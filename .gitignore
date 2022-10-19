@@ -1,0 +1,10 @@
+diff
+.idea
+.nyc_output
+dist
+node_modules
+coverage
+jest-stare
+*.log
+*.lock
+*.ts.bak
