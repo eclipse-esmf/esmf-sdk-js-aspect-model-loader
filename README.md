@@ -38,7 +38,7 @@ npm install @sds/aspect-model-loader
 ### Install from github release repository:
 
 ```
-npm install git@github.com:OpenManufacturingPlatform/sds-sdk-js-aspect-model-loader.git#<TAG_VERSION>
+npm install https://github.com/OpenManufacturingPlatform/sds-sdk-js-aspect-model-loader/releases/download/<TAG_VERSION>/sds-aspect-model-loader-x.x.x.tgz
 ```
 
 ## Usage
