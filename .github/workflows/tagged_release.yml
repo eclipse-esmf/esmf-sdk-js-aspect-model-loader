@@ -14,9 +14,6 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v3
 
-      - run: git config --global user.email "info@open-manufacturing.org"
-      - run: git config --global user.name "OpenManufacturing"
-
       - name: Cache node modules
         uses: actions/cache@v3
         env:
