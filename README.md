@@ -29,10 +29,16 @@ Are you having trouble with SDS SDK JS? We want to help!
 
 ## Getting started
 
-### Install from the public npm:
+### Install from the public npm (Currently not available):
 
 ```
-npm install @omp-sdk/aspect-model-loader
+npm install @sds/aspect-model-loader
+```
+
+### Install from github release repository:
+
+```
+npm install git@github.com:OpenManufacturingPlatform/sds-sdk-js-aspect-model-loader.git#<TAG_VERSION>
 ```
 
 ## Usage
