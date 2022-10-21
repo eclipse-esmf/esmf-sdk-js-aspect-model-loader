@@ -38,6 +38,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Set app version (Unix)
+        run: npm version $tagVersion
+
       - name: Build Project
         run: npm run build
 
@@ -52,7 +55,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: omp-sds-aspect-model-loader-${{ env.tagVersion }}.tgz
+          file: sds-aspect-model-loader-${{ env.tagVersion }}.tgz
           tag: ${{ github.ref }}
 
       - name: Create GitHub pre-release
@@ -62,5 +65,5 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: omp-sds-aspect-model-loader-${{ env.tagVersion }}.tgz
+          file: sds-aspect-model-loader-${{ env.tagVersion }}.tgz
           tag: ${{ github.ref }}

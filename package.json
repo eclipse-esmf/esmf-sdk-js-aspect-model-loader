@@ -1,6 +1,6 @@
 {
   "name": "@sds/aspect-model-loader",
-  "version": "4.0.0-rc.0",
+  "version": "",
   "description": "Instantiate and traverse defined Aspect Models natively in your TypeScript applications",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
