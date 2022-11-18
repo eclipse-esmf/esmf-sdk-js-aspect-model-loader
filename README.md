@@ -98,11 +98,6 @@ ctix create ./src
 
 to update all index files under `src`. For more information see the project https://github.com/imjuni/create-ts-index.
 
-## Documentation
-
-Further documentation and howto's are provided in the
-official [JS SDK User Documentation](https://openmanufacturingplatform.github.io/sds-documentation/js-sdk-guide/1.0.0/index.html)
-
 ## License
 
 SPDX-License-Identifier: MPL-2.0
