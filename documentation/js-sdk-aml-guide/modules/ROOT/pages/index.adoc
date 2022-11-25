@@ -1,0 +1,96 @@
+////
+Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+
+See the AUTHORS file(s) distributed with this work for additional
+information regarding authorship.
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+SPDX-License-Identifier: MPL-2.0
+////
+
+= Introduction
+
+The Aspect Model loader can be used to load an Aspect Model to traverse and access the different information a model provides (units, descriptions, constraints, etc.) to implement generic frontends capable to automatically adapt to the underling Aspect Model.
+For example a new added property and the related value could be shown in the UI including all information (name, description and unit) without changing any line of code.
+
+== Getting Started
+
+=== Install from the public npm (Currently not available):
+
+[source,bash]
+----
+npm install @sds/aspect-model-loader
+----
+
+=== Install from github release repository:
+
+[source,bash]
+----
+npm install https://github.com/OpenManufacturingPlatform/sds-sdk-js-aspect-model-loader/releases/download/<TAG_VERSION>/sds-aspect-model-loader-x.x.x.tgz
+----
+
+== Usage
+
+This package contains two methods for loading ttl files(string value of the .ttl files).
+
+Load an aspect model which is self-contained (includes no imports to other ttl file):
+
+[source,bash]
+----
+new AspectModelLoader().loadSelfContainedModel(ttl).subscribe((aspect: Aspect) => {
+...
+});
+----
+
+or if the model contains imports to additional ttl files:
+
+[source,bash]
+----
+new AspectModelLoader().load('<aspect-model-urn>', ttl-1, ttl-2, ttl-3).subscribe((aspect: Aspect) => {
+...
+});
+----
+
+If you are using external .ttl files you may need to parse the contents of these files to strings, to be passed to the methods params.
+
+== Helpful functions
+
+This module exposes some helper functions that can be used to find items inside the loaded ttl object.
+
+Find a specific model element, and returns it or undefined.
+
+[source,bash]
+----
+let specificElement = loader.findByUrn(options.urnSelectedModelElement)
+----
+
+Find a specific model element by name, and returns the found elements.
+
+[source,bash]
+----
+let specificElement = loader.findByName(options.selectedModelName)
+----
+
+== Development
+
+=== Create bundle
+
+[source,bash]
+----
+npm run build
+----
+
+to build and to create the library
+
+==== Update indexes
+
+[source,bash]
+----
+ctix create ./src
+----
+
+to update all index files under `src`.
+For more information see the project https://github.com/imjuni/create-ts-index.

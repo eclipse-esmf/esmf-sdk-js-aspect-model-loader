@@ -98,6 +98,11 @@ ctix create ./src
 
 to update all index files under `src`. For more information see the project https://github.com/imjuni/create-ts-index.
 
+## Documentation
+
+Further documentation and howto's are provided in the
+official [JS SDK Aspect Model loader User Documentation](https://openmanufacturingplatform.github.io/sds-documentation/js-sdk-aml-guide/index.html)
+
 ## License
 
 SPDX-License-Identifier: MPL-2.0
