@@ -35,16 +35,16 @@ export class CollectionCharacteristicInstantiator extends CharacteristicInstanti
     }
 
     private initProperties(collectionCharacteristic: Collection, quads: Array<Quad>): Collection {
-        const bamm = this.metaModelElementInstantiator.BAMM();
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const samm = this.metaModelElementInstantiator.samm;
+        const sammC = this.metaModelElementInstantiator.sammC;
         quads.forEach(quad => {
-            if (bamm.isDataTypeProperty(quad.predicate.value)) {
+            if (samm.isDataTypeProperty(quad.predicate.value)) {
                 collectionCharacteristic.dataType = this.getDataType(quad);
-            } else if (bammc.isAllowDuplicatesProperty(quad.predicate.value)) {
+            } else if (sammC.isAllowDuplicatesProperty(quad.predicate.value)) {
                 collectionCharacteristic.isAllowDuplicates = Boolean(quad.object.value);
-            } else if (bammc.isOrderedProperty(quad.predicate.value)) {
+            } else if (sammC.isOrderedProperty(quad.predicate.value)) {
                 collectionCharacteristic.isOrdered = Boolean(quad.object.value);
-            } else if (bammc.isElementCharacteristicProperty(quad.predicate.value)) {
+            } else if (sammC.isElementCharacteristicProperty(quad.predicate.value)) {
                 collectionCharacteristic.elementCharacteristic = this.create(quad);
             }
         });
@@ -52,6 +52,6 @@ export class CollectionCharacteristicInstantiator extends CharacteristicInstanti
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().CollectionCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.CollectionCharacteristic().equals(nameNode);
     }
 }

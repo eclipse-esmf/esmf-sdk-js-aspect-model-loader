@@ -28,6 +28,6 @@ export class SortedSetCharacteristicInstantiator extends CollectionCharacteristi
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().SortedSetCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.SortedSetCharacteristic().equals(nameNode);
     }
 }

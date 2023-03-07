@@ -11,21 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Bamm} from './bamm';
+import {Samm} from './samm';
 import {DataFactory, NamedNode} from 'n3';
 import {BoundDefinition} from '../aspect-meta-model/bound-definition';
 
-export class Bammc {
-    private alias = 'bamm-c';
+export class SammC {
+    private alias = 'samm-c';
 
-    constructor(private bamm: Bamm) {}
+    constructor(private samm: Samm) {}
 
     getAlias(): string {
         return this.alias;
     }
 
     getUri(): string {
-        return `${Bamm.getBaseUri()}characteristic:${this.bamm.version}`;
+        return `${Samm.getBaseUri()}characteristic:${this.samm.version}`;
     }
 
     isStandardCharacteristic(elementUrn: string): boolean {

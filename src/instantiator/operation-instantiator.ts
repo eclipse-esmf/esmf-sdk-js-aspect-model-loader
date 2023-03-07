@@ -21,19 +21,19 @@ export class OperationInstantiator {
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
     createOperation(quad: Quad): Operation {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const rdfModel = this.metaModelElementInstantiator.rdfModel;
         const operation = new DefaultOperation(null, null, null);
         const quads = rdfModel.findAnyProperty(quad);
         const propertyInstantiator = new PropertyInstantiator(this.metaModelElementInstantiator);
 
         quads.forEach(quad => {
-            if (bamm.isInputProperty(quad.predicate.value)) {
+            if (samm.isInputProperty(quad.predicate.value)) {
                 const inputQuads = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
                 operation.input = inputQuads.map(input => propertyInstantiator.createProperty(input));
                 operation.input.forEach(property => (property as DefaultPropertyInstanceDefinition).addParent(operation));
-            } else if (bamm.isOutputProperty(quad.predicate.value)) {
-                const outputQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(quad.object, null, bamm.Property(), null);
+            } else if (samm.isOutputProperty(quad.predicate.value)) {
+                const outputQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(quad.object, null, samm.Property(), null);
                 operation.output = propertyInstantiator.createProperty(outputQuads[0]);
                 (operation.output as DefaultPropertyInstanceDefinition)?.addParent(operation);
             }

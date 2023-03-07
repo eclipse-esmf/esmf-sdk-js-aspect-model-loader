@@ -22,14 +22,14 @@ export class TraitCharacteristicInstantiator extends CharacteristicInstantiator 
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const sammC = this.metaModelElementInstantiator.sammC;
         const trait = new DefaultTrait(null, null, null, null, new Array<Constraint>());
 
         quads.forEach(quad => {
-            if (bammc.isBaseCharacteristicProperty(quad.predicate.value)) {
+            if (sammC.isBaseCharacteristicProperty(quad.predicate.value)) {
                 trait.baseCharacteristic = this.metaModelElementInstantiator.getCharacteristic(quad);
                 (trait.baseCharacteristic as DefaultCharacteristic).addParent(trait);
-            } else if (bammc.isConstraintProperty(quad.predicate.value)) {
+            } else if (sammC.isConstraintProperty(quad.predicate.value)) {
                 const constraint = this.metaModelElementInstantiator.getConstraint(quad);
                 (constraint as DefaultConstraint).addParent(trait);
                 trait.constraints.push(constraint);
@@ -40,6 +40,6 @@ export class TraitCharacteristicInstantiator extends CharacteristicInstantiator 
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().TraitCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.TraitCharacteristic().equals(nameNode);
     }
 }

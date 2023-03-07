@@ -13,69 +13,69 @@
 
 import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity';
 import {RdfModel} from './rdf-model';
-import {Bamm} from '../vocabulary/bamm';
-import {Bammc} from '../vocabulary/bammc';
-import {Bamme} from '../vocabulary/bamme';
-import {Bammu} from '../vocabulary/bammu';
+import {Samm} from '../vocabulary/samm';
+import {SammC} from '../vocabulary/samm-c';
+import {SammE} from '../vocabulary/samm-e';
+import {SammU} from '../vocabulary/samm-u';
 
 export class RdfModelUtil {
     static readonly defaultAspectModelAlias = '';
 
     static resolveNamespaceAlias(namespace: string, metaModelVersion: string): string {
-        const bamm = new Bamm(metaModelVersion);
-        const bammc = new Bammc(bamm);
-        const bamme = new Bamme(bamm);
-        const bammu = new Bammu(bamm);
+        const samm = new Samm(metaModelVersion);
+        const sammC = new SammC(samm);
+        const sammE = new SammE(samm);
+        const sammU = new SammU(samm);
 
-        if (namespace.startsWith(bamm.getNamespace())) {
-            return bamm.getAlias();
+        if (namespace.startsWith(samm.getNamespace())) {
+            return samm.getAlias();
         }
 
-        if (namespace.startsWith(bammc.getNamespace())) {
-            return bammc.getAlias();
+        if (namespace.startsWith(sammC.getNamespace())) {
+            return sammC.getAlias();
         }
 
-        if (namespace.startsWith(bamme.getNamespace())) {
-            return bamme.getAlias();
+        if (namespace.startsWith(sammE.getNamespace())) {
+            return sammE.getAlias();
         }
 
-        if (namespace.startsWith(bammu.getNamespace())) {
-            return bammu.getAlias();
+        if (namespace.startsWith(sammU.getNamespace())) {
+            return sammU.getAlias();
         }
 
-        if (namespace.startsWith(Bamm.XSD_URI)) {
+        if (namespace.startsWith(Samm.XSD_URI)) {
             return 'xsd';
         }
 
-        if (namespace.startsWith(Bamm.RDF_URI)) {
+        if (namespace.startsWith(Samm.RDF_URI)) {
             return 'rdf';
         }
 
-        if (namespace.startsWith(Bamm.RDFS_URI)) {
+        if (namespace.startsWith(Samm.RDFS_URI)) {
             return 'rdfs';
         }
 
         return this.defaultAspectModelAlias;
     }
 
-    static isBammDefinition(urn: string, bamm: Bamm): boolean {
-        return urn && urn.includes(bamm.getNamespace());
+    static isSammDefinition(urn: string, samm: Samm): boolean {
+        return urn && urn.includes(samm.getNamespace());
     }
 
-    static isBammcDefinition(urn: string, bammc: Bammc): boolean {
-        return urn && urn.includes(bammc.getNamespace());
+    static isSammCDefinition(urn: string, sammC: SammC): boolean {
+        return urn && urn.includes(sammC.getNamespace());
     }
 
-    static isBammuDefinition(urn: string, bammu: Bammu): boolean {
-        return urn && urn.includes(bammu.getNamespace());
+    static isSammUDefinition(urn: string, sammU: SammU): boolean {
+        return urn && urn.includes(sammU.getNamespace());
     }
 
-    static isCharacteristicInstance(urn: string, bammc: Bammc): boolean {
-        return urn && urn.includes(bammc.getNamespace());
+    static isCharacteristicInstance(urn: string, sammC: SammC): boolean {
+        return urn && urn.includes(sammC.getNamespace());
     }
 
-    static isUnitInstance(urn: string, bammu: Bammu): boolean {
-        return urn && urn.includes(bammu.getNamespace());
+    static isUnitInstance(urn: string, sammU: SammU): boolean {
+        return urn && urn.includes(sammU.getNamespace());
     }
 
     static isAspectModelDefinition(urn: string, rdfModel: RdfModel) {
@@ -83,7 +83,7 @@ export class RdfModelUtil {
     }
 
     static getValueWithoutUrnDefinition(value: any): string {
-        if (value && (`${value}`.startsWith('urn:bamm') || `${value}`.startsWith(Bamm.XSD_URI) || `${value}`.startsWith(Bamm.RDF_URI))) {
+        if (value && (`${value}`.startsWith('urn:samm') || `${value}`.startsWith(Samm.XSD_URI) || `${value}`.startsWith(Samm.RDF_URI))) {
             return `${value}`.split('#').pop();
         }
         return value === null ? '' : `${value}`;

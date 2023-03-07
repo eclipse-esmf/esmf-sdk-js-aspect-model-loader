@@ -23,13 +23,13 @@ export class SingleEntityInstantiator extends CharacteristicInstantiator {
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const defaultSingleEntity = new DefaultSingleEntity(null, null, null, null);
 
         this.metaModelElementInstantiator.initBaseProperties(quads, defaultSingleEntity, this.metaModelElementInstantiator.rdfModel);
 
         quads.forEach(quad => {
-            if (bamm.isDataTypeProperty(quad.predicate.value)) {
+            if (samm.isDataTypeProperty(quad.predicate.value)) {
                 defaultSingleEntity.dataType = this.getDataType(quad);
             }
         });
@@ -38,6 +38,6 @@ export class SingleEntityInstantiator extends CharacteristicInstantiator {
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().SingleEntityCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.SingleEntityCharacteristic().equals(nameNode);
     }
 }

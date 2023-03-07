@@ -43,8 +43,8 @@ export class AspectModelLoader {
      * @param modelAspectUrn URN of the Aspect Model to load and instantiate
      *
      * @param rdfContent List of all RDF/Turtle representation to load, including
-     *                   all referenced models imports. The default BAMM related imports
-     *                   e.g. with prefixes "bamm", "bamm-c", "bamm-e", "unit" and "xsd"
+     *                   all referenced models imports. The default SAMM related imports
+     *                   e.g. with prefixes "samm", "samm-c", "samm-e", "unit" and "xsd"
      *                   are already provided. No needs to provided that(content) is not
      *                   required.
      *

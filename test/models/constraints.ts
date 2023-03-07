@@ -13,236 +13,236 @@
 
 export const constraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :Property1Trait.
-:Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
-    bamm-c:baseCharacteristic :Characteristic1;
-    bamm-c:constraint :Constraint.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1".
-:Constraint a bamm:Constraint;
-    bamm:name "Constraint";
-    bamm:preferredName "constraint"@en;
-    bamm:description "Test constraint"@en.
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :Property1Trait.
+:Property1Trait a samm-c:Trait;
+    samm:name "Property1Trait";
+    samm-c:baseCharacteristic :Characteristic1;
+    samm-c:constraint :Constraint.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1".
+:Constraint a samm:Constraint;
+    samm:name "Constraint";
+    samm:preferredName "constraint"@en;
+    samm:description "Test constraint"@en.
 `;
 
 export const encodingConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :Property1Trait.
-:Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
-    bamm-c:baseCharacteristic :Characteristic1;
-    bamm-c:constraint :EncodingConstraint.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1".
-:EncodingConstraint a bamm-c:EncodingConstraint;
-    bamm:name "EncodingConstraint";
-    bamm:preferredName "Encoding constraint"@en;
-    bamm:description "Test encoding"@en;
-    bamm:value bamm:US-ASCII.
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :Property1Trait.
+:Property1Trait a samm-c:Trait;
+    samm:name "Property1Trait";
+    samm-c:baseCharacteristic :Characteristic1;
+    samm-c:constraint :EncodingConstraint.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1".
+:EncodingConstraint a samm-c:EncodingConstraint;
+    samm:name "EncodingConstraint";
+    samm:preferredName "Encoding constraint"@en;
+    samm:description "Test encoding"@en;
+    samm:value samm:US-ASCII.
 `;
 
 export const fixedPointConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :Property1Trait.
-:Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
-    bamm-c:baseCharacteristic :Characteristic1;
-    bamm-c:constraint :FixedPointConstraint.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1".
-:FixedPointConstraint a bamm-c:FixedPointConstraint;
-    bamm:name "FixedPointConstraint";
-    bamm:preferredName "Fixed point constraint"@en;
-    bamm:description "Test fixed point constraint"@en;
-    bamm-c:scale "1"^^xsd:positiveInteger;
-    bamm-c:integer "2"^^xsd:positiveInteger.
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :Property1Trait.
+:Property1Trait a samm-c:Trait;
+    samm:name "Property1Trait";
+    samm-c:baseCharacteristic :Characteristic1;
+    samm-c:constraint :FixedPointConstraint.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1".
+:FixedPointConstraint a samm-c:FixedPointConstraint;
+    samm:name "FixedPointConstraint";
+    samm:preferredName "Fixed point constraint"@en;
+    samm:description "Test fixed point constraint"@en;
+    samm-c:scale "1"^^xsd:positiveInteger;
+    samm-c:integer "2"^^xsd:positiveInteger.
 `;
 
 export const languageConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :Property1Trait.
-:Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
-    bamm-c:baseCharacteristic :Characteristic1;
-    bamm-c:constraint :LanguageConstraint.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1".
-:LanguageConstraint a bamm-c:LanguageConstraint;
-    bamm:name "LanguageConstraint";
-    bamm:preferredName "Language constraint"@en;
-    bamm:description "Test language constraint"@en;
-    bamm-c:languageCode "it".
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :Property1Trait.
+:Property1Trait a samm-c:Trait;
+    samm:name "Property1Trait";
+    samm-c:baseCharacteristic :Characteristic1;
+    samm-c:constraint :LanguageConstraint.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1".
+:LanguageConstraint a samm-c:LanguageConstraint;
+    samm:name "LanguageConstraint";
+    samm:preferredName "Language constraint"@en;
+    samm:description "Test language constraint"@en;
+    samm-c:languageCode "it".
 `;
 
 export const lengthConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :Property1Trait.
-:Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
-    bamm-c:baseCharacteristic :Characteristic1;
-    bamm-c:constraint :LengthConstraint.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1".
-:LengthConstraint a bamm-c:LengthConstraint;
-    bamm:name "LengthConstraint";
-    bamm:preferredName "Length constraint"@en;
-    bamm:description "Test length constraint"@en;
-    bamm-c:maxValue "2"^^xsd:nonNegativeInteger;
-    bamm-c:minValue "1"^^xsd:nonNegativeInteger.
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :Property1Trait.
+:Property1Trait a samm-c:Trait;
+    samm:name "Property1Trait";
+    samm-c:baseCharacteristic :Characteristic1;
+    samm-c:constraint :LengthConstraint.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1".
+:LengthConstraint a samm-c:LengthConstraint;
+    samm:name "LengthConstraint";
+    samm:preferredName "Length constraint"@en;
+    samm:description "Test length constraint"@en;
+    samm-c:maxValue "2"^^xsd:nonNegativeInteger;
+    samm-c:minValue "1"^^xsd:nonNegativeInteger.
 `;
 
 export const localeConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :Property1Trait.
-:Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
-    bamm-c:baseCharacteristic :Characteristic1;
-    bamm-c:constraint :LocaleConstraint.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1".
-:LocaleConstraint a bamm-c:LocaleConstraint;
-    bamm:name "LocaleConstraint";
-    bamm:preferredName "Locale constraint"@en;
-    bamm:description "Test locale constraint"@en;
-    bamm-c:localeCode "it-IT".
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :Property1Trait.
+:Property1Trait a samm-c:Trait;
+    samm:name "Property1Trait";
+    samm-c:baseCharacteristic :Characteristic1;
+    samm-c:constraint :LocaleConstraint.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1".
+:LocaleConstraint a samm-c:LocaleConstraint;
+    samm:name "LocaleConstraint";
+    samm:preferredName "Locale constraint"@en;
+    samm:description "Test locale constraint"@en;
+    samm-c:localeCode "it-IT".
 `;
 
 export const rangeConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :Property1Trait.
-:Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
-    bamm-c:baseCharacteristic :Characteristic1;
-    bamm-c:constraint :RangeConstraint.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1".
-:RangeConstraint a bamm-c:RangeConstraint;
-    bamm:name "RangeConstraint";
-    bamm:preferredName "Rangeconstraint"@en;
-    bamm:description "Test range constraint"@en;
-    bamm-c:maxValue "6";
-    bamm-c:minValue "4";
-    bamm-c:lowerBoundDefinition bamm-c:GREATER_THAN;
-    bamm-c:upperBoundDefinition bamm-c:AT_MOST.
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :Property1Trait.
+:Property1Trait a samm-c:Trait;
+    samm:name "Property1Trait";
+    samm-c:baseCharacteristic :Characteristic1;
+    samm-c:constraint :RangeConstraint.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1".
+:RangeConstraint a samm-c:RangeConstraint;
+    samm:name "RangeConstraint";
+    samm:preferredName "Rangeconstraint"@en;
+    samm:description "Test range constraint"@en;
+    samm-c:maxValue "6";
+    samm-c:minValue "4";
+    samm-c:lowerBoundDefinition samm-c:GREATER_THAN;
+    samm-c:upperBoundDefinition samm-c:AT_MOST.
 `;
 
 export const regularExpressionConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :Property1Trait.
-:Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
-    bamm-c:baseCharacteristic :Characteristic1;
-    bamm-c:constraint :RegularExpressionConstraint.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1".
-:RegularExpressionConstraint a bamm-c:RegularExpressionConstraint;
-    bamm:name "RegularExpressionConstraint";
-    bamm:preferredName "Regular expression constraint"@en;
-    bamm:description "Test regular expression constraint"@en;
-    bamm:value "([A-Z])\\\\w+".
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :Property1Trait.
+:Property1Trait a samm-c:Trait;
+    samm:name "Property1Trait";
+    samm-c:baseCharacteristic :Characteristic1;
+    samm-c:constraint :RegularExpressionConstraint.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1".
+:RegularExpressionConstraint a samm-c:RegularExpressionConstraint;
+    samm:name "RegularExpressionConstraint";
+    samm:preferredName "Regular expression constraint"@en;
+    samm:description "Test regular expression constraint"@en;
+    samm:value "([A-Z])\\\\w+".
 `;

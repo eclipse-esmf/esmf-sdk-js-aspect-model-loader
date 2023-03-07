@@ -136,7 +136,7 @@ describe('Characteristics tests', (): void => {
 
         it('should have correct model urn', (): void => {
             expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn)
-                .toEqual('urn:bamm:io.openmanufacturing:1.0.0#resultStateAttributeDescription');
+                .toEqual('urn:samm:org.eclipse.esmf.samm:1.0.0#resultStateAttributeDescription');
         });
 
         it('should have no description and loads successfully', (): void => {

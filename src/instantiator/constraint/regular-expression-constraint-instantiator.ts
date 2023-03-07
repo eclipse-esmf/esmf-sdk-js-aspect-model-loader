@@ -23,11 +23,11 @@ export class RegularExpressionConstraintInstantiator extends ConstraintInstantia
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const encodingConstraint = new DefaultRegularExpressionConstraint(null, null, null, null);
 
         quads.forEach(quad => {
-            if (bamm.isValueProperty(quad.predicate.value)) {
+            if (samm.isValueProperty(quad.predicate.value)) {
                 encodingConstraint.value = quad.object.value;
             }
         });
@@ -36,6 +36,6 @@ export class RegularExpressionConstraintInstantiator extends ConstraintInstantia
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().RegularExpressionConstraint().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.RegularExpressionConstraint().equals(nameNode);
     }
 }

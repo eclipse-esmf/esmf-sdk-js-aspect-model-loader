@@ -34,7 +34,7 @@ export class AspectInstantiator {
 
     createAspect(): Aspect {
         const aspectNode = <NamedNode>(
-            this.rdfModel.store.getQuads(null, this.rdfModel.BAMM().RdfType(), this.rdfModel.BAMM().Aspect(), null)[0].subject
+            this.rdfModel.store.getQuads(null, this.rdfModel.samm.RdfType(), this.rdfModel.samm.Aspect(), null)[0].subject
         );
         const metaModelElementInstantiator = new MetaModelElementInstantiator(
             this.rdfModel,

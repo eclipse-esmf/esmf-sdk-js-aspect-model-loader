@@ -25,7 +25,7 @@ describe('Import model tests', (): void => {
     beforeEach((done: DoneCallback): void => {
         loader = new AspectModelLoader();
         subscription = loader
-            .load('urn:bamm:io.openmanufacturing:1.0.0#MovementWithImports', testAspectModel, movementAspectModelWithExternalReference)
+            .load('urn:samm:org.eclipse.esmf.samm:1.0.0#MovementWithImports', testAspectModel, movementAspectModelWithExternalReference)
             .subscribe((_aspect: DefaultAspect): void => {
                 aspect = _aspect;
                 done();

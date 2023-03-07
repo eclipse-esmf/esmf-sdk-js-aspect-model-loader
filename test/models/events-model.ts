@@ -12,34 +12,34 @@
  */
 
 export const eventAspectModel = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties ();
-    bamm:operations ();
-    bamm:events (:StartEngineEvent :StopEngineEvent).
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties ();
+    samm:operations ();
+    samm:events (:StartEngineEvent :StopEngineEvent).
 
-:engineState a bamm:Property;
-    bamm:name "engineState";
-    bamm:preferredName "Current state of the engine"@en;
-    bamm:characteristic :EngineStateCharacteristic.
+:engineState a samm:Property;
+    samm:name "engineState";
+    samm:preferredName "Current state of the engine"@en;
+    samm:characteristic :EngineStateCharacteristic.
    
-:EngineStateCharacteristic a bamm:Characteristic;
-    bamm:name "Characteristic";
-    bamm:dataType xsd:string.
+:EngineStateCharacteristic a samm:Characteristic;
+    samm:name "Characteristic";
+    samm:dataType xsd:string.
    
-:StopEngineEvent a bamm:Event;
-    bamm:name "StopEngineEvent";
-    bamm:parameters (:engineState).
+:StopEngineEvent a samm:Event;
+    samm:name "StopEngineEvent";
+    samm:parameters (:engineState).
    
-:StartEngineEvent a bamm:Event;
-    bamm:name "StartEngineEvent";
-    bamm:parameters (:engineState).
+:StartEngineEvent a samm:Event;
+    samm:name "StartEngineEvent";
+    samm:parameters (:engineState).
    
 `;

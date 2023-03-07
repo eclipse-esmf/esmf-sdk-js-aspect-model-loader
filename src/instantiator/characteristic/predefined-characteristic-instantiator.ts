@@ -18,28 +18,28 @@ import {NamedNode} from 'n3';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {XsdDataTypes} from '../../shared/xsd-datatypes';
 
-export class BammCharacteristicInstantiator {
+export class PredefinedCharacteristicInstantiator {
     private characteristicInstanceList = [];
     private readonly xsdDataTypes: XsdDataTypes;
 
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
         this.xsdDataTypes = metaModelElementInstantiator.rdfModel.xsdDataTypes;
-        const bammc = metaModelElementInstantiator.BAMMC();
-        this.characteristicInstanceList[`${bammc.getNamespace()}Timestamp`] = this.createTimestampCharacteristic.bind(this);
-        this.characteristicInstanceList[`${bammc.getNamespace()}Text`] = this.createTextCharacteristic.bind(this);
-        this.characteristicInstanceList[`${bammc.getNamespace()}MultiLanguageText`] = this.createMultiLanguageTextCharacteristic.bind(this);
-        this.characteristicInstanceList[`${bammc.getNamespace()}Boolean`] = this.createBooleanCharacteristic.bind(this);
-        this.characteristicInstanceList[`${bammc.getNamespace()}Locale`] = this.createLocaleCharacteristic.bind(this);
-        this.characteristicInstanceList[`${bammc.getNamespace()}Language`] = this.createLanguageCharacteristic.bind(this);
-        this.characteristicInstanceList[`${bammc.getNamespace()}UnitReference`] = this.createUnitReferenceCharacteristic.bind(this);
-        this.characteristicInstanceList[`${bammc.getNamespace()}ResourcePath`] = this.createResourcePathCharacteristic.bind(this);
-        this.characteristicInstanceList[`${bammc.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic.bind(this);
+        const sammC = metaModelElementInstantiator.sammC;
+        this.characteristicInstanceList[`${sammC.getNamespace()}Timestamp`] = this.createTimestampCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}Text`] = this.createTextCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}MultiLanguageText`] = this.createMultiLanguageTextCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}Boolean`] = this.createBooleanCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}Locale`] = this.createLocaleCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}Language`] = this.createLanguageCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}UnitReference`] = this.createUnitReferenceCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}ResourcePath`] = this.createResourcePathCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic.bind(this);
     }
 
     createTextCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('Text'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Text'),
             'Text',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('string').isDefinedBy}`)
         );
@@ -55,8 +55,8 @@ export class BammCharacteristicInstantiator {
 
     createTimestampCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('Timestamp'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Timestamp'),
             'Timestamp',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('dateTime').isDefinedBy}`)
         );
@@ -69,8 +69,8 @@ export class BammCharacteristicInstantiator {
 
     createMultiLanguageTextCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('MultiLanguageText'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('MultiLanguageText'),
             'MultiLanguageText',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('langString').isDefinedBy}`)
         );
@@ -86,8 +86,8 @@ export class BammCharacteristicInstantiator {
 
     createBooleanCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('Boolean'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Boolean'),
             'Boolean',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('boolean').isDefinedBy}`)
         );
@@ -100,8 +100,8 @@ export class BammCharacteristicInstantiator {
 
     createLocaleCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('Locale'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Locale'),
             'Locale',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('string').isDefinedBy}`)
         );
@@ -114,8 +114,8 @@ export class BammCharacteristicInstantiator {
 
     createLanguageCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('Language'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Language'),
             'Language',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('string').isDefinedBy}`)
         );
@@ -128,8 +128,8 @@ export class BammCharacteristicInstantiator {
 
     createUnitReferenceCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('UnitReference'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('UnitReference'),
             'UnitReference',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('curie').isDefinedBy}`)
         );
@@ -142,8 +142,8 @@ export class BammCharacteristicInstantiator {
 
     createResourcePathCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('ResourcePath'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('ResourcePath'),
             'ResourcePath',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('anyURI').isDefinedBy}`)
         );
@@ -156,8 +156,8 @@ export class BammCharacteristicInstantiator {
 
     createMimeTypeCharacteristic(): Characteristic {
         const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMMC().getAspectModelUrn('MimeType'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('MimeType'),
             'MimeType',
             new DefaultScalar(`${this.xsdDataTypes.getDataType('string').isDefinedBy}`)
         );

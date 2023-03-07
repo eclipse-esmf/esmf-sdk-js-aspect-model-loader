@@ -1,33 +1,31 @@
-# Contribution Guideline SDS SDK JS Aspect Model loader
+# Contribution Guideline ESMF JS Aspect Model loader
 
-Thank you for your interest in contributing to the SDS SDK JS Aspect Model loader. Use this repository to contribute to
-the
-SDS SDK JS Aspect Model loader as easy and
-transparent as possible, whether it is:
+Thank you for your interest in contributing to the ESMF JS Aspect Model loader. Use this repository to contribute to
+the ESMF JS Aspect Model loader as easy and transparent as possible, whether it is:
 
-* Reporting a bug
-* Submitting a fix
-* Proposing new features
-* other
+- Reporting a bug
+- Submitting a fix
+- Proposing new features
+- other
 
-## OMP SDS and Roles
+## ESMF and Roles
 
-The SDS SDK JS Aspect Model loader is developed in the context of the OMP SDS WG (Open Manufacturing Platform - Semantic
+The ESMF JS Aspect Model loader is developed in the context of the ESMF WG (Open Manufacturing Platform - Semantic
 Data
 Structuring - Working Group).
-More information about the OMP such as its goals or members is available under
-[open-manufacturing.org](https://open-manufacturing.org).
-The overall goal of the SDS WG within the OMP is to work on a Semantic Data Structuring Layer that addresses the needs
+More information about the ESMF such as its goals or members is available under
+[dt.esmf](https://projects.eclipse.org/projects/dt.esmf).
+The overall goal of the ESMF WG within the ESMF is to work on a Semantic Data Structuring Layer that addresses the needs
 to share, join, and reuse heterogeneous data of the manufacturing.
-The SDS SDK JS Aspect Model loader is based on the BAMM Aspect Meta Model and supports its use.
+The ESMF JS Aspect Model loader is based on the SAMM Aspect Meta Model and supports its use.
 
 ### Roles
 
-The work on the SDS SDK JS Aspect Model loader is organized within the OMP SDS WG to which this document simply refers
+The work on the ESMF JS Aspect Model loader is organized within the ESMF WG to which this document simply refers
 as "`working group`"
 in the following. The `working group` is currently meeting regularly and may decide on the acceptance of Pull Requests
 (`PR's`) and `Issues`. Before a release of the specification, the `working group` further needs to agree on a state of
-the SDS SDK JS Aspect Model loader as a release candidate.
+the ESMF JS Aspect Model loader as a release candidate.
 
 Besides the `working group`, there is a group of people to which this document refers to as "`maintainers`".
 `Maintainers` manage this repository and therefore have write access and the right to assign labels to `Issues`
@@ -38,9 +36,9 @@ working group. The `Chair` is also a `maintainer` of this repository.
 
 # Contributing Source Code (using GitHub)
 
-* We use this GitHub repository to track issues and feature requests, as well as discuss and manage all PR's related to
+- We use this GitHub repository to track issues and feature requests, as well as discuss and manage all PR's related to
   this project.
-* Opening `Issues` and `PRs` in GitHub is the preferred way to interact with the community around the SDS SDK JS
+- Opening `Issues` and `PRs` in GitHub is the preferred way to interact with the community around the EMSF JS
   Aspect Model loader.
 
 ## Branching
@@ -51,13 +49,13 @@ the [Git branching guidance](https://docs.microsoft.com/en-us/azure/devops/repos
 
 More specifically the repository has the following branches:
 
-name of branch | description
-----| ----
-`main` | Contains the latest state of the repository
-`v{version_number}-RC{rc_number}` | A state on which the working group agreed on as a release candidate but which is missing the approval by the OMP.
-`v{version_number}` | A release of the respective version which is approved by the working group and the OMP.
-`feature/#{issue_number}-{feature_name}` | Contains the development on a specific feature and is intended to be merged back into the `main` branch as soon as possible. Note, that it is recommended for contributors to create and develop feature branches in a personal fork and not the upstream repository.
-`bug/#{issue_number}-{bug_name}` | Contains the development of (usually smaller) changes in files of the repository that do not introduce new functionality but fix mistakes, errors or inconsistencies. These branches should be merged back into the `main`branch as soon as possible.
+| name of branch                           | description                                                                                                                                                                                                                                                           |
+|------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `main`                                   | Contains the latest state of the repository                                                                                                                                                                                                                           |
+| `v{version_number}-RC{rc_number}`        | A state on which the working group agreed on as a release candidate but which is missing the approval by the ESMF.                                                                                                                                                    |
+| `v{version_number}`                      | A release of the respective version which is approved by the working group and the ESMF.                                                                                                                                                                              |
+| `feature/#{issue_number}-{feature_name}` | Contains the development on a specific feature and is intended to be merged back into the `main` branch as soon as possible. Note, that it is recommended for contributors to create and develop feature branches in a personal fork and not the upstream repository. |
+| `bug/#{issue_number}-{bug_name}`         | Contains the development of (usually smaller) changes in files of the repository that do not introduce new functionality but fix mistakes, errors or inconsistencies. These branches should be merged back into the `main`branch as soon as possible.                 |
 
 ## Issues
 
@@ -65,10 +63,10 @@ We use the `Issues` feature of GitHub for tracking all types of work in the repo
 
 We distinguish between the following types of issues;
 
-Issue Types        |   Description
--------------------| ------------------------------------------------------
-`Bug Report`         | This `Issue` is dedicated to reporting a problem.
-`Task` | This `Issue` is used for describing and proposing a new work item (e.g., a new feature)
+| Issue Types  | Description                                                                             |
+|--------------|-----------------------------------------------------------------------------------------|
+| `Bug Report` | This `Issue` is dedicated to reporting a problem.                                       |
+| `Task`       | This `Issue` is used for describing and proposing a new work item (e.g., a new feature) |
 
 If there are issues that link to the same topic, the creator of the issue shall mention those other tasks in the
 description. To group tasks that can belong together, one could further create an issue mentioning and describing
@@ -88,44 +86,45 @@ right corner of the GitHub page)
 
 When opening a `PR` please consider the following topics:
 
-* optional: Rebase your development on the branch to which you plan to create the `PR`.
-* Each `PR` must be linked to an `Issue`:
+- optional: Rebase your development on the branch to which you plan to create the `PR`.
+- Each `PR` must be linked to an `Issue`:
     - Reference the `Issue` number in the name of your `feature branch` and the description of the `PR`.
     - Mention the `Issue` in one of the commit messages associated to the `PR` together with a GitHub keyword like
       `closes #IssueNumber` or `fixes #IssuesNumber`. For more details visit the
       [GitHub documentation on linking PR with Issues](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)
-* Each `PR` should only contain changes related to a single work item. If the changes cover more than one work item or
+- Each `PR` should only contain changes related to a single work item. If the changes cover more than one work item or
   feature, then create one `PR` per work item. You may need to create new more specific `Issues` to reference if you
   split up the work into multiple `feature branches`.
-* Commit changes often. A `PR` may contain one or more commits.
+- Commit changes often. A `PR` may contain one or more commits.
 
 ## Paperwork and DCO
 
-The OMP is a [JDF project (Joint Developement Foundation)](https://www.jointdevelopment.org/) following the project and
+The ESMF is a [JDF project (Joint Development Foundation)](https://www.jointdevelopment.org/) following the project and
 working group charters as defined in JDF charter template 4.0.1
 
 For source code contribution the project charter requests for non-working group participants the following:
 
 ```
-Non-Working Group Participant Feedback and Participation. Upon the Approval of the Working Group Participants, 
-the Working Group can request feedback from and/or allow Non-Working Group Participant participation in a Working Group, 
+Non-Working Group Participant Feedback and Participation. Upon the Approval of the Working Group Participants,
+the Working Group can request feedback from and/or allow Non-Working Group Participant participation in a Working Group,
 subject to each Non-Working Group Participant executing the Feedback Agreement set forth in Appendix B.
 ```
 
-``Appendix B`` with the placeholders set to:
+`Appendix B` with the placeholders set to:
 
-- [Project Name] = "OMP"
+- [Project Name] = "ESMF"
 - [Projects’s Source Code License] = "MPL 2.0"
-- [name of deliverable] = "SDS SDK JS Aspect Model loader"
+- [name of deliverable] = "ESMF JS Aspect Model loader"
 
 states:
 
-> ### OMP Feedback Agreement
->**
+> ### ESMF Feedback Agreement
 >
->Feedback
+> \*\*
 >
->The OMP (“Project”) is developing the SDS SDK JS Aspect Model loader (the “Materials”). Project would like to receive
+> Feedback
+>
+> The ESMF (“Project”) is developing the ESMF JS Aspect Model loader (the “Materials”). Project would like to receive
 > input,
 > suggestions and other feedback (“Feedback”) on the Materials. By signing below,
 > you (on behalf of yourself if you are an individual and your company if you are providing Feedback
@@ -140,12 +139,12 @@ states:
 > the Project Materials to third parties. Unless the parties agree otherwise, this obligation of non-disclosure will
 > expire five (5) years from the date the material was disclosed to you.
 >
->Source Code
+> Source Code
 >
->Any source code you provide to the Project is subject to the Developer Certificate of Origin version 1.1,
+> Any source code you provide to the Project is subject to the Developer Certificate of Origin version 1.1,
 > available at http://developercertificate.org/ and the MPL 2.0.
 
-This means, before making a pull request or providing an issue please sign the OMP Feedback Agreement for the
+This means, before making a pull request or providing an issue please sign the ESMF Feedback Agreement for the
 working group “Semantic Data Structuring”.
 
 ## Labeling
@@ -154,33 +153,34 @@ After new `Issues` or `PRs` are created, the `bug` and `task` label will be adde
 issue type.
 Later on the Chair or one of the maintainers may further assign a `label` to it according to this table:
 
-Label Types        | Description
--------------------| ----------------------------------------
-`to be discussed`        | Involvement and Discussion in one of the `working group` meetings are needed.
-`request for information`| The `working group` or the `maintainers` are requesting further information from the creator of the `Issue` or `PR`. If for a pre-defined time no information is received, then the `Issue` or `PR` can be closed.
-`approved` | Has been discussed and approved in the `working group`.
-`not accepted` | Has been discussed in the `working group` with the decision to close this issue.
+| Label Types               | Description                                                                                                                                                                                                        |
+|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `to be discussed`         | Involvement and Discussion in one of the `working group` meetings are needed.                                                                                                                                      |
+| `request for information` | The `working group` or the `maintainers` are requesting further information from the creator of the `Issue` or `PR`. If for a pre-defined time no information is received, then the `Issue` or `PR` can be closed. |
+| `approved`                | Has been discussed and approved in the `working group`.                                                                                                                                                            |
+| `not accepted`            | Has been discussed in the `working group` with the decision to close this issue.                                                                                                                                   |
 
 ### PR or Issue Discussion and Decision
 
-* You can provide comments to any `PR` or `Issue` via the comment function in GitHub
-* If no further involvement from the working group is required, a `maintainer` may merge a `PR`.
+- You can provide comments to any `PR` or `Issue` via the comment function in GitHub
+- If no further involvement from the working group is required, a `maintainer` may merge a `PR`.
   This mostly applies to bug fixes and non-API-breaking changes.
   A `PR` for a bug fix has to reference an issue of type `Bug Report`.
-* The `maintainers` may assign the label `to be discussed` to a proposal when further involvement from
+- The `maintainers` may assign the label `to be discussed` to a proposal when further involvement from
   the `working group` is required. This then triggers the following steps:
+
     1. The `Chair` of the `working group` puts the proposal up for discussion in one of the next `working group`
        meetings.
     2. The `working group` then uses Consensus Decision-Making with one of the outcomes listed below.
     3. The label `to be discussed` is removed.
 
-  | Decision | Next Steps |
-              | ------ | ------- |
-  |`Approved`| The `Issue` or the `PR` gets the label `approved`. In the case of a `PR`, the `maintainers` merge the respective `PR`. |
-  | `Discussion`| The `Issue` or the `PR` get the label `request for information`.
-  |`Close` | The `Issue` or the `PR` are closed and get the label `not accepted`. |
+  | Decision     | Next Steps                                                                                                             |
+              | ------------ | ---------------------------------------------------------------------------------------------------------------------- |
+  | `Approved`   | The `Issue` or the `PR` gets the label `approved`. In the case of a `PR`, the `maintainers` merge the respective `PR`. |
+  | `Discussion` | The `Issue` or the `PR` get the label `request for information`.                                                       |
+  | `Close`      | The `Issue` or the `PR` are closed and get the label `not accepted`.                                                   |
 
-* If the `working group` or the `maintainers` feel that further information is required to explain a `PR` or an `Issue`,
+- If the `working group` or the `maintainers` feel that further information is required to explain a `PR` or an `Issue`,
   they may request this information through the comment section of the `PR` or `Issue` and assign the label
   `request for information`. The `maintainers` may close the issue if no answer is received after a pre-defined time.
 
@@ -190,11 +190,11 @@ Note, that merging a `PR` leads to the closing of the `Issue` if it is linked in
 
 The following checklist can be seen as a basis for performing reviews on new `PRs`:
 
-- [ ] brief and useful commit messages
-- [ ] code convention is followed
-- [ ] the contribution matches to the linked issue and the description of the PR
-- [ ] provide clear documentation of new features (if applicable)
-- [ ] outline added third party dependencies
+-   [ ] brief and useful commit messages
+-   [ ] code convention is followed
+-   [ ] the contribution matches to the linked issue and the description of the PR
+-   [ ] provide clear documentation of new features (if applicable)
+-   [ ] outline added third party dependencies
 
 ### Commit Messages
 
@@ -214,8 +214,8 @@ The header should follow the following template:
 
 ```
 /*
- * Copyright (c) {YEAR} {NAME OF COMPANY X} 
- * Copyright (c) {YEAR} {NAME OF COMPANY Y} 
+ * Copyright (c) {YEAR} {NAME OF COMPANY X}
+ * Copyright (c) {YEAR} {NAME OF COMPANY Y}
  *
  * See the AUTHORS file(s) distributed with this work for additional
  * information regarding authorship.
@@ -232,7 +232,8 @@ When using the template, one must replace "{NAME OF COMPANY X}" with the name of
 with the year of the contribution. For each involved company you need a new line starting with "Copyright" as outlined
 in the example.
 
-The example is taken from a Typescript class file. If your file is of another type you may have to adapt the comment syntax
+The example is taken from a Typescript class file. If your file is of another type you may have to adapt the comment
+syntax
 accordingly.
 
 If you use third-party content (e.g., import / include ...), you are required to list each third-party content
@@ -242,36 +243,40 @@ E.g. software licensed under GPL, AGPL or, a similar strong copy-left license ca
 
 # Code Conventions
 
-The SDS SDK JS Aspect Model loader is written in the Typescript Programming Language. Please have a look into
+The ESMF JS Aspect Model loader is written in the Typescript Programming Language. Please have a look into
 our [Code Conventions](CONVENTIONS.md).
+
+<!-- Replace with ESMF -->
 
 # Release Process
 
 The working group may decide that it reached a stable state for the contents of the repository.
-To settle an agreement on this and provide downstream users with a stable version of the BAMM SDS SDK JS Aspect Model
+To settle an agreement on this and provide downstream users with a stable version of the SAMM ESMF JS Aspect Model
 loader,
 a release process can be triggered.
 
 For such a release the `working group` must approve the current state of the `main` branch as agreement.
 A `maintainer` of the repository then forks the `main` branch into a new branch that follows the naming
-convention `v{version_number}-RC`. The organization team of the OMP is then asked to `review & approve`
-the `v{version_number}-RC` branch. If the organization agrees on the approval the OMP steering committee needs to be
+convention `v{version_number}-RC`. The organization team of the ESMF is then asked to `review & approve`
+the `v{version_number}-RC` branch. If the organization agrees on the approval the ESMF steering committee needs to be
 notified. After that notification, a `maintainer` triggers the release feature from GitHub based on the commit on
 which the `v{version_number}-RC` branch is based.
 
+<!-- Replace with ESMF -->
+
 ## Versioning
 
-We use Semantic Versioning to identify released versions of the SDS SDK JS Aspect Model loader. Semantic Versioning is
+We use Semantic Versioning to identify released versions of the ESMF JS Aspect Model loader. Semantic Versioning is
 documented
 [here](https://semver.org). It proposes to have a versioning number with the following elements:
 
-````
+```
 Given a version number MAJOR.MINOR.PATCH, increment the:
 - MAJOR version when you make incompatible API changes,
 - MINOR version when you add functionality in a backwards compatible manner, and
 - PATCH version when you make backwards compatible bug fixes.
 Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
-````
+```
 
 Whereas the Major version must be incremented if the API has backward-incompatible changes (e.g., has breaking changes),
 the Minor version must be changed if new backward-compatible features are introduced and,
@@ -283,10 +288,10 @@ For the definition of a breaking change, we follow the definition as in the
 [Microsoft REST API Guidelines](https://github.com/Microsoft/api-guidelines/blob/vNext/Guidelines.md#123-definition-of-a-breaking-change)
 which are licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0). This definition states:
 
-````
-Changes to the contract of an API are considered a breaking change. Changes that impact the backwards compatibility 
+```
+Changes to the contract of an API are considered a breaking change. Changes that impact the backwards compatibility
 of an API are a breaking change.
-`````
+```
 
 ### Version Syntax for Specific Environments
 
@@ -300,7 +305,6 @@ v1.0.0-RC1, v1.0.0
 
 # Resources
 
-* [For a Repo](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork)
-* [Issue Creation](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue)
-* [PR Creation](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
-
+- [For a Repo](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork)
+- [Issue Creation](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue)
+- [PR Creation](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)

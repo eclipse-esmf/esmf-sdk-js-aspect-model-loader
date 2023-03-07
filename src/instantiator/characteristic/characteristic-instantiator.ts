@@ -14,20 +14,20 @@
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad, Util} from 'n3';
 import {Characteristic, DefaultCharacteristic, DefaultEntity, DefaultScalar, Entity, Type} from '../../aspect-meta-model';
-import {BammCharacteristicInstantiator} from './bamm-characteristic-instantiator';
+import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
 import {EntityInstantiator} from '../entity-instantiator';
 import {BaseConstraintCharacteristicInstantiator} from '../base-constraint-characteristic-instantiator';
 
 export class CharacteristicInstantiator extends BaseConstraintCharacteristicInstantiator {
-    private standardCharacteristicInstantiator: BammCharacteristicInstantiator;
+    private standardCharacteristicInstantiator: PredefinedCharacteristicInstantiator;
 
     constructor(protected metaModelElementInstantiator: MetaModelElementInstantiator, public nextProcessor?: CharacteristicInstantiator) {
         super(metaModelElementInstantiator, nextProcessor);
-        this.standardCharacteristicInstantiator = new BammCharacteristicInstantiator(metaModelElementInstantiator);
+        this.standardCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(metaModelElementInstantiator);
     }
 
     create(quad: Quad): Characteristic {
-        let characteristic: Characteristic = this.determineBAMMDefaultCharacteristic(quad);
+        let characteristic: Characteristic = this.determineDefaultCharacteristic(quad);
         if (characteristic) {
             return characteristic;
         }
@@ -36,7 +36,7 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
         characteristic.dataType = this.getDataType(
             this.metaModelElementInstantiator.rdfModel
                 .findAnyProperty(quad)
-                .find(propertyQuad => this.bamm.isDataTypeProperty(propertyQuad.predicate.value))
+                .find(propertyQuad => this.samm.isDataTypeProperty(propertyQuad.predicate.value))
         );
 
         if (characteristic.dataType && characteristic.dataType.isComplex) {
@@ -55,16 +55,16 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
         return <Characteristic>this.metaModelElementInstantiator.cacheService.resolveInstance(characteristic);
     }
 
-    private determineBAMMDefaultCharacteristic(quad: Quad): Characteristic | undefined {
+    private determineDefaultCharacteristic(quad: Quad): Characteristic | undefined {
         // resolve actual element quad in case of a blank node which is most likely the case
         // for characteristics
         const elementQuad = Util.isBlankNode(quad.object)
             ? this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value).shift()
             : quad;
 
-        // check if the found quad target a default BAMM characteristic e.g. Text or Code in this case
+        // check if the found quad target a default SAMM characteristic e.g. Text or Code in this case
         // return the exiting default characteristic
-        if (elementQuad.object.value.startsWith(this.metaModelElementInstantiator.BAMMC().getNamespace())) {
+        if (elementQuad.object.value.startsWith(this.metaModelElementInstantiator.sammC.getNamespace())) {
             const standardCharacteristic = this.standardCharacteristicInstantiator.createCharacteristic(<NamedNode>elementQuad.object);
             if (standardCharacteristic) {
                 return standardCharacteristic;
@@ -86,13 +86,13 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
     }
 
     isEntity(quad: Quad): boolean {
-        if (this.bamm.Entity().equals(quad.object) || this.bamm.AbstractEntity().equals(quad.object)) {
+        if (this.samm.Entity().equals(quad.object) || this.samm.AbstractEntity().equals(quad.object)) {
             return true;
         }
 
         const propertyFound = this.metaModelElementInstantiator.rdfModel
             .findAnyProperty(quad)
-            .find(quadProperty => this.bamm.Entity().equals(quadProperty.subject));
+            .find(quadProperty => this.samm.Entity().equals(quadProperty.subject));
 
         return !!propertyFound;
     }
@@ -119,7 +119,7 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
             const entity = new EntityInstantiator(this.metaModelElementInstantiator).createEntity(
                 quadEntity,
                 quadEntity.find(
-                    quad => this.bamm.isRdfTypeProperty(quad.predicate.value) && this.bamm.isAbstractEntity(quad.object.value)
+                    quad => this.samm.isRdfTypeProperty(quad.predicate.value) && this.samm.isAbstractEntity(quad.object.value)
                 ) !== undefined
             );
             return <Entity>this.metaModelElementInstantiator.cacheService.resolveInstance(entity);
@@ -131,17 +131,17 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
     private getEffectiveType(quad: Quad): Quad {
         if (Util.isBlankNode(quad.subject)) {
             let resolvedQuad: Array<Quad>;
-            if (this.bamm.isDataTypeProperty(quad.predicate.value)) {
+            if (this.samm.isDataTypeProperty(quad.predicate.value)) {
                 resolvedQuad = [quad];
             } else {
                 resolvedQuad = this.metaModelElementInstantiator.rdfModel.store.getQuads(quad.subject, null, null, null);
             }
 
-            quad = resolvedQuad.find(propertyQuad => this.bamm.isDataTypeProperty(propertyQuad.predicate.value));
-        } else if (quad.predicate.value === `${this.bamm.getRdfSyntaxNameSpace()}type`) {
+            quad = resolvedQuad.find(propertyQuad => this.samm.isDataTypeProperty(propertyQuad.predicate.value));
+        } else if (quad.predicate.value === `${this.samm.getRdfSyntaxNameSpace()}type`) {
             const resolvedQuad = this.metaModelElementInstantiator.rdfModel.store.getQuads(quad.subject, null, null, null);
 
-            quad = resolvedQuad.find(propertyQuad => this.bamm.isDataTypeProperty(propertyQuad.predicate.value));
+            quad = resolvedQuad.find(propertyQuad => this.samm.isDataTypeProperty(propertyQuad.predicate.value));
         }
 
         return quad;

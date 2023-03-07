@@ -27,6 +27,6 @@ export class TimeSeriesCharacteristicInstantiator extends SortedSetCharacteristi
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().TimeSeriesCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.TimeSeriesCharacteristic().equals(nameNode);
     }
 }

@@ -119,7 +119,7 @@ export class DefaultProperty extends Base implements Property {
 }
 
 /**
- * Properties which are defined inline e.g. bamm:properties ( [ bamm:extends :abstractTestProperty ; bamm:characteristic bamm-c:Text ] ).
+ * Properties which are defined inline e.g. samm:properties ( [ samm:extends :abstractTestProperty ; samm:characteristic samm-c:Text ] ).
  */
 export class DefaultPropertyInstanceDefinition implements Property {
     /**

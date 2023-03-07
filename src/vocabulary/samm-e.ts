@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Bamm} from './bamm';
+import {Samm} from './samm';
 
-export class Bamme {
-    private alias = 'bamm-e';
+export class SammE {
+    private alias = 'samm-e';
 
-    constructor(private bamm: Bamm) {}
+    constructor(private samm: Samm) {}
 
     getAlias(): string {
         return this.alias;
@@ -27,7 +27,7 @@ export class Bamme {
     }
 
     getUri(): string {
-        return `${Bamm.getBaseUri()}entity:${this.bamm.version}`;
+        return `${Samm.getBaseUri()}entity:${this.samm.version}`;
     }
 
     getNamespace(): string {

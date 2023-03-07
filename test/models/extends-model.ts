@@ -12,66 +12,66 @@
  */
 
 export const extendsAspectModel = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:2.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:2.0.0#>.
 
-:AspectDefault a bamm:Aspect ;
-    bamm:properties (:vehicleWheel :vehicleSeat) ;
-    bamm:operations () ;
-    bamm:events () .
+:AspectDefault a samm:Aspect ;
+    samm:properties (:vehicleWheel :vehicleSeat) ;
+    samm:operations () ;
+    samm:events () .
 
-:vehicleWheel a bamm:Property ;
-    bamm:preferredName "Vehicle wheel"@en ;
-    bamm:characteristic :WheelCharacteristic .
+:vehicleWheel a samm:Property ;
+    samm:preferredName "Vehicle wheel"@en ;
+    samm:characteristic :WheelCharacteristic .
 
-:vehicleSeat a bamm:Property ;
-    bamm:preferredName "Vehicle seat"@en ;
-    bamm:characteristic :SeatCharacteristic .
+:vehicleSeat a samm:Property ;
+    samm:preferredName "Vehicle seat"@en ;
+    samm:characteristic :SeatCharacteristic .
     
-:WheelCharacteristic a bamm-c:SingleEntity ;
-   bamm:preferredName "Vehicle Wheel Characteristic"@en ;
-   bamm:description "Represents the wheel type"@en ;
-   bamm:dataType :Steeringwheel .
+:WheelCharacteristic a samm-c:SingleEntity ;
+   samm:preferredName "Vehicle Wheel Characteristic"@en ;
+   samm:description "Represents the wheel type"@en ;
+   samm:dataType :Steeringwheel .
 
-:SeatCharacteristic a bamm-c:SingleEntity ;
-   bamm:preferredName "Vehicle Seat Characteristic"@en ;
-   bamm:description "Represents the seat type"@en ;
-   bamm:dataType :Seat .
+:SeatCharacteristic a samm-c:SingleEntity ;
+   samm:preferredName "Vehicle Seat Characteristic"@en ;
+   samm:description "Represents the seat type"@en ;
+   samm:dataType :Seat .
       
-:VehicleComponent a bamm:AbstractEntity ;
-    bamm:preferredName "Vehicle Component"@en ;
-    bamm:description "Represents a general component"@en ;
-    bamm:see "http://reference.general" ;
-    bamm:properties ( :typeNumber :manufacturer :abstractTestProperty) .
+:VehicleComponent a samm:AbstractEntity ;
+    samm:preferredName "Vehicle Component"@en ;
+    samm:description "Represents a general component"@en ;
+    samm:see "http://reference.general" ;
+    samm:properties ( :typeNumber :manufacturer :abstractTestProperty) .
 
-:typeNumber a bamm:Property ;
-    bamm:dataType xsd:string .
+:typeNumber a samm:Property ;
+    samm:dataType xsd:string .
 
-:manufacturer a bamm:Property ;
-    bamm:dataType xsd:string .
+:manufacturer a samm:Property ;
+    samm:dataType xsd:string .
 
-:Steeringwheel a bamm:Entity ;
-    bamm:extends :VehicleComponent ;
-    bamm:preferredName "Vehicle Steering Wheel"@en ;
-    bamm:properties ( :isMultifunction [ bamm:extends :abstractTestProperty ; bamm:characteristic bamm-c:Text ] ) .
+:Steeringwheel a samm:Entity ;
+    samm:extends :VehicleComponent ;
+    samm:preferredName "Vehicle Steering Wheel"@en ;
+    samm:properties ( :isMultifunction [ samm:extends :abstractTestProperty ; samm:characteristic samm-c:Text ] ) .
 
-:isMultifunction a bamm:Property ;
-    bamm:dataType xsd:boolean .
+:isMultifunction a samm:Property ;
+    samm:dataType xsd:boolean .
 
-:Seat a bamm:Entity ;
-    bamm:extends :VehicleComponent ;
-    bamm:description "Represents a seat component"@en ;
-    bamm:see "http://reference.seat" ;
-    bamm:properties ( :material ) .
+:Seat a samm:Entity ;
+    samm:extends :VehicleComponent ;
+    samm:description "Represents a seat component"@en ;
+    samm:see "http://reference.seat" ;
+    samm:properties ( :material ) .
     
-:material a bamm:Property ;
-    bamm:dataType xsd:string .
+:material a samm:Property ;
+    samm:dataType xsd:string .
 
-:abstractTestProperty a bamm:AbstractProperty ;
-    bamm:description "The something part of the vector"@en .
+:abstractTestProperty a samm:AbstractProperty ;
+    samm:description "The something part of the vector"@en .
     
 `;

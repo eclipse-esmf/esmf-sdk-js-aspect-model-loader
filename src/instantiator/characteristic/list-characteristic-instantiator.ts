@@ -28,6 +28,6 @@ export class ListCharacteristicInstantiator extends CollectionCharacteristicInst
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().ListCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.ListCharacteristic().equals(nameNode);
     }
 }

@@ -23,12 +23,12 @@ export class EitherCharacteristicInstantiator extends CharacteristicInstantiator
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const sammC = this.metaModelElementInstantiator.sammC;
         const defaultEither = new DefaultEither(null, null, null, null, null);
         quads.forEach(quad => {
-            if (bammc.isEitherLeftProperty(quad.predicate.value)) {
+            if (sammC.isEitherLeftProperty(quad.predicate.value)) {
                 defaultEither.left = this.metaModelElementInstantiator.getCharacteristic(quad);
-            } else if (bammc.isEitherRightProperty(quad.predicate.value)) {
+            } else if (sammC.isEitherRightProperty(quad.predicate.value)) {
                 defaultEither.right = this.metaModelElementInstantiator.getCharacteristic(quad);
             }
         });
@@ -37,6 +37,6 @@ export class EitherCharacteristicInstantiator extends CharacteristicInstantiator
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().EitherCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.EitherCharacteristic().equals(nameNode);
     }
 }
