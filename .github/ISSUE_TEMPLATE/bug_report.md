@@ -11,7 +11,7 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **Where**
-Indicate the location of the bug (e.g., which component of the SDS SDK JS Aspect Model loader, which API call, which
+Indicate the location of the bug (e.g., which component of the ESMF SDK JS Aspect Model loader, which API call, which
 command
 etc.).
 

@@ -14,8 +14,8 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v3
 
-      - run: git config --global user.email "info@open-manufacturing.org"
-      - run: git config --global user.name "OpenManufacturing"
+      - run: git config --global user.email "info@eclipse.org"
+      - run: git config --global user.name "Eclipse Foundation
 
       - name: Cache node modules
         uses: actions/cache@v3
@@ -58,7 +58,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: sds-aspect-model-loader-${{ env.tagVersion }}.tgz
+          file: esmf-aspect-model-loader-${{ env.tagVersion }}.tgz
           tag: ${{ github.ref }}
 
       - name: Create GitHub pre-release
@@ -68,5 +68,5 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: sds-aspect-model-loader-${{ env.tagVersion }}.tgz
+          file: esmf-aspect-model-loader-${{ env.tagVersion }}.tgz
           tag: ${{ github.ref }}
