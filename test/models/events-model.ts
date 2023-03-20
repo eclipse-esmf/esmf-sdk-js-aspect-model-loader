@@ -17,7 +17,7 @@ export const eventAspectModel = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#
 @prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
 @prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
 :AspectDefault a samm:Aspect;
     samm:name "AspectDefault";
