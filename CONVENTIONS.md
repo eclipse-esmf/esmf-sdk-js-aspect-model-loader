@@ -1,12 +1,12 @@
-# ESMF JS Aspect Model loader Code Conventions
+# ESMF Code Conventions
 
-The following document contains a compilation of conventions and guidelines to format, structure and write code for the
-ESMF JS Aspect Model loader.
+The following document contains a compilation of conventions and guidelines to format, structure and
+write code for the ESMF SDK JS Aspect Model loader.
 
 ## General Conventions
 
 Our code conventions are based on the [Google Typescript Style Guide](https://google.github.io/styleguide/tsguide.html)
-but detailed and adjusted for the needs of the ESMF JS Aspect Model loader.
+but detailed and adjusted for the needs of the ESMF SDK JS Aspect Model loader.
 
 ## Copyright header
 
@@ -32,8 +32,9 @@ Developer documentation is put into a README.md placed in the project root. This
 
 ### User documentation
 
-User documentation (this includes technical documentation on how to use an application or tool from
-the ESMF JS Aspect Model loader) should be on its own.
+User documentation (this includes technical documentation on how to use an application or tool from the SDK) should be
+on
+its own.
 It is written in AsciiDoc, rendered with [Antora](https://antora.org) and the generated static content is
 publically hosted for direct user access.
 The source files of the documentation are placed in a subfolder /documentation from the project root.
@@ -47,9 +48,3 @@ way more targeted towards writing fully fledged documents and with its multitude
 very good source format.
 Publishing is realized by means of [Github pages](https://docs.antora.org/antora/2.3/publish-to-github-pages/).
 
-### High Level Documentation
-
-Technical documentation targeted towards components and architecture should be accessible via the developer
-documentation.
-Corresponding discussions on design etc. can be placed in the project wiki on
-[Github](https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/wiki).
