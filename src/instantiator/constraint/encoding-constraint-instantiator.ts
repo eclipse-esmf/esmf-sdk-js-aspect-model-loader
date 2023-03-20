@@ -22,11 +22,11 @@ export class EncodingConstraintInstantiator extends ConstraintInstantiator {
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const encodingConstraint = new DefaultEncodingConstraint(null, null, null, null);
 
         quads.forEach(quad => {
-            if (bamm.isValueProperty(quad.predicate.value)) {
+            if (samm.isValueProperty(quad.predicate.value)) {
                 encodingConstraint.value = quad.object.value;
             }
         });
@@ -35,6 +35,6 @@ export class EncodingConstraintInstantiator extends ConstraintInstantiator {
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().EncodingConstraint().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.EncodingConstraint().equals(nameNode);
     }
 }

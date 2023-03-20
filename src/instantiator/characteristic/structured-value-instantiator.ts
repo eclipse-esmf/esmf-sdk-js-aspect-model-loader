@@ -24,13 +24,13 @@ export class StructuredValueCharacteristicInstantiator extends CharacteristicIns
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const sammC = this.metaModelElementInstantiator.sammC;
         const structuredValueCharacteristic = new DefaultStructuredValue(null, null, null, null, null, null);
         const property = new PropertyInstantiator(this.metaModelElementInstantiator);
         quads.forEach(quad => {
-            if (bammc.isDeconstructionRuleProperty(quad.predicate.value)) {
+            if (sammC.isDeconstructionRuleProperty(quad.predicate.value)) {
                 structuredValueCharacteristic.deconstructionRule = quad.object.value;
-            } else if (bammc.isElementsProperty(quad.predicate.value)) {
+            } else if (sammC.isElementsProperty(quad.predicate.value)) {
                 structuredValueCharacteristic.elements = [];
                 const structuredValueElementsQuad = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
                 structuredValueCharacteristic.elements = structuredValueElementsQuad.map(elementQuad => {
@@ -46,6 +46,6 @@ export class StructuredValueCharacteristicInstantiator extends CharacteristicIns
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().StructuredValueCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.StructuredValueCharacteristic().equals(nameNode);
     }
 }

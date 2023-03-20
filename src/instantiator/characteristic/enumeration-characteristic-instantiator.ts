@@ -15,7 +15,7 @@ import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad, Util} from 'n3';
 import {Characteristic} from '../../aspect-meta-model';
 import {DefaultEnumeration, Enumeration} from '../../aspect-meta-model/characteristic/default-enumeration';
-import {Bamm} from '../../vocabulary';
+import {Samm} from '../../vocabulary';
 import {EntityInstantiator} from '../entity-instantiator';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
 
@@ -25,14 +25,14 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bamm = this.metaModelElementInstantiator.BAMM();
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const samm = this.metaModelElementInstantiator.samm;
+        const sammC = this.metaModelElementInstantiator.sammC;
         const enumeration = this.creatEnumerationObject();
 
-        const dataType = quads.find(quad => this.bamm.isDataTypeProperty(quad.predicate.value));
+        const dataType = quads.find(quad => this.samm.isDataTypeProperty(quad.predicate.value));
 
         quads.forEach(quad => {
-            if (bamm.isValueProperty(quad.predicate.value) || bammc.isValuesProperty(quad.predicate.value)) {
+            if (samm.isValueProperty(quad.predicate.value) || sammC.isValuesProperty(quad.predicate.value)) {
                 if (Util.isBlankNode(quad.object)) {
                     enumeration.values = this.getEnumerationValues(quad, dataType?.object.value);
                 }
@@ -87,7 +87,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     protected resolveEntityInstance(quad: Quad): DefaultEntityInstance {
         const entityInstanceQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(quad.object, null, null, null);
         const entityTypeQuad = entityInstanceQuads.find(
-            entityInstanceQuad => entityInstanceQuad.predicate.value === `${Bamm.RDF_URI}#type`
+            entityInstanceQuad => entityInstanceQuad.predicate.value === `${Samm.RDF_URI}#type`
         );
 
         if (entityTypeQuad) {
@@ -102,10 +102,12 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
                     entity.properties.find(property => property.isNotInPayload === false && quad.predicate.id)
             );
             const descriptions = new Map<string, string>();
-            if(descriptionQuad) {
+            if (descriptionQuad) {
                 entityInstanceQuads
                     .filter(quad => quad.predicate.id === descriptionQuad.predicate.id)
-                    .forEach(quad => descriptions.set(this.metaModelElementInstantiator.rdfModel.getLocale(quad) || 'en', quad.object.value));
+                    .forEach(quad =>
+                        descriptions.set(this.metaModelElementInstantiator.rdfModel.getLocale(quad) || 'en', quad.object.value)
+                    );
             }
 
             // create the related instance and attach the metamodel element to it
@@ -120,6 +122,6 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().EnumerationCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.EnumerationCharacteristic().equals(nameNode);
     }
 }

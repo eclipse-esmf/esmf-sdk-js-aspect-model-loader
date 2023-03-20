@@ -14,22 +14,21 @@
 import {DataFactory, NamedNode, Quad, Store, Util} from 'n3';
 import {RdfModelUtil} from './rdf-model-util';
 import * as locale from 'locale-codes';
-import {Bamm} from '../vocabulary/bamm';
-import {Bammc} from '../vocabulary/bammc';
-import {Bamme} from '../vocabulary/bamme';
-import {Bammu} from '../vocabulary/bammu';
+import {Samm} from '../vocabulary/samm';
+import {SammC} from '../vocabulary/samm-c';
+import {SammE} from '../vocabulary/samm-e';
+import {SammU} from '../vocabulary/samm-u';
 import {XsdDataTypes} from './xsd-datatypes';
-import {BammVersion, KnownVersion} from './known-version';
+import {KnownVersion, SammVersion} from './known-version';
 
 export class RdfModel {
     private prefixes = Array<string>();
-    private metaModelVersion;
+    private metaModelVersion: string;
 
-    private readonly bamm: Bamm;
-    private readonly bammc: Bammc;
-    private readonly bamme: Bamme;
-    private readonly bammu: Bammu;
-
+    public readonly samm: Samm;
+    public readonly sammC: SammC;
+    public readonly sammE: SammE;
+    public readonly sammU: SammU;
     public xsdDataTypes: XsdDataTypes;
 
     constructor(public store: Store, metaModelVersion?: string, aspectModelUrn?: string) {
@@ -39,22 +38,22 @@ export class RdfModel {
             this.resolveMetaModelVersion();
         }
         this.xsdDataTypes = new XsdDataTypes(this.metaModelVersion);
-        this.bamm = new Bamm(this.metaModelVersion);
-        this.bammc = new Bammc(this.bamm);
-        this.bamme = new Bamme(this.bamm);
-        this.bammu = new Bammu(this.bamm);
+        this.samm = new Samm(this.metaModelVersion);
+        this.sammC = new SammC(this.samm);
+        this.sammE = new SammE(this.samm);
+        this.sammU = new SammU(this.samm);
         if (aspectModelUrn) {
             this.addPrefix('', `${aspectModelUrn}#`);
         }
-        this.addPrefix('xsd', this.BAMM().getXSDNameSpace());
-        this.addPrefix(this.BAMM().getAlias(), this.BAMM().getNamespace());
-        this.addPrefix(this.BAMMU().getAlias(), this.BAMMU().getNamespace());
-        this.addPrefix(this.BAMMC().getAlias(), this.BAMMC().getNamespace());
-        this.addPrefix(this.BAMME().getAlias(), this.BAMME().getNamespace());
+        this.addPrefix('xsd', this.samm.getXSDNameSpace());
+        this.addPrefix(this.samm.getAlias(), this.samm.getNamespace());
+        this.addPrefix(this.sammU.getAlias(), this.sammU.getNamespace());
+        this.addPrefix(this.sammC.getAlias(), this.sammC.getNamespace());
+        this.addPrefix(this.sammE.getAlias(), this.sammE.getNamespace());
         this.resolveNamespaces();
     }
 
-    public getMetaModelVersion(): BammVersion | undefined {
+    public getMetaModelVersion(): SammVersion | undefined {
         return KnownVersion.fromVersionString(this.metaModelVersion) || undefined;
     }
 
@@ -85,7 +84,7 @@ export class RdfModel {
         this.store.getQuads(DataFactory.blankNode(uri), null, null, null).forEach(value => {
             if (Util.isBlankNode(value.object)) {
                 this.resolveBlankNodes(value.object.value, resolvedNodes);
-            } else if (!value.object.value.startsWith(Bamm.RDF_URI)) {
+            } else if (!value.object.value.startsWith(Samm.RDF_URI)) {
                 resolvedNodes.push(DataFactory.quad(value.subject, value.predicate, value.object));
             }
         });
@@ -117,7 +116,7 @@ export class RdfModel {
     private resolveMetaModelVersion(): void {
         const metaModelPrefix = this.store
             .getQuads(null, null, null, null)
-            .find(quad => quad.object.value.startsWith('urn:bamm:io.openmanufacturing:meta-model:'));
+            .find(quad => quad.object.value.startsWith('urn:samm:org.eclipse.esmf.samm:meta-model:'));
         if (metaModelPrefix) {
             const prefixPart = metaModelPrefix.object.value.split(':');
             this.metaModelVersion = prefixPart[prefixPart.length - 1].split('#')[0];
@@ -133,21 +132,5 @@ export class RdfModel {
                 this.addPrefix(RdfModelUtil.resolveNamespaceAlias(namespace, this.metaModelVersion || ''), namespace);
             }
         });
-    }
-
-    public BAMM(): Bamm {
-        return this.bamm;
-    }
-
-    public BAMMC(): Bammc {
-        return this.bammc;
-    }
-
-    public BAMME(): Bamme {
-        return this.bamme;
-    }
-
-    public BAMMU(): Bammu {
-        return this.bammu;
     }
 }

@@ -25,11 +25,11 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const sammC = this.metaModelElementInstantiator.sammC;
         const stateCharacteristic = <DefaultState>super.processElement(quads);
 
         quads.forEach(quad => {
-            if (bammc.isDefaultValueProperty(quad.predicate.value)) {
+            if (sammC.isDefaultValueProperty(quad.predicate.value)) {
                 stateCharacteristic.defaultValue = Util.isLiteral(quad.object) ? `${quad.object.value}` : this.resolveEntityInstance(quad);
             }
         });
@@ -42,6 +42,6 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().StateCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.StateCharacteristic().equals(nameNode);
     }
 }

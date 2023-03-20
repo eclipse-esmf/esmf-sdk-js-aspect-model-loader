@@ -13,20 +13,20 @@
 
 import {DefaultQuantityKind, QuantityKind} from '../aspect-meta-model/default-quantity-kind';
 import {DefaultUnit, Unit} from '../aspect-meta-model/default-unit';
-import {Bamm, Bammu} from '../vocabulary';
+import {Samm, SammU} from '../vocabulary';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
 import {DataFactory} from 'n3';
 import {Units} from '../shared/units';
 
-export class BammUnitInstantiator {
-    private readonly bammu: Bammu;
-    private readonly bamm: Bamm;
+export class PredefinedUnitInstantiator {
+    private readonly sammU: SammU;
+    private readonly samm: Samm;
     private readonly units: Units;
 
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
-        this.bammu = this.metaModelElementInstantiator.BAMMU();
-        this.bamm = this.metaModelElementInstantiator.BAMM();
-        this.units = new Units(this.bammu);
+        this.sammU = this.metaModelElementInstantiator.sammU;
+        this.samm = this.metaModelElementInstantiator.samm;
+        this.units = new Units(this.sammU);
     }
 
     getUnit(name: string): Unit {
@@ -36,11 +36,11 @@ export class BammUnitInstantiator {
 
     createQuantityKind(name: string): QuantityKind {
         if (name) {
-            const quantityKind = this.units.getQuantityKind(name.replace(this.bammu.getNamespace(), ''));
+            const quantityKind = this.units.getQuantityKind(name.replace(this.sammU.getNamespace(), ''));
             if (quantityKind) {
                 return new DefaultQuantityKind(
-                    this.bamm.version,
-                    `${this.metaModelElementInstantiator.BAMMU().getDefaultQuantityKindsUri()}${quantityKind.name}`,
+                    this.samm.version,
+                    `${this.metaModelElementInstantiator.sammU.getDefaultQuantityKindsUri()}${quantityKind.name}`,
                     quantityKind.name,
                     quantityKind.label
                 );
@@ -52,13 +52,13 @@ export class BammUnitInstantiator {
     createUnit(name: string): Unit {
         if (name) {
             const quantityKindNames = new Array<string>();
-            const unit = this.units.getUnit(name.replace(this.bammu.getNamespace(), ''));
-            const defaultUnit = new DefaultUnit(this.bamm.version, null, null, null, null, null);
+            const unit = this.units.getUnit(name.replace(this.sammU.getNamespace(), ''));
+            const defaultUnit = new DefaultUnit(this.samm.version, null, null, null, null, null);
 
             if (unit) {
                 defaultUnit.name = unit.name;
                 defaultUnit.addPreferredName('en', unit.label);
-                defaultUnit.aspectModelUrn = `${this.metaModelElementInstantiator.BAMMU().getDefaultUnitUri()}#${defaultUnit.name}`;
+                defaultUnit.aspectModelUrn = `${this.metaModelElementInstantiator.sammU.getDefaultUnitUri()}#${defaultUnit.name}`;
                 defaultUnit.symbol = unit.symbol;
                 defaultUnit.code = unit.code;
                 defaultUnit.referenceUnit = unit.referenceUnit ? unit.referenceUnit().name : null;
@@ -73,15 +73,15 @@ export class BammUnitInstantiator {
                 );
 
                 unitPropertyQuads.forEach(quad => {
-                    if (this.bamm.isSymbolProperty(quad.predicate.value)) {
+                    if (this.samm.isSymbolProperty(quad.predicate.value)) {
                         defaultUnit.symbol = quad.object.value;
-                    } else if (this.bamm.isReferenceUnitProperty(quad.predicate.value)) {
+                    } else if (this.samm.isReferenceUnitProperty(quad.predicate.value)) {
                         defaultUnit.referenceUnit = quad.object.value;
-                    } else if (this.bamm.isConversionFactorProperty(quad.predicate.value)) {
+                    } else if (this.samm.isConversionFactorProperty(quad.predicate.value)) {
                         defaultUnit.conversionFactor = quad.object.value;
-                    } else if (this.bammu.isCodeProperty(quad.predicate.value)) {
+                    } else if (this.sammU.isCodeProperty(quad.predicate.value)) {
                         defaultUnit.code = quad.object.value;
-                    } else if (this.bamm.isQuantityKindProperty(quad.predicate.value)) {
+                    } else if (this.samm.isQuantityKindProperty(quad.predicate.value)) {
                         quantityKindNames.push(quad.object.value);
                     }
                 });

@@ -13,15 +13,15 @@
 
 import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity';
 import {DefaultProperty} from '../aspect-meta-model/default-property';
-import {BammCharacteristicInstantiator} from './characteristic/bamm-characteristic-instantiator';
+import {PredefinedCharacteristicInstantiator} from './characteristic/predefined-characteristic-instantiator';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
 
-export class BammEntityInstantiator {
+export class PredefinedEntityInstantiator {
     private entityInstanceList = [];
 
     constructor(
         private metaModelElementInstantiator: MetaModelElementInstantiator,
-        private bammcInstantiator: BammCharacteristicInstantiator
+        private sammCInstantiator: PredefinedCharacteristicInstantiator
     ) {
         this.entityInstanceList['FileResource'] = this.createFileResourceEntity.bind(this);
         this.entityInstanceList['Point3d'] = this.create3dPointEntity.bind(this);
@@ -30,8 +30,8 @@ export class BammEntityInstantiator {
 
     private createTimeSeriesEntity(): Entity {
         const entity = new DefaultEntity(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('TimeSeriesEntity'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('TimeSeriesEntity'),
             'TimeSeriesEntity',
             null
         );
@@ -42,17 +42,17 @@ export class BammEntityInstantiator {
         );
 
         const timestamp = new DefaultProperty(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('timestamp'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('timestamp'),
             'timestamp',
-            this.bammcInstantiator.createTimestampCharacteristic()
+            this.sammCInstantiator.createTimestampCharacteristic()
         );
         timestamp.addPreferredName('en', 'Timestamp');
         timestamp.addDescription('en', 'The specific point in time when the corresponding value was recorded.');
 
         const value = new DefaultProperty(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('value'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('value'),
             'value',
             null
         );
@@ -67,8 +67,8 @@ export class BammEntityInstantiator {
 
     private create3dPointEntity(): Entity {
         const entity = new DefaultEntity(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('Point3d'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('Point3d'),
             'ThreeDimensionalPosition',
             null
         );
@@ -76,8 +76,8 @@ export class BammEntityInstantiator {
         entity.addDescription('en', 'Defines a position in a three dimensional space.');
 
         const x = new DefaultProperty(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('x'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('x'),
             'x',
             null
         );
@@ -86,8 +86,8 @@ export class BammEntityInstantiator {
         x.addDescription('en', 'The position along the X axis.');
 
         const y = new DefaultProperty(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('y'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('y'),
             'y',
             null
         );
@@ -96,8 +96,8 @@ export class BammEntityInstantiator {
         y.addDescription('en', 'The position along the Y axis.');
 
         const z = new DefaultProperty(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('z'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('z'),
             'z',
             null
         );
@@ -112,8 +112,8 @@ export class BammEntityInstantiator {
 
     private createFileResourceEntity(): Entity {
         const entity = new DefaultEntity(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('FileResource'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('FileResource'),
             'FileResource',
             null
         );
@@ -121,19 +121,19 @@ export class BammEntityInstantiator {
         entity.addDescription('en', 'A file in a specific format');
 
         const resource = new DefaultProperty(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('resource'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('resource'),
             'resource',
-            this.bammcInstantiator.createTimestampCharacteristic()
+            this.sammCInstantiator.createTimestampCharacteristic()
         );
         resource.addPreferredName('en', 'Resource');
         resource.addDescription('en', 'Location of a resource.');
 
         const mimeType = new DefaultProperty(
-            this.metaModelElementInstantiator.BAMM().version,
-            this.metaModelElementInstantiator.BAMME().getAspectModelUrn('mimeType'),
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('mimeType'),
             'mimeType',
-            this.bammcInstantiator.createTimestampCharacteristic()
+            this.sammCInstantiator.createTimestampCharacteristic()
         );
         mimeType.addPreferredName('en', 'MIME Type');
         mimeType.addDescription('en', 'A MIME type as defined in RFC 2046.');

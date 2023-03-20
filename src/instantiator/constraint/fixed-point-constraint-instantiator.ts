@@ -22,13 +22,13 @@ export class FixedPointConstraintInstantiator extends ConstraintInstantiator {
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const sammC = this.metaModelElementInstantiator.sammC;
         const defaultFixedPointConstraint = new DefaultFixedPointConstraint(null, null, null, null, null);
 
         quads.forEach(quad => {
-            if (bammc.isScaleValueProperty(quad.predicate.value)) {
+            if (sammC.isScaleValueProperty(quad.predicate.value)) {
                 defaultFixedPointConstraint.scale = Number(quad.object.value);
-            } else if (bammc.isIntegerValueProperty(quad.predicate.value)) {
+            } else if (sammC.isIntegerValueProperty(quad.predicate.value)) {
                 defaultFixedPointConstraint.integer = Number(quad.object.value);
             }
         });
@@ -37,6 +37,6 @@ export class FixedPointConstraintInstantiator extends ConstraintInstantiator {
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().FixedPointConstraint().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.FixedPointConstraint().equals(nameNode);
     }
 }

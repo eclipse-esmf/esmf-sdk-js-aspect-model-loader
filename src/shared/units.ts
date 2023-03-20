@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Bammu} from '../vocabulary';
+import {SammU} from '../vocabulary';
 
 export class Units {
-    constructor(private bammu: Bammu) {}
+    constructor(private sammU: SammU) {}
 
     getUnit(name: string) {
-        return units.units[name.replace(this.bammu.getNamespace(), '')];
+        return units.units[name.replace(this.sammU.getNamespace(), '')];
     }
 
     getQuantityKind(name: string) {
-        return units.quantityKinds[name.replace(this.bammu.getNamespace(), '')];
+        return units.quantityKinds[name.replace(this.sammU.getNamespace(), '')];
     }
 
     getSupportedQuantityKindsNames(): Array<string> {

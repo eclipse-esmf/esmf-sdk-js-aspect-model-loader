@@ -13,96 +13,96 @@
 
 export const characteristicClassString = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :CharacteristicTest.
-:CharacteristicTest a bamm:Characteristic;
-    bamm:name "CharacteristicTest";
-    bamm:dataType xsd:string;
-    bamm:preferredName "PreferredName"@en;
-    bamm:description "This is a test description!"@en;
-    bamm:see <https%3A%2F%2Ftestcharacteristic.com>.
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :CharacteristicTest.
+:CharacteristicTest a samm:Characteristic;
+    samm:name "CharacteristicTest";
+    samm:dataType xsd:string;
+    samm:preferredName "PreferredName"@en;
+    samm:description "This is a test description!"@en;
+    samm:see <https%3A%2F%2Ftestcharacteristic.com>.
 
 `;
 
 export const collectionCharacteristicClassString = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:name "property1";
-    bamm:characteristic :CharacteristicTest.
-:Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1";
-    bamm:dataType xsd:string;
-    bamm:description "This is an element Characteristic!"@en.
-:CharacteristicTest a bamm-c:Collection;
-    bamm:name "CharacteristicTest";
-    bamm:preferredName "PreferredName"@en;
-    bamm:description "This is a test description!"@en;
-    bamm:see <https%3A%2F%2Ftestcharacteristic.com>;
-    bamm-c:elementCharacteristic :Characteristic1.
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :CharacteristicTest.
+:Characteristic1 a samm:Characteristic;
+    samm:name "Characteristic1";
+    samm:dataType xsd:string;
+    samm:description "This is an element Characteristic!"@en.
+:CharacteristicTest a samm-c:Collection;
+    samm:name "CharacteristicTest";
+    samm:preferredName "PreferredName"@en;
+    samm:description "This is a test description!"@en;
+    samm:see <https%3A%2F%2Ftestcharacteristic.com>;
+    samm-c:elementCharacteristic :Characteristic1.
 `;
 
 export const enumerationCharacteristicClassEntity = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties (:resultState :resultStateNoDesc);
-    bamm:operations ().
-:resultState a bamm:Property ;
-    bamm:name           "resultState" ;
-    bamm:preferredName  "Last Recent Result State"@en ;
-    bamm:description    "Result state of a part defines if the manufacturing is ok or nok in the current process"@en ;
-    bamm:characteristic :ResultState .
-:ResultState a bamm-c:Enumeration ;
-    bamm:name          "ResultState" ;
-    bamm:preferredName "Result State"@en ;
-    bamm:description   "Result state of a processed part from production"@en ;
-    bamm:dataType      :ResultEntity ;
-    bamm-c:values      ( :OKState
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:resultState :resultStateNoDesc);
+    samm:operations ().
+:resultState a samm:Property ;
+    samm:name           "resultState" ;
+    samm:preferredName  "Last Recent Result State"@en ;
+    samm:description    "Result state of a part defines if the manufacturing is ok or nok in the current process"@en ;
+    samm:characteristic :ResultState .
+:ResultState a samm-c:Enumeration ;
+    samm:name          "ResultState" ;
+    samm:preferredName "Result State"@en ;
+    samm:description   "Result state of a processed part from production"@en ;
+    samm:dataType      :ResultEntity ;
+    samm-c:values      ( :OKState
                          :NOKState ) .
-:ResultEntity a bamm:Entity ;
-    bamm:name          "ResultEntity" ;
-    bamm:preferredName "Result Entity"@en ;
-    bamm:description   "Entity that describes a result state from production of a processed part."@en ;
-    bamm:properties    ( :resultStateAttributeValue
-                         [ bamm:property     :resultStateAttributeDescription ;
-                           bamm:notInPayload "true"^^xsd:boolean ] ) .
-:resultStateAttributeValue a bamm:Property ;
-    bamm:name           "resultStateAttributeValue" ;
-    bamm:preferredName  "Result State Attribute Value"@en ;
-    bamm:description    "The value representing a specific result state."@en ;
-    bamm:characteristic [ a             bamm-c:Code ;
-                          bamm:name     "ResultStateCode" ;
-                          bamm:dataType xsd:string ] .
+:ResultEntity a samm:Entity ;
+    samm:name          "ResultEntity" ;
+    samm:preferredName "Result Entity"@en ;
+    samm:description   "Entity that describes a result state from production of a processed part."@en ;
+    samm:properties    ( :resultStateAttributeValue
+                         [ samm:property     :resultStateAttributeDescription ;
+                           samm:notInPayload "true"^^xsd:boolean ] ) .
+:resultStateAttributeValue a samm:Property ;
+    samm:name           "resultStateAttributeValue" ;
+    samm:preferredName  "Result State Attribute Value"@en ;
+    samm:description    "The value representing a specific result state."@en ;
+    samm:characteristic [ a             samm-c:Code ;
+                          samm:name     "ResultStateCode" ;
+                          samm:dataType xsd:string ] .
     
 :OKState a :ResultEntity ;
     :resultStateAttributeValue       "ok"^^xsd:string ;
@@ -111,83 +111,83 @@ export const enumerationCharacteristicClassEntity = `
     :resultStateAttributeValue       "nok"^^xsd:string ;
     :resultStateAttributeDescription "Result state not OK"@en, "Result Status nicht OK"@de .
 
-:resultStateNoDesc a bamm:Property ;
-    bamm:name           "resultStateNoDesc" ;
-    bamm:preferredName  "Last Recent Result State"@en ;
-    bamm:description    "Result state of a part defines if the manufacturing is ok or nok in the current process"@en ;
-    bamm:characteristic :ResultStateNoDesc .
-:ResultStateNoDesc a bamm-c:Enumeration ;
-    bamm:name          "ResultStateNoDesc" ;
-    bamm:preferredName "Result State"@en ;
-    bamm:description   "Result state of a processed part from production"@en ;
-    bamm:dataType      :ResultEntityNoDesc ;
-    bamm-c:values      ( :OKStateNoDesc ) .
-:ResultEntityNoDesc a bamm:Entity ;
-    bamm:name          "ResultEntityNoDesc" ;
-    bamm:preferredName "Result Entity"@en ;
-    bamm:description   "Entity that describes a result state from production of a processed part."@en ;
-    bamm:properties    ( :resultStateAttributeValue ) .
+:resultStateNoDesc a samm:Property ;
+    samm:name           "resultStateNoDesc" ;
+    samm:preferredName  "Last Recent Result State"@en ;
+    samm:description    "Result state of a part defines if the manufacturing is ok or nok in the current process"@en ;
+    samm:characteristic :ResultStateNoDesc .
+:ResultStateNoDesc a samm-c:Enumeration ;
+    samm:name          "ResultStateNoDesc" ;
+    samm:preferredName "Result State"@en ;
+    samm:description   "Result state of a processed part from production"@en ;
+    samm:dataType      :ResultEntityNoDesc ;
+    samm-c:values      ( :OKStateNoDesc ) .
+:ResultEntityNoDesc a samm:Entity ;
+    samm:name          "ResultEntityNoDesc" ;
+    samm:preferredName "Result Entity"@en ;
+    samm:description   "Entity that describes a result state from production of a processed part."@en ;
+    samm:properties    ( :resultStateAttributeValue ) .
 :OKStateNoDesc a :ResultEntity ;
     :resultStateAttributeValue       "ok"^^xsd:string .
 `;
 
 export const eitherCharacteristicClass = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:bamm:io.openmanufacturing:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
 
-:AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
-    bamm:properties ( :property1 :property2 );
-    bamm:operations ().
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties ( :property1 :property2 );
+    samm:operations ().
 
 :property1
-   a bamm:Property ;
-   bamm:name "property1" ;
-   bamm:characteristic [ a bamm-c:Either ;
-                         bamm:name "EitherCharacteristic1" ;
-                         bamm-c:left [ a bamm-c:Language ;
-                                       bamm:name "TextCharacteristicLeft1"];
-                         bamm-c:right [ a bamm-c:List ;
-                                      bamm:name "ListCharacteristicRight1" ;
-                                      bamm:dataType xsd:float]
+   a samm:Property ;
+   samm:name "property1" ;
+   samm:characteristic [ a samm-c:Either ;
+                         samm:name "EitherCharacteristic1" ;
+                         samm-c:left [ a samm-c:Language ;
+                                       samm:name "TextCharacteristicLeft1"];
+                         samm-c:right [ a samm-c:List ;
+                                      samm:name "ListCharacteristicRight1" ;
+                                      samm:dataType xsd:float]
                        ] .
 
 :property2
-   a bamm:Property ;
-   bamm:name "property2" ;
-   bamm:characteristic [ a bamm-c:Either ;
-                         bamm:name "EitherCharacteristic2" ;
-                         bamm-c:left [ a bamm-c:SingleEntity ;
-                                     bamm:name "EntityCharacteristicLeft2" ;
-                                     bamm:dataType :SpatialPosition] ;
-                         bamm-c:right [ a bamm-c:List ;
-                                      bamm:name "ListCharacteristicRight2" ;
-                                      bamm:dataType xsd:string]
+   a samm:Property ;
+   samm:name "property2" ;
+   samm:characteristic [ a samm-c:Either ;
+                         samm:name "EitherCharacteristic2" ;
+                         samm-c:left [ a samm-c:SingleEntity ;
+                                     samm:name "EntityCharacteristicLeft2" ;
+                                     samm:dataType :SpatialPosition] ;
+                         samm-c:right [ a samm-c:List ;
+                                      samm:name "ListCharacteristicRight2" ;
+                                      samm:dataType xsd:string]
                        ] .
 
 
-:SpatialPosition a bamm:Entity ;
-   bamm:name "SpatialPosition" ;
-   bamm:properties ( :x :y ) .
+:SpatialPosition a samm:Entity ;
+   samm:name "SpatialPosition" ;
+   samm:properties ( :x :y ) .
    
-:x a bamm:Property ;
-   bamm:name "x" ;
-   bamm:characteristic :Coordinate .
+:x a samm:Property ;
+   samm:name "x" ;
+   samm:characteristic :Coordinate .
    
-:y a bamm:Property ;
-   bamm:name "y" ;
-   bamm:characteristic :Coordinate .
+:y a samm:Property ;
+   samm:name "y" ;
+   samm:characteristic :Coordinate .
    
-:Coordinate a bamm-c:Measurement ;
-   bamm:name "Coordinate" ;
-   bamm:preferredName "Coordinate"@en ;
-   bamm:description "Represents a coordinate along an axis in space."@en ;
-   bamm:dataType xsd:float ;
-   bamm-c:unit unit:metre .
+:Coordinate a samm-c:Measurement ;
+   samm:name "Coordinate" ;
+   samm:preferredName "Coordinate"@en ;
+   samm:description "Represents a coordinate along an axis in space."@en ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:metre .
       
 `;

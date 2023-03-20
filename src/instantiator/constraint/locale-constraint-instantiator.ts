@@ -22,11 +22,11 @@ export class LocaleConstraintInstantiator extends ConstraintInstantiator {
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const sammC = this.metaModelElementInstantiator.sammC;
         const defaultLocaleConstraint = new DefaultLocaleConstraint(null, null, null, null);
 
         quads.forEach(quad => {
-            if (bammc.isLocaleCodeProperty(quad.predicate.value)) {
+            if (sammC.isLocaleCodeProperty(quad.predicate.value)) {
                 defaultLocaleConstraint.localeCode = quad.object.value;
             }
         });
@@ -35,6 +35,6 @@ export class LocaleConstraintInstantiator extends ConstraintInstantiator {
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().LocaleConstraint().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.LocaleConstraint().equals(nameNode);
     }
 }

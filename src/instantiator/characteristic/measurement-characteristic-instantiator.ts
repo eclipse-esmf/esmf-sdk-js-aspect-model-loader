@@ -15,7 +15,7 @@ import {CharacteristicInstantiator} from '../characteristic/characteristic-insta
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad} from 'n3';
 import {Characteristic} from '../../aspect-meta-model';
-import {BammUnitInstantiator} from '../bamm-unit-instantiator';
+import {PredefinedUnitInstantiator} from '../predefined-unit-instantiator';
 import {DefaultMeasurement} from '../../aspect-meta-model/characteristic/default-measurement';
 
 export class MeasurementCharacteristicInstantiator extends CharacteristicInstantiator {
@@ -27,8 +27,8 @@ export class MeasurementCharacteristicInstantiator extends CharacteristicInstant
         const measurement = new DefaultMeasurement(null, null, null, null, null);
 
         quads.forEach(quad => {
-            if (this.metaModelElementInstantiator.BAMMC().isUnitProperty(quad.predicate.value)) {
-                measurement.unit = new BammUnitInstantiator(this.metaModelElementInstantiator).createUnit(quad.object.value);
+            if (this.metaModelElementInstantiator.sammC.isUnitProperty(quad.predicate.value)) {
+                measurement.unit = new PredefinedUnitInstantiator(this.metaModelElementInstantiator).createUnit(quad.object.value);
             }
         });
 
@@ -36,6 +36,6 @@ export class MeasurementCharacteristicInstantiator extends CharacteristicInstant
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().MeasurementCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.MeasurementCharacteristic().equals(nameNode);
     }
 }

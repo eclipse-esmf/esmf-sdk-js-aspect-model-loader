@@ -23,24 +23,24 @@ export class RangeConstraintInstantiator extends ConstraintInstantiator {
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bammc = this.metaModelElementInstantiator.BAMMC();
+        const sammC = this.metaModelElementInstantiator.sammC;
         const defaultRangeConstraint = new DefaultRangeConstraint(null, null, null, null, null, null, null);
 
         quads.forEach(quad => {
-            if (bammc.isMinValueProperty(quad.predicate.value)) {
+            if (sammC.isMinValueProperty(quad.predicate.value)) {
                 defaultRangeConstraint.minValue = quad.object.value;
-            } else if (bammc.isMaxValueProperty(quad.predicate.value)) {
+            } else if (sammC.isMaxValueProperty(quad.predicate.value)) {
                 defaultRangeConstraint.maxValue = quad.object.value;
-            } else if (bammc.isUpperBoundDefinitionProperty(quad.predicate.value)) {
-                defaultRangeConstraint.upperBoundDefinition = BoundDefinition[quad.object.value.replace(bammc.getNamespace(), '')];
-            } else if (bammc.isLowerBoundDefinitionProperty(quad.predicate.value)) {
-                defaultRangeConstraint.lowerBoundDefinition = BoundDefinition[quad.object.value.replace(bammc.getNamespace(), '')];
+            } else if (sammC.isUpperBoundDefinitionProperty(quad.predicate.value)) {
+                defaultRangeConstraint.upperBoundDefinition = BoundDefinition[quad.object.value.replace(sammC.getNamespace(), '')];
+            } else if (sammC.isLowerBoundDefinitionProperty(quad.predicate.value)) {
+                defaultRangeConstraint.lowerBoundDefinition = BoundDefinition[quad.object.value.replace(sammC.getNamespace(), '')];
             }
         });
         return defaultRangeConstraint;
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().RangeConstraint().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.RangeConstraint().equals(nameNode);
     }
 }

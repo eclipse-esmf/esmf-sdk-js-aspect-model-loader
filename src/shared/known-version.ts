@@ -14,9 +14,9 @@
 /**
  * List of all known versions
  */
-export enum BammVersion {
-    BAMM_1_0_0 = '1.0.0',
-    BAMM_2_0_0 = '2.0.0',
+export enum SammVersion {
+    SAMM_1_0_0 = '1.0.0',
+    SAMM_2_0_0 = '2.0.0',
 }
 
 export class KnownVersion {
@@ -26,11 +26,11 @@ export class KnownVersion {
      * @param version Version string
      * @return Version or undefined if version string can be mapped
      */
-    public static fromVersionString(version: string): BammVersion | undefined {
-        if (BammVersion.BAMM_1_0_0 === version) {
-            return BammVersion.BAMM_1_0_0;
-        } else if (BammVersion.BAMM_2_0_0 === version) {
-            return BammVersion.BAMM_2_0_0;
+    public static fromVersionString(version: string): SammVersion | undefined {
+        if (SammVersion.SAMM_1_0_0 === version) {
+            return SammVersion.SAMM_1_0_0;
+        } else if (SammVersion.SAMM_2_0_0 === version) {
+            return SammVersion.SAMM_2_0_0;
         } else {
             return undefined;
         }
@@ -42,7 +42,7 @@ export class KnownVersion {
      * @param version Version to check
      * @return true if the version is supported or false if not
      */
-    public static isVersionSupported(version: BammVersion): boolean {
+    public static isVersionSupported(version: SammVersion): boolean {
         return this.getSupportedVersions().find(supportedVersion => supportedVersion === version) !== undefined;
     }
 
@@ -51,7 +51,7 @@ export class KnownVersion {
      *
      * @return Array of supported versions
      */
-    public static getSupportedVersions(): Array<BammVersion> {
-        return [BammVersion.BAMM_1_0_0, BammVersion.BAMM_2_0_0];
+    public static getSupportedVersions(): Array<SammVersion> {
+        return [SammVersion.SAMM_1_0_0, SammVersion.SAMM_2_0_0];
     }
 }

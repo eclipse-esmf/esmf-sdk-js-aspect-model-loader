@@ -20,16 +20,16 @@ export class EntityInstantiator {
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
     createEntity(quads: Array<Quad>, isAbstract = false): Entity {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const entity = new DefaultEntity(null, null, null, new Array<Property>(), isAbstract);
 
         this.metaModelElementInstantiator.initBaseProperties(quads, entity, this.metaModelElementInstantiator.rdfModel);
 
         quads.forEach(quad => {
-            if (bamm.isPropertiesProperty(quad.predicate.value)) {
+            if (samm.isPropertiesProperty(quad.predicate.value)) {
                 entity.properties = this.metaModelElementInstantiator.getProperties(DataFactory.namedNode(quad.subject.value));
             }
-            if (bamm.isExtends(quad.predicate.value)) {
+            if (samm.isExtends(quad.predicate.value)) {
                 const abstractQuadEntity = this.metaModelElementInstantiator.rdfModel.store.getQuads(quad.object, null, null, null);
                 if (abstractQuadEntity && abstractQuadEntity.length > 0) {
                     entity.extends = new EntityInstantiator(this.metaModelElementInstantiator).createEntity(

@@ -15,7 +15,7 @@ import {NamedNode, Quad, Util} from 'n3';
 import {Base, Characteristic, Event, Operation, Property} from '../aspect-meta-model';
 import {PropertyInstantiator} from './property-instantiator';
 import {CharacteristicInstantiator} from './characteristic/characteristic-instantiator';
-import {Bamm, Bammc, Bamme, Bammu} from '../vocabulary';
+import {Samm, SammC, SammE, SammU} from '../vocabulary';
 import {EncodingConstraintInstantiator} from './constraint/encoding-constraint-instantiator';
 import {DurationCharacteristicInstantiator} from './characteristic/duration-characteristic-instantiator';
 import {RegularExpressionConstraintInstantiator} from './constraint/regular-expression-constraint-instantiator';
@@ -101,14 +101,14 @@ export class MetaModelElementInstantiator {
         const properties: Array<Property> = [];
         const propertyInstantiator = new PropertyInstantiator(this);
 
-        this.rdfModel.store.getQuads(subject, this.BAMM().PropertiesProperty(), null, null).forEach(propertyQuad => {
+        this.rdfModel.store.getQuads(subject, this.samm.PropertiesProperty(), null, null).forEach(propertyQuad => {
             this.rdfModel
                 .resolveBlankNodes(propertyQuad.object.value)
                 .filter(
                     quad =>
-                        this.BAMM().isRdfFirst(quad.predicate.value) ||
-                        this.BAMM().isReferenceProperty(quad.predicate.value) ||
-                        this.BAMM().isExtends(quad.predicate.value)
+                        this.samm.isRdfFirst(quad.predicate.value) ||
+                        this.samm.isReferenceProperty(quad.predicate.value) ||
+                        this.samm.isExtends(quad.predicate.value)
                 )
                 .forEach(quad => {
                     properties.push(propertyInstantiator.createProperty(quad));
@@ -122,7 +122,7 @@ export class MetaModelElementInstantiator {
         const operations: Array<Operation> = [];
         const operationInstantiator = new OperationInstantiator(this);
 
-        this.rdfModel.store.getQuads(subject, this.BAMM().OperationsProperty(), null, null).forEach(operationQuad => {
+        this.rdfModel.store.getQuads(subject, this.samm.OperationsProperty(), null, null).forEach(operationQuad => {
             this.rdfModel
                 .resolveBlankNodes(operationQuad.object.value)
                 .forEach(resolvedOperationQuad => operations.push(operationInstantiator.createOperation(resolvedOperationQuad)));
@@ -135,7 +135,7 @@ export class MetaModelElementInstantiator {
         const events: Array<Event> = [];
         const eventInstantiator = new EventInstantiator(this);
 
-        this.rdfModel.store.getQuads(subject, this.BAMM().EventsProperty(), null, null).forEach(eventQuad => {
+        this.rdfModel.store.getQuads(subject, this.samm.EventsProperty(), null, null).forEach(eventQuad => {
             this.rdfModel
                 .resolveBlankNodes(eventQuad.object.value)
                 .forEach(resolvedEventQuad => events.push(eventInstantiator.createEvent(resolvedEventQuad)));
@@ -156,13 +156,13 @@ export class MetaModelElementInstantiator {
         let typeQuad: Quad;
 
         quads.forEach(quad => {
-            if (this.BAMM().isDescriptionProperty(quad.predicate.value)) {
+            if (this.samm.isDescriptionProperty(quad.predicate.value)) {
                 this.addDescription(quad, metaModelElement);
-            } else if (this.BAMM().isPreferredNameProperty(quad.predicate.value)) {
+            } else if (this.samm.isPreferredNameProperty(quad.predicate.value)) {
                 this.addPreferredName(quad, metaModelElement);
-            } else if (this.BAMM().isSeeProperty(quad.predicate.value)) {
+            } else if (this.samm.isSeeProperty(quad.predicate.value)) {
                 metaModelElement.addSeeReference(quad.object.value);
-            } else if (quad.predicate.value === this.BAMM().RdfType().value) {
+            } else if (quad.predicate.value === this.samm.RdfType().value) {
                 typeQuad = quad;
             }
         });
@@ -170,7 +170,7 @@ export class MetaModelElementInstantiator {
         this.initAspectModelUrn(typeQuad, quads, metaModelElement as Base);
 
         if (!(<Base>metaModelElement).metaModelVersion) {
-            (<Base>metaModelElement).metaModelVersion = rdfModel.BAMM().version;
+            (<Base>metaModelElement).metaModelVersion = rdfModel.samm.version;
         }
     }
 
@@ -178,8 +178,8 @@ export class MetaModelElementInstantiator {
         if (typeQuad && !Util.isBlankNode(typeQuad.subject)) {
             metaModelElement.aspectModelUrn = `${typeQuad.subject.value}`;
         } else if (quads && quads.length > 0) {
-            const propertyQuads = quads.find(quads => quads.predicate.value === this.BAMM().property().id);
-            if(propertyQuads && Util.isBlankNode(quads[0].subject)) {
+            const propertyQuads = quads.find(quads => quads.predicate.value === this.samm.property().id);
+            if (propertyQuads && Util.isBlankNode(quads[0].subject)) {
                 metaModelElement.aspectModelUrn = propertyQuads.object.value;
             } else {
                 metaModelElement.aspectModelUrn = quads[0].subject.id;
@@ -205,19 +205,19 @@ export class MetaModelElementInstantiator {
         }
     }
 
-    BAMM(): Bamm {
-        return this.rdfModel.BAMM();
+    get samm(): Samm {
+        return this.rdfModel.samm;
     }
 
-    BAMMC(): Bammc {
-        return this.rdfModel.BAMMC();
+    get sammC(): SammC {
+        return this.rdfModel.sammC;
     }
 
-    BAMME(): Bamme {
-        return this.rdfModel.BAMME();
+    get sammE(): SammE {
+        return this.rdfModel.sammE;
     }
 
-    BAMMU(): Bammu {
-        return this.rdfModel.BAMMU();
+    get sammU(): SammU {
+        return this.rdfModel.sammU;
     }
 }

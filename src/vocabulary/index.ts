@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './bamm';
-export * from './bammc';
-export * from './bamme';
-export * from './bammu';
+export * from './samm';
+export * from './samm-c';
+export * from './samm-e';
+export * from './samm-u';

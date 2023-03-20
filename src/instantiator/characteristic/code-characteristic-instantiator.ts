@@ -23,11 +23,11 @@ export class CodeCharacteristicInstantiator extends CharacteristicInstantiator {
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const defaultCode = new DefaultCode(null, null, null, null);
 
         quads.forEach(quad => {
-            if (bamm.isDataTypeProperty(quad.predicate.value)) {
+            if (samm.isDataTypeProperty(quad.predicate.value)) {
                 defaultCode.dataType = this.getDataType(quad);
             }
         });
@@ -36,6 +36,6 @@ export class CodeCharacteristicInstantiator extends CharacteristicInstantiator {
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().CodeCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.CodeCharacteristic().equals(nameNode);
     }
 }

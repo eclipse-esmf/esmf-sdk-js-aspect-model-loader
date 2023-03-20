@@ -15,13 +15,13 @@ import {DefaultProperty, DefaultPropertyInstanceDefinition} from '../aspect-meta
 import {DefaultCharacteristic, Property} from '../aspect-meta-model';
 import {Quad, Util} from 'n3';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {Bamm} from '../vocabulary';
+import {Samm} from '../vocabulary';
 
 export class PropertyInstantiator {
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
     createProperty(quad: Quad): Property {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const rdfModel = this.metaModelElementInstantiator.rdfModel;
         const property = new DefaultProperty(null, null, null, null);
         const propertyInstanceDefinition = new DefaultPropertyInstanceDefinition(property, null, null, null, null);
@@ -34,15 +34,15 @@ export class PropertyInstantiator {
         this.initExtends(quads, propertyInstanceDefinition);
 
         quads.forEach(value => {
-            if (bamm.isCharacteristicProperty(value.predicate.value)) {
+            if (samm.isCharacteristicProperty(value.predicate.value)) {
                 propertyInstanceDefinition.characteristic = this.metaModelElementInstantiator.getCharacteristic(value);
-            } else if (bamm.isExampleValueProperty(value.predicate.value)) {
+            } else if (samm.isExampleValueProperty(value.predicate.value)) {
                 propertyInstanceDefinition.exampleValue = value.object.value;
-            } else if (bamm.isNotInPayloadProperty(value.predicate.value)) {
+            } else if (samm.isNotInPayloadProperty(value.predicate.value)) {
                 propertyInstanceDefinition.isNotInPayload = value.object.value === 'true';
-            } else if (bamm.isOptionalProperty(value.predicate.value)) {
+            } else if (samm.isOptionalProperty(value.predicate.value)) {
                 propertyInstanceDefinition.isOptional = value.object.value === 'true';
-            } else if (bamm.isPayloadNameProperty(value.predicate.value)) {
+            } else if (samm.isPayloadNameProperty(value.predicate.value)) {
                 propertyInstanceDefinition.payloadName = value.object.value;
             }
         });
@@ -53,9 +53,9 @@ export class PropertyInstantiator {
     }
 
     private resolvePropertyQuads(property: DefaultProperty, quad: Quad): Array<Quad> {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const rdfModel = this.metaModelElementInstantiator.rdfModel;
-        let quads;
+        let quads: Quad[];
 
         if (Util.isBlankNode(quad.subject)) {
             quads = rdfModel.findAnyProperty(quad);
@@ -65,7 +65,7 @@ export class PropertyInstantiator {
 
         if (property.isAnonymousNode) {
             quads.push(
-                ...rdfModel.store.getQuads(quad.subject, null, null, null).filter(quad => bamm.Property().value !== quad.object.value)
+                ...rdfModel.store.getQuads(quad.subject, null, null, null).filter(quad => samm.Property().value !== quad.object.value)
             );
         }
 
@@ -74,9 +74,8 @@ export class PropertyInstantiator {
 
     private initExtends(quads: Array<Quad>, property: DefaultPropertyInstanceDefinition) {
         quads.forEach(value => {
-            if (this.metaModelElementInstantiator.BAMM().isExtends(value.predicate.value)) {
-                const quadsAbstractProperty
-                    = this.metaModelElementInstantiator.rdfModel.store.getQuads(value.object, null, null, null);
+            if (this.metaModelElementInstantiator.samm.isExtends(value.predicate.value)) {
+                const quadsAbstractProperty = this.metaModelElementInstantiator.rdfModel.store.getQuads(value.object, null, null, null);
                 const extendedAbstractProperty = this.createProperty(quadsAbstractProperty[0]);
                 extendedAbstractProperty.isAbstract = true;
                 property.extends = extendedAbstractProperty;
@@ -85,12 +84,12 @@ export class PropertyInstantiator {
     }
 
     private isDefinedInline(propertyQuad: Quad) {
-        const bamm = this.metaModelElementInstantiator.BAMM();
+        const samm = this.metaModelElementInstantiator.samm;
         const rdfModel = this.metaModelElementInstantiator.rdfModel;
 
         // check if the property is fully defined as separate definition
         if (
-            (propertyQuad.object.id === bamm.Property().id || propertyQuad.object.id === bamm.AbstractProperty().id) &&
+            (propertyQuad.object.id === samm.Property().id || propertyQuad.object.id === samm.AbstractProperty().id) &&
             !Util.isBlankNode(propertyQuad.subject)
         ) {
             return false;
@@ -100,7 +99,7 @@ export class PropertyInstantiator {
         return (
             rdfModel.store
                 .getQuads(propertyQuad.subject, null, null, null)
-                .find(quad => bamm.Property().value !== quad.predicate.value && quad.predicate.value.startsWith(Bamm.getBaseUri())) !==
+                .find(quad => samm.Property().value !== quad.predicate.value && quad.predicate.value.startsWith(Samm.getBaseUri())) !==
             undefined
         );
     }

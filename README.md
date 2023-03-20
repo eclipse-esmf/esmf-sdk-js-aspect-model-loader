@@ -1,4 +1,4 @@
-# SDS JS SDK :: Aspect Model Loader 🚀
+# ESMF JS SDK :: Aspect Model Loader 🚀
 
 ## Table of Contents
 
@@ -21,24 +21,20 @@ more [.ttl files](<https://en.wikipedia.org/wiki/Turtle_(syntax)>) into native T
 
 ## Getting help
 
-Are you having trouble with SDS SDK JS? We want to help!
+Are you having trouble with ESMF JS? We want to help!
 
-* Check the [developer documentation](https://openmanufacturingplatform.github.io)
-* Having issues with the SDS SDK JS? Open
-  a [GitHub issue](https://github.com/OpenManufacturingPlatform/sds-sdk-js-aspect-model-loader/issues).
+- Check the [developer documentation](https://openmanufacturingplatform.github.io)
+- Having issues with the ESMF JS? Open
+  a [GitHub issue](https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/issues).
 
 ## Getting started
 
-### Install from the public npm (Currently not available):
+### Install from the public npm:
+
+<!-- TODO: Replace this with esmf -->
 
 ```
-npm install @sds/aspect-model-loader
-```
-
-### Install from github release repository:
-
-```
-npm install https://github.com/OpenManufacturingPlatform/sds-sdk-js-aspect-model-loader/releases/download/<TAG_VERSION>/sds-aspect-model-loader-x.x.x.tgz
+npm install @omp-sdk/aspect-model-loader
 ```
 
 ## Usage
@@ -101,7 +97,7 @@ to update all index files under `src`. For more information see the project http
 ## Documentation
 
 Further documentation and howto's are provided in the
-official [JS SDK Aspect Model loader User Documentation](https://openmanufacturingplatform.github.io/sds-documentation/js-sdk-aml-guide/index.html)
+official [JS SDK User Documentation](https://openmanufacturingplatform.github.io/sds-documentation/js-sdk-guide/1.0.0/index.html)
 
 ## License
 
@@ -111,4 +107,3 @@ This program and the accompanying materials are made available under the terms o
 [Mozilla Public License, v. 2.0](LICENSE).
 
 The [Notice file](NOTICE.md) details contained third party materials.
-

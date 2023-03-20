@@ -53,14 +53,14 @@ describe('Property tests', (): void => {
         });
 
         test('should have an enumeration "EnumerationCharacteristic" with entries', (): void => {
-            const enumeration = loader.findByUrn('urn:bamm:io.openmanufacturing:1.0.0#EnumerationCharacteristic') as Enumeration;
+            const enumeration = loader.findByUrn('urn:samm:org.eclipse.esmf.samm:1.0.0#EnumerationCharacteristic') as Enumeration;
             expect(enumeration.values.length).toBeGreaterThanOrEqual(0);
         });
 
         test('should have an enumeration "WarningLevel" with 3 values', () => {
             const loader = new AspectModelLoader();
             loader.loadSelfContainedModel(movementAspectModel).subscribe(() => {
-                expect((loader.findByUrn('urn:bamm:io.openmanufacturing:1.0.0#WarningLevel') as Enumeration).values).toEqual([
+                expect((loader.findByUrn('urn:samm:org.eclipse.esmf.samm:1.0.0#WarningLevel') as Enumeration).values).toEqual([
                     'green',
                     'yellow',
                     'red',

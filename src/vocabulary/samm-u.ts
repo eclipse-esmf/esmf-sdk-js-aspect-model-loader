@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Bamm} from './bamm';
+import {Samm} from './samm';
 
-export class Bammu {
+export class SammU {
     private alias = 'unit';
 
-    constructor(private bamm: Bamm) {}
+    constructor(private samm: Samm) {}
 
     getAlias(): string {
         return this.alias;
@@ -39,11 +39,11 @@ export class Bammu {
     }
 
     getBaseUri(): string {
-        return Bamm.getBaseUri();
+        return Samm.getBaseUri();
     }
 
     getUri(): string {
-        return `${Bamm.getBaseUri()}unit:${this.bamm.version}`;
+        return `${Samm.getBaseUri()}unit:${this.samm.version}`;
     }
 
     getNamespace(): string {

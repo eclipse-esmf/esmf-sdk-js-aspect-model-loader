@@ -13,22 +13,23 @@
 
 import {DataFactory, NamedNode} from 'n3';
 
-export class Bamm {
+export class Samm {
     static readonly XSD_URI = 'http://www.w3.org/2001/XMLSchema';
     static readonly RDF_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns';
     static readonly RDFS_URI = 'http://www.w3.org/2000/01/rdf-schema';
-    static readonly BASE_URI = 'urn:bamm:io.openmanufacturing:';
+    static readonly BASE_URI = 'urn:samm:org.eclipse.esmf.samm:';
 
-    private alias = 'bamm';
+    private alias = 'samm';
 
-    constructor(public version: string) {}
+    constructor(public version: string) {
+    }
 
     isDefaultNamespaceUri(value: string): boolean {
         return (
-            value.startsWith(Bamm.XSD_URI) ||
-            value.startsWith(Bamm.RDF_URI) ||
-            value.startsWith(Bamm.RDFS_URI) ||
-            value.startsWith(Bamm.BASE_URI)
+            value.startsWith(Samm.XSD_URI) ||
+            value.startsWith(Samm.RDF_URI) ||
+            value.startsWith(Samm.RDFS_URI) ||
+            value.startsWith(Samm.BASE_URI)
         );
     }
 
@@ -37,11 +38,11 @@ export class Bamm {
     }
 
     static getBaseUri(): string {
-        return Bamm.BASE_URI;
+        return Samm.BASE_URI;
     }
 
     getUri(): string {
-        return `${Bamm.BASE_URI}meta-model:${this.version}`;
+        return `${Samm.BASE_URI}meta-model:${this.version}`;
     }
 
     getAspectModelUrn(elementName: string): string {
@@ -53,11 +54,11 @@ export class Bamm {
     }
 
     getRdfSyntaxNameSpace(): string {
-        return `${Bamm.RDF_URI}#`;
+        return `${Samm.RDF_URI}#`;
     }
 
     getXSDNameSpace(): string {
-        return `${Bamm.XSD_URI}#`;
+        return `${Samm.XSD_URI}#`;
     }
 
     RdfType(): NamedNode {

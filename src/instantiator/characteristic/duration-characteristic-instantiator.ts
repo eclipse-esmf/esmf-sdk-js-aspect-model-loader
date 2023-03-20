@@ -16,7 +16,7 @@ import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad} from 'n3';
 import {Characteristic} from '../../aspect-meta-model';
 import {DefaultDuration} from '../../aspect-meta-model/characteristic/default-duration';
-import {BammUnitInstantiator} from '../bamm-unit-instantiator';
+import {PredefinedUnitInstantiator} from '../predefined-unit-instantiator';
 
 export class DurationCharacteristicInstantiator extends CharacteristicInstantiator {
     constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -27,8 +27,10 @@ export class DurationCharacteristicInstantiator extends CharacteristicInstantiat
         const durationCharacteristic = new DefaultDuration(null, null, null, null, null);
 
         quads.forEach(quad => {
-            if (this.metaModelElementInstantiator.BAMMC().isUnitProperty(quad.predicate.value)) {
-                durationCharacteristic.unit = new BammUnitInstantiator(this.metaModelElementInstantiator).createUnit(quad.object.value);
+            if (this.metaModelElementInstantiator.sammC.isUnitProperty(quad.predicate.value)) {
+                durationCharacteristic.unit = new PredefinedUnitInstantiator(this.metaModelElementInstantiator).createUnit(
+                    quad.object.value
+                );
             }
         });
 
@@ -36,6 +38,6 @@ export class DurationCharacteristicInstantiator extends CharacteristicInstantiat
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.BAMMC().DurationCharacteristic().equals(nameNode);
+        return this.metaModelElementInstantiator.sammC.DurationCharacteristic().equals(nameNode);
     }
 }

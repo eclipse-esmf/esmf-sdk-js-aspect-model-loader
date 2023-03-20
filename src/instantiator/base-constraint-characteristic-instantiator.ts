@@ -14,18 +14,18 @@
 import {NamedNode, Quad, Util} from 'n3';
 import {BaseMetaModelElement, DefaultConstraint} from '../aspect-meta-model';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {Bamm, Bammc} from '../vocabulary';
+import {Samm, SammC} from '../vocabulary';
 
 export class BaseConstraintCharacteristicInstantiator {
-    public bamm: Bamm;
-    public bammc: Bammc;
+    public samm: Samm;
+    public sammC: SammC;
 
     constructor(
         protected metaModelElementInstantiator: MetaModelElementInstantiator,
         public nextProcessor?: BaseConstraintCharacteristicInstantiator
     ) {
-        this.bamm = metaModelElementInstantiator.BAMM();
-        this.bammc = metaModelElementInstantiator.BAMMC();
+        this.samm = metaModelElementInstantiator.samm;
+        this.sammC = metaModelElementInstantiator.sammC;
     }
 
     create(quad: Quad): BaseMetaModelElement {

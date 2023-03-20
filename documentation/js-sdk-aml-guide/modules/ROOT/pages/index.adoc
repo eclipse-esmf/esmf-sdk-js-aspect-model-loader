@@ -22,14 +22,14 @@ For example a newly added property and the related value could be shown in the U
 
 [source,bash]
 ----
-npm install @sds/aspect-model-loader
+npm install @esmf/aspect-model-loader
 ----
 
 === Install from github release repository:
 
 [source,bash]
 ----
-npm install https://github.com/OpenManufacturingPlatform/sds-sdk-js-aspect-model-loader/releases/download/<TAG_VERSION>/sds-aspect-model-loader-x.x.x.tgz
+npm install https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/releases/download/<TAG_VERSION>/esmf-aspect-model-loader-x.x.x.tgz
 ----
 
 == Usage
