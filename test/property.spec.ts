@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -19,6 +19,7 @@ import {
     DefaultEnumeration,
     DefaultProperty,
     Enumeration,
+    Property,
 } from '../src';
 import {
     movementAspectModel,
@@ -27,7 +28,6 @@ import {
 } from './models/movement-model';
 import {Subscription} from 'rxjs';
 import {property} from './models/property';
-import {Property} from "../dist";
 import DoneCallback = jest.DoneCallback;
 
 describe('Property tests', (): void => {
@@ -53,14 +53,14 @@ describe('Property tests', (): void => {
         });
 
         test('should have an enumeration "EnumerationCharacteristic" with entries', (): void => {
-            const enumeration = loader.findByUrn('urn:samm:org.eclipse.esmf.samm:1.0.0#EnumerationCharacteristic') as Enumeration;
+            const enumeration = loader.findByUrn('urn:samm:org.eclipse.esmf.test:1.0.0#EnumerationCharacteristic') as Enumeration;
             expect(enumeration.values.length).toBeGreaterThanOrEqual(0);
         });
 
         test('should have an enumeration "WarningLevel" with 3 values', () => {
             const loader = new AspectModelLoader();
             loader.loadSelfContainedModel(movementAspectModel).subscribe(() => {
-                expect((loader.findByUrn('urn:samm:org.eclipse.esmf.samm:1.0.0#WarningLevel') as Enumeration).values).toEqual([
+                expect((loader.findByUrn('urn:samm:org.eclipse.esmf.test:1.0.0#WarningLevel') as Enumeration).values).toEqual([
                     'green',
                     'yellow',
                     'red',
