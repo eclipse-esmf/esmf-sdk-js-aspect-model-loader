@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,7 +12,7 @@
  */
 
 export const testAspectModel = `
-@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#> .
+@prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#> .
 @prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
 @prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
 @prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .

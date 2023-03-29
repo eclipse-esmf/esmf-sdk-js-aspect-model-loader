@@ -33,8 +33,7 @@ Developer documentation is put into a README.md placed in the project root. This
 ### User documentation
 
 User documentation (this includes technical documentation on how to use an application or tool from the SDK) should be
-on
-its own.
+on its own.
 It is written in AsciiDoc, rendered with [Antora](https://antora.org) and the generated static content is
 publically hosted for direct user access.
 The source files of the documentation are placed in a subfolder /documentation from the project root.

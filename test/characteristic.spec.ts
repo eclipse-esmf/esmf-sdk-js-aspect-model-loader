@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -19,6 +19,7 @@ import {
     DefaultCharacteristic,
     DefaultCollection,
     DefaultEither,
+    DefaultEntity,
     DefaultEntityInstance,
     DefaultEnumeration,
     DefaultList,
@@ -136,7 +137,7 @@ describe('Characteristics tests', (): void => {
 
         it('should have correct model urn', (): void => {
             expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn)
-                .toEqual('urn:samm:org.eclipse.esmf.samm:1.0.0#resultStateAttributeDescription');
+                .toEqual('urn:samm:org.eclipse.esmf.test:1.0.0#resultStateAttributeDescription');
         });
 
         it('should have no description and loads successfully', (): void => {

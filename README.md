@@ -23,7 +23,7 @@ more [.ttl files](<https://en.wikipedia.org/wiki/Turtle_(syntax)>) into native T
 
 Are you having trouble with ESMF JS? We want to help!
 
-- Check the [developer documentation](https://openmanufacturingplatform.github.io)
+- Check the [developer documentation](https://eclipse-esmf.github.io)
 - Having issues with the ESMF JS? Open
   a [GitHub issue](https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/issues).
 
@@ -97,7 +97,7 @@ to update all index files under `src`. For more information see the project http
 ## Documentation
 
 Further documentation and howto's are provided in the
-official [JS SDK User Documentation](https://openmanufacturingplatform.github.io/sds-documentation/js-sdk-guide/1.0.0/index.html)
+official [JS SDK User Documentation](https://eclipse-esmf.github.io/esmf-developer-guide/js-sdk-guide/1.0.0/index.html)
 
 ## License
 

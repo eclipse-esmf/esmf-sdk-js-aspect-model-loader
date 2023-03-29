@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -18,7 +18,7 @@ export const characteristicClassString = `
 @prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
 @prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
 :AspectDefault a samm:Aspect;
     samm:name "AspectDefault";
@@ -43,7 +43,7 @@ export const collectionCharacteristicClassString = `
 @prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
 @prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
 :AspectDefault a samm:Aspect;
     samm:name "AspectDefault";
@@ -71,7 +71,7 @@ export const enumerationCharacteristicClassEntity = `
 @prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
 @prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
 :AspectDefault a samm:Aspect;
     samm:name "AspectDefault";
@@ -138,7 +138,7 @@ export const eitherCharacteristicClass = `
 @prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
 @prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix : <urn:samm:org.eclipse.esmf.samm:1.0.0#>.
+@prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
 :AspectDefault a samm:Aspect;
     samm:name "AspectDefault";
