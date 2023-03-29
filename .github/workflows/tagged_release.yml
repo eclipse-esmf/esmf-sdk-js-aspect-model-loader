@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       - run: git config --global user.email "info@eclipse.org"
-      - run: git config --global user.name "Eclipse Foundation
+      - run: git config --global user.name "Eclipse Foundation"
 
       - name: Cache node modules
         uses: actions/cache@v3
