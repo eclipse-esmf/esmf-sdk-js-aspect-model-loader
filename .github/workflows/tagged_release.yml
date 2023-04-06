@@ -1,9 +1,11 @@
 name: "Create Tagged Release"
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Version number of the release'
+        required: true
 
 jobs:
   gh_tagged_release:
@@ -14,8 +16,10 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v3
 
-      - run: git config --global user.email "info@eclipse.org"
-      - run: git config --global user.name "Eclipse Foundation"
+      - name: Setup Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
 
       - name: Cache node modules
         uses: actions/cache@v3
@@ -35,14 +39,29 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
-      - name: Set tag version
-        run: echo "tagVersion=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+      - name: Set versions
+        run: |
+          release_version=${{ github.event.inputs.release_version }}
+          release_branch_name=${release_version%.*}.x
+          echo "release_branch_name=$release_branch_name" >> $GITHUB_ENV
+
+      - name: Set antora version
+        run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/js-sdk-aml-guide/antora.yml
+
+      - name: Commit version changes and push to upstream repository
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: ${{ env.release_branch_name }}
+          commit_user_name: github-actions
+          commit_user_email: github-actions@github.com
+          commit_author: Author <actions@github.com>
+          file_pattern: 'documentation/js-sdk-aml-guide/antora.yml'
 
       - name: Install Dependencies
         run: npm install
 
       - name: Set app version (Unix)
-        run: npm version $tagVersion --no-git-tag-version
+        run: npm version ${{ github.event.inputs.release_version }} --no-git-tag-version
 
       - name: Build Project
         run: npm run build
@@ -51,22 +70,30 @@ jobs:
       - name: Pack Project as tgz
         run: npm pack
 
-      - name: Create GitHub release
-        if: ${{ (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+      - name: "Create Github release (full)"
+        if: ${{ !contains( github.event.inputs.release_version, '-rc' ) }}
+        uses: softprops/action-gh-release@v1
+        id: esmf_sdk_js_aml_release
         with:
-          overwrite: true
+          body: "Release version ${{ github.event.inputs.release_version }}."
+          tag_name: v${{ github.event.inputs.release_version }}
+          target_commitish: ${{ env.release_branch_name }}
+          draft: false
           prerelease: false
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: esmf-aspect-model-loader-${{ env.tagVersion }}.tgz
-          tag: ${{ github.ref }}
+          files: esmf-aspect-model-loader-${{ github.event.inputs.release_version }}.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: Create GitHub pre-release
-        if: ${{ (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+      - name: "Create Github release (milestone)"
+        if: contains( github.event.inputs.release_version, '-rc' )
+        uses: softprops/action-gh-release@v1
+        id: sds_sdk_js_aml_release
         with:
-          overwrite: true
+          body: "Release version ${{ github.event.inputs.release_version }}."
+          tag_name: v${{ github.event.inputs.release_version }}
+          target_commitish: ${{ env.release_branch_name }}
+          draft: false
           prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: esmf-aspect-model-loader-${{ env.tagVersion }}.tgz
-          tag: ${{ github.ref }}
+          files: esmf-aspect-model-loader-${{ github.event.inputs.release_version }}.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
