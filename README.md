@@ -34,7 +34,7 @@ Are you having trouble with ESMF JS? We want to help!
 <!-- TODO: Replace this with esmf -->
 
 ```
-npm install @omp-sdk/aspect-model-loader
+npm install @esmf/aspect-model-loader
 ```
 
 ## Usage
@@ -96,8 +96,8 @@ to update all index files under `src`. For more information see the project http
 
 ## Documentation
 
-Further documentation and howto's are provided in the
-official [JS SDK User Documentation](https://eclipse-esmf.github.io/esmf-developer-guide/js-sdk-guide/1.0.0/index.html)
+Further documentation and HowTos are provided in the
+official [JS SDK User Documentation](https://eclipse-esmf.github.io/js-sdk-guide/index.html)
 
 ## License
 
