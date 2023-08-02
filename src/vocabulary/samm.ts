@@ -21,8 +21,7 @@ export class Samm {
 
     private alias = 'samm';
 
-    constructor(public version: string) {
-    }
+    constructor(public version: string) {}
 
     isDefaultNamespaceUri(value: string): boolean {
         return (
