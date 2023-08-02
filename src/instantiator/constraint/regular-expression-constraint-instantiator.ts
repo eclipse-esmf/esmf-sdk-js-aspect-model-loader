@@ -14,9 +14,7 @@
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad} from 'n3';
 import {Characteristic} from '../../aspect-meta-model/characteristic/default-characteristic';
-import {
-    DefaultRegularExpressionConstraint
-} from '../../aspect-meta-model/constraint/default-regular-expression-constraint';
+import {DefaultRegularExpressionConstraint} from '../../aspect-meta-model/constraint/default-regular-expression-constraint';
 import {ConstraintInstantiator} from './constraint-instantiator';
 
 export class RegularExpressionConstraintInstantiator extends ConstraintInstantiator {
