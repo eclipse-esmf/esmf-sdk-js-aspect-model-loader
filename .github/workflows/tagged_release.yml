@@ -97,3 +97,8 @@ jobs:
           files: esmf-aspect-model-loader-${{ github.event.inputs.release_version }}.tgz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Publish to npm
+        run: npm publish
+        env:
+         NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
