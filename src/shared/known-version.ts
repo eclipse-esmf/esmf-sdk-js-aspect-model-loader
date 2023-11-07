@@ -15,8 +15,8 @@
  * List of all known versions
  */
 export enum SammVersion {
-    SAMM_1_0_0 = '1.0.0',
     SAMM_2_0_0 = '2.0.0',
+    SAMM_2_1_0 = '2.1.0',
 }
 
 export class KnownVersion {
@@ -27,10 +27,10 @@ export class KnownVersion {
      * @return Version or undefined if version string can be mapped
      */
     public static fromVersionString(version: string): SammVersion | undefined {
-        if (SammVersion.SAMM_1_0_0 === version) {
-            return SammVersion.SAMM_1_0_0;
-        } else if (SammVersion.SAMM_2_0_0 === version) {
+        if (SammVersion.SAMM_2_0_0 === version) {
             return SammVersion.SAMM_2_0_0;
+        } else if (SammVersion.SAMM_2_1_0 === version) {
+            return SammVersion.SAMM_2_1_0;
         } else {
             return undefined;
         }
@@ -52,6 +52,6 @@ export class KnownVersion {
      * @return Array of supported versions
      */
     public static getSupportedVersions(): Array<SammVersion> {
-        return [SammVersion.SAMM_1_0_0, SammVersion.SAMM_2_0_0];
+        return [SammVersion.SAMM_2_0_0, SammVersion.SAMM_2_1_0];
     }
 }

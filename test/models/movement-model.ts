@@ -13,9 +13,9 @@
 
 export const movementAspectModel = `
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#> .
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :Movement a samm:Aspect ;
@@ -90,9 +90,9 @@ export const movementAspectModel = `
 
 export const movementAspectModelWithExternalReference = `
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#> .
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix test: <urn:samm:org.eclipse.esmf.samm:1.0.0#> .
 
@@ -168,9 +168,9 @@ export const movementAspectModelWithExternalReference = `
 
 export const movementAspectModelWithCollectionsAndReusedEntity = `
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#> .
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :Movements a samm:Aspect ;
@@ -260,9 +260,9 @@ export const movementAspectModelWithCollectionsAndReusedEntity = `
 
 export const movementAspectModelWithOperations = `
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#> .
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :Movement a samm:Aspect ;

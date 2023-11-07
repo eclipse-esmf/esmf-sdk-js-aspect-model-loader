@@ -13,10 +13,10 @@
 
 export const constraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
-@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
@@ -41,10 +41,10 @@ export const constraint = `
 
 export const encodingConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
-@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
@@ -70,10 +70,10 @@ export const encodingConstraint = `
 
 export const fixedPointConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
-@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
@@ -100,10 +100,10 @@ export const fixedPointConstraint = `
 
 export const languageConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
-@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
@@ -129,10 +129,10 @@ export const languageConstraint = `
 
 export const lengthConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
-@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
@@ -159,10 +159,10 @@ export const lengthConstraint = `
 
 export const localeConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
-@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
@@ -188,10 +188,10 @@ export const localeConstraint = `
 
 export const rangeConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
-@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 
@@ -220,10 +220,10 @@ export const rangeConstraint = `
 
 export const regularExpressionConstraint = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#>.
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#>.
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
-@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#>.
 

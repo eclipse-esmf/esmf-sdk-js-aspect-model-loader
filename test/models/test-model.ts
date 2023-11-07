@@ -13,9 +13,9 @@
 
 export const testAspectModel = `
 @prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#> .
-@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
-@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
-@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :TestAspect a samm:Aspect ;
