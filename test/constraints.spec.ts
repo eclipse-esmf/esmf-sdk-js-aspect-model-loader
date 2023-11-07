@@ -86,7 +86,7 @@ describe('Constraints tests', (): void => {
 
         test('should have a value defined from a list of available encodings', (): void => {
             const trait = aspect.properties[0].characteristic as unknown as DefaultTrait;
-            const urn = 'urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#';
+            const urn = 'urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#';
             const encodingConstraint = trait.constraints[0] as DefaultEncodingConstraint;
             const definedEncodings = [
                 `${urn}US-ASCII`,
