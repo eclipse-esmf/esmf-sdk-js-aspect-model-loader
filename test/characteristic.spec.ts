@@ -57,7 +57,7 @@ describe('Characteristics tests', (): void => {
         });
 
         it('should populate Characteristic with available data from fields', (): void => {
-            expect(testCharacteristic.metaModelVersion).toBe('1.0.0');
+            expect(testCharacteristic.metaModelVersion).toBe('2.1.0');
             expect(testCharacteristic.dataType).toEqual({_urn: 'http://www.w3.org/2001/XMLSchema#string'});
             expect(testCharacteristic.name).toBe('CharacteristicTest');
             expect(testCharacteristic.localesDescriptions).toEqual([currentLocale]);
@@ -98,7 +98,7 @@ describe('Characteristics tests', (): void => {
 
         it('should populate collection Characteristic with available data from fields', (): void => {
             const currentLocale = 'en';
-            expect(testCharacteristic.metaModelVersion).toBe('1.0.0');
+            expect(testCharacteristic.metaModelVersion).toBe('2.1.0');
             expect(testCharacteristic.name).toBe('CharacteristicTest');
             expect(testCharacteristic.localesDescriptions).toEqual([currentLocale]);
             expect(testCharacteristic.getDescription(currentLocale)).toBe('This is a test description!');
