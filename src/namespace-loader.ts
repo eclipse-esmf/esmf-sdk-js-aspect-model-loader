@@ -12,17 +12,17 @@
  */
 
 import {Observable, Subject} from 'rxjs';
-import {Aspect} from './aspect-meta-model';
+import {BaseMetaModelElement} from './aspect-meta-model';
 import {CacheStrategy, ModelElementCacheService} from './shared/model-element-cache.service';
 import {RdfLoader} from './shared/rdf-loader';
 import {RdfModel} from './shared/rdf-model';
-import {AspectInstantiator} from './instantiator/aspect-instantiator';
+import {NamespaceInstantiator} from './instantiator/namespace-instantiator';
 import {BaseModelLoader} from './base-model-loader';
 import {RdfModelUtil} from './shared/rdf-model-util';
 
-export class AspectModelLoader extends BaseModelLoader {
+export class NamespaceLoader extends BaseModelLoader {
     /**
-     * Creates a AspectModelLoader instance.
+     * Creates a NamespaceLoader instance.
      *
      * @param cacheService cache strategy to cache created elements to ensure uniqueness and a fast lookup of it.
      *                     The default cache strategy ignores inline defined elements.
@@ -32,35 +32,19 @@ export class AspectModelLoader extends BaseModelLoader {
     }
 
     /**
-     * Load and instantiate an Aspect Model based on an RDF/Turtle. Related imports are not resolved.
+     * Loads RDF content and returns an Observable that emits a map of namespaces as keys and an array of corresponding BaseMetaModelElement objects.
      *
-     * @param rdfContent RDF/Turtle representation to load
+     * @param {string[]} rdfContent The RDF content to load.
+     * @return {Observable<Map<string, Array<BaseMetaModelElement>>>} An Observable that emits a map of namespace keys to arrays of BaseMetaModelElement objects.
      */
-    public loadSelfContainedModel(rdfContent: string): Observable<Aspect> {
-        return this.load('', rdfContent);
-    }
-
-    /**
-     * Load and instantiate an Aspect Model based on an RDF/Turtle
-     *
-     * @param modelAspectUrn URN of the Aspect Model to load and instantiate
-     *
-     * @param rdfContent List of all RDF/Turtle representation to load, including
-     *                   all referenced models imports. The default SAMM related imports
-     *                   e.g. with prefixes "samm", "samm-c", "samm-e", "unit" and "xsd"
-     *                   are already provided. No needs to provided that(content) is not
-     *                   required.
-     *
-     * @return Observable<Aspect> Aspect including all information from the given RDF
-     */
-    public load(modelAspectUrn: string, ...rdfContent: string[]): Observable<Aspect> {
+    public load(...rdfContent: string[]): Observable<Map<string, Array<BaseMetaModelElement>>> {
         this.cacheService.reset();
-        const subject = new Subject<Aspect>();
+        const subject = new Subject<Map<string, Array<BaseMetaModelElement>>>();
         new RdfLoader().loadModel(rdfContent).subscribe(
             (rdfModel: RdfModel) => {
                 try {
                     RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);
-                    subject.next(Object.freeze(new AspectInstantiator(rdfModel, this.cacheService).createAspect(modelAspectUrn)));
+                    subject.next(Object.freeze(new NamespaceInstantiator(rdfModel, this.cacheService).createNamespaces()));
                 } catch (error: any) {
                     subject.error(error);
                 } finally {

@@ -23,7 +23,7 @@ import {traitAspectModel} from './models/trait-model';
 import {Subscription} from 'rxjs';
 import DoneCallback = jest.DoneCallback;
 
-describe('Visitor tests', (): void => {
+describe('Aspect model visitor tests', (): void => {
     let loader: AspectModelLoader;
     let aspect: DefaultAspect;
     let subscription: Subscription;

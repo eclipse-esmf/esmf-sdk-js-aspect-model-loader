@@ -12,7 +12,7 @@
  */
 
 import {Base, BaseMetaModelElement} from '../base';
-import {AspectModelVisitor} from '../../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../../visitor/model-visitor';
 
 export type Constraint = BaseMetaModelElement;
 
@@ -21,7 +21,7 @@ export class DefaultConstraint extends Base implements Constraint {
         super(metaModelVersion, aspectModelUrn, name);
     }
 
-    accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitConstraint(this, context);
     }
 }

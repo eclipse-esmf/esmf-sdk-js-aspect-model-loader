@@ -12,9 +12,9 @@
  */
 
 import {Base, DefaultCollection, Event, Operation, Property} from './index';
-import {AspectModelVisitor} from '../visitor/aspect-model-visitor';
 import {BaseMetaModelElement} from './base';
 import {HasProperties} from './has-properties';
+import {ModelVisitor} from '../visitor/model-visitor';
 
 export interface Aspect extends BaseMetaModelElement, HasProperties {
     operations: Array<Operation>;
@@ -66,7 +66,7 @@ export class DefaultAspect extends Base implements Aspect {
         this._events = value;
     }
 
-    public accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitAspect(this, context);
     }
 }

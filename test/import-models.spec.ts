@@ -37,11 +37,11 @@ describe('Import model tests', (): void => {
     });
 
     test('should have shared procedureAndStepIdentification', (): void => {
-        expect((<DefaultProperty>aspect.properties[2]).name).toEqual('procedureAndStepIdentification');
+        expect((<DefaultProperty>aspect.properties[4]).name).toEqual('procedureAndStepIdentification');
     });
 
     test('should check for properties length', (): void => {
-        expect(aspect.properties.length).toBe(3);
+        expect(aspect.properties.length).toBe(5);
     });
 
     test('should have resolve to 1 path for iProcedureAndStepNo', (): void => {

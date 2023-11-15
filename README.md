@@ -16,8 +16,8 @@
 
 ## Introduction
 
-The main purpose of this package it to allow users to load and parse one or
-more [.ttl files](<https://en.wikipedia.org/wiki/Turtle_(syntax)>) into native TypeScript objects.
+This project enables developers to effortlessly load and parse one or more [.ttl files](<https://en.wikipedia.org/wiki/Turtle_(syntax)>) 
+and instantiate native TypeScript objects of the pared [SAMM](<https://projects.eclipse.org/projects/dt.esmf>) semantic concepts.
 
 ## Getting help
 
@@ -39,7 +39,7 @@ npm install @esmf/aspect-model-loader
 
 ## Usage
 
-This package contains two methods for loading ttl files(string value of the .ttl files).
+Instantiating an Aspect the following two methods for loading ttl files(string value of the .ttl files) are provided.
 
 Load an aspect model which is self-contained (includes no imports to other ttl file):
 
@@ -49,16 +49,27 @@ new AspectModelLoader().loadSelfContainedModel(ttl).subscribe((aspect: Aspect) =
 });
 ```
 
-or if the model contains imports to additional ttl files:
+or if the model contains imports to further ttl files:
 
 ```
-new AspectModelLoader().load('<aspect-model-urn>', ttl-1, ttl-2, ttl-3).subscribe((aspect: Aspect) => {
+new AspectModelLoader().load('<aspect-model-urn>', ttl-1, ttl-2, ttl-3, ...).subscribe((aspect: Aspect) => {
+...
+});
+```
+
+Besides loading an aspect the project also supports to load and group the SAMM definitions by namespace.
+
+Load all namespace and related SAMM semantic concepts:
+
+```
+new NamespaceLoader().load(ttl-1, ttl-2, ttl-3, ...).subscribe((namespaces: Observable<Map<string, Array<BaseMetaModelElement>>>) => {
 ...
 });
 ```
 
 If you are using external .ttl files you may need to parse the contents of these files to strings, to be passed to the
-methods params.
+methods params. Further all .ttl files must use the same SAMM version. Loading SAMM semantic concepts from different .ttl files
+having different SAMM versions is not supported yet.
 
 ## Helpful functions
 

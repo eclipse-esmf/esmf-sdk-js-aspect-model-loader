@@ -12,8 +12,10 @@
  */
 
 export * from './aspect-model-loader';
+export * from './namespace-loader';
 export * from './vocabulary';
 export * from './aspect-meta-model';
-export * from './visitor/aspect-model-visitor';
+export * from './visitor/model-visitor';
 export * from './visitor/default-aspect-model-visitor';
+export * from './visitor/default-namespace-visitor';
 export * from './shared/model-element-cache.service';

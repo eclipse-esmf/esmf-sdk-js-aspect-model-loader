@@ -33,7 +33,6 @@ export const characteristicClassString = `
     samm:preferredName "PreferredName"@en;
     samm:description "This is a test description!"@en;
     samm:see <https%3A%2F%2Ftestcharacteristic.com>.
-
 `;
 
 export const collectionCharacteristicClassString = `
@@ -190,4 +189,28 @@ export const eitherCharacteristicClass = `
    samm:dataType xsd:float ;
    samm-c:unit unit:metre .
       
+`;
+
+export const characteristicDifferentNamespace = `
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix : <urn:samm:org.eclipse.esmf.test-with-different-ns:1.0.0#>.
+
+:AspectDefault a samm:Aspect;
+    samm:name "AspectDefault";
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:name "property1";
+    samm:characteristic :CharacteristicTest.
+:CharacteristicTest a samm:Characteristic;
+    samm:name "CharacteristicTest";
+    samm:dataType xsd:string;
+    samm:preferredName "PreferredName"@en;
+    samm:description "This is a test description!"@en;
+    samm:see <https%3A%2F%2Ftestcharacteristic.com>.
 `;
