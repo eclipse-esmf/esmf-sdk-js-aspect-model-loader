@@ -45,7 +45,7 @@ export class AspectInstantiator {
         const events = metaModelElementInstantiator.getEvents(aspectNode);
         const aspect = new DefaultAspect(null, null, null, properties, operations, events);
 
-        properties.forEach(property => (property as unknown as DefaultPropertyInstanceDefinition).addParent(aspect));
+        properties.forEach(property => (property as DefaultPropertyInstanceDefinition).addParent(aspect));
         operations.forEach(operation => (operation as DefaultOperation).addParent(aspect));
         events.forEach(event => (event as DefaultEvent).addParent(aspect));
 

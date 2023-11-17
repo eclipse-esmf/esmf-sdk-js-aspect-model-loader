@@ -105,7 +105,7 @@ export class RdfModelUtil {
     static throwErrorIfUnsupportedVersion(rdfModel: RdfModel): void {
         if (rdfModel && KnownVersion.isVersionSupported(rdfModel.getMetaModelVersion()) === false) {
             throw Error(
-                `Version ${rdfModel.getMetaModelVersion()} is not supported by this versions. Supported versions are: ${KnownVersion.getSupportedVersions().join()}`
+                `SAMM ${rdfModel.getMetaModelVersion()} is not supported. Supported versions are: ${KnownVersion.getSupportedVersions().join()}`
             );
         }
     }
