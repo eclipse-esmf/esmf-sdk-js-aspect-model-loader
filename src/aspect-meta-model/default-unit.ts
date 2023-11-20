@@ -13,7 +13,7 @@
 
 import {Base, BaseMetaModelElement} from './base';
 import {QuantityKind} from './default-quantity-kind';
-import {AspectModelVisitor} from '../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../visitor/model-visitor';
 
 export interface Unit extends BaseMetaModelElement {
     symbol?: string;
@@ -78,7 +78,7 @@ export class DefaultUnit extends Base implements Unit {
         return this._quantityKinds;
     }
 
-    public accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitUnit(this, context);
     }
 }

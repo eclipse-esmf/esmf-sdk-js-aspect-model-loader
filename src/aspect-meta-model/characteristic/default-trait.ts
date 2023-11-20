@@ -13,7 +13,7 @@
 
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {Constraint} from '../constraint/default-constraint';
-import {AspectModelVisitor} from '../../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../../visitor/model-visitor';
 
 export interface Trait extends Characteristic {
     baseCharacteristic?: Characteristic;
@@ -43,7 +43,7 @@ export class DefaultTrait extends DefaultCharacteristic implements Trait {
         return this._constraints;
     }
 
-    accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitCharacteristic(this, context);
     }
 }

@@ -13,5 +13,6 @@
 
 export interface IsNamed {
     aspectModelUrn: string;
+    namespace: string;
     name: string;
 }

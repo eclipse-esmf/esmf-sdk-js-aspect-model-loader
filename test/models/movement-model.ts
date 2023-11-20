@@ -94,7 +94,7 @@ export const movementAspectModelWithExternalReference = `
 @prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
 @prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix test: <urn:samm:org.eclipse.esmf.samm:1.0.0#> .
+@prefix test: <urn:samm:org.eclipse.esmf.test:1.0.0#> .
 
 :MovementWithImports a samm:Aspect ;
    samm:name "MovementWithImports" ;

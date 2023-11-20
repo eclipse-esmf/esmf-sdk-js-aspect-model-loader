@@ -39,7 +39,7 @@ export class BaseConstraintCharacteristicInstantiator {
             return this.nextProcessor !== null ? this.nextProcessor.create(quad) : null;
         }
 
-        // post init all common properties of the meta model element
+        // post init all common properties of the metamodel element
         const element = this.processElement(propertyQuads);
 
         (<DefaultConstraint>element).isAnonymousNode = Util.isBlankNode(quad.object);
@@ -50,7 +50,7 @@ export class BaseConstraintCharacteristicInstantiator {
     }
 
     /**
-     * This method must be override from the respective constraint or characteristic instantiator implementation
+     * This method must be overridden from the respective constraint or characteristic instantiator implementation
      * in order to initialize the specific properties.
      */
     protected processElement(quads: Array<Quad>): BaseMetaModelElement {
@@ -58,7 +58,7 @@ export class BaseConstraintCharacteristicInstantiator {
     }
 
     /**
-     * This method must be override from the respective constraint or characteristic instantiator implementation
+     * This method must be overridden from the respective constraint or characteristic instantiator implementation
      * in order to get called.
      */
     shouldProcess(namedNode: NamedNode): boolean {

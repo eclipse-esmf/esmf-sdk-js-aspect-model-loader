@@ -11,35 +11,32 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '../aspect-meta-model/base';
-import {Entity} from '../aspect-meta-model/default-entity';
-import {Property} from '../aspect-meta-model/default-property';
-import {Aspect} from '../aspect-meta-model/default-aspect';
-import {Constraint} from '../aspect-meta-model/constraint/default-constraint';
-import {Characteristic} from '../aspect-meta-model/characteristic/default-characteristic';
-import {Unit} from '../aspect-meta-model/default-unit';
-import {Operation} from '../aspect-meta-model/default-operation';
-import {QuantityKind} from '../aspect-meta-model/default-quantity-kind';
-import {Event} from '../aspect-meta-model';
+import {Aspect, Characteristic, Constraint, Entity, Event, Operation, Property, QuantityKind, Unit} from '../aspect-meta-model';
 
-export interface AspectModelVisitor<T, U> {
-    visit(metalModelElement: BaseMetaModelElement, context: U): T;
-
+/**
+ * Visitor interface to traverse a loaded model and apply operations to the
+ * different defined concepts.
+ *
+ * @template T return type of the visitor.
+ * @template U context object of the visitor.
+ */
+export interface ModelVisitor<T, U> {
+    /** Visit a Property definition */
     visitProperty(property: Property, context: U): T;
-
+    /** Visit an Aspect definition */
     visitAspect(aspect: Aspect, context: U): T;
-
+    /** Visit a Operation definition */
     visitOperation(operation: Operation, context: U): T;
-
+    /** Visit a Constraint definition */
     visitConstraint(constraint: Constraint, context: U): T;
-
+    /** Visit a Characteristic definition */
     visitCharacteristic(characteristic: Characteristic, context: U): T;
-
+    /** Visit a Unit definition */
     visitUnit(unit: Unit, context: U): T;
-
+    /** Visit a QuantityKind definition */
     visitQuantityKind(quantityKind: QuantityKind, context: U): T;
-
+    /** Visit an Entity definition */
     visitEntity(entity: Entity, context: U): T;
-
+    /** Visit an Event definition */
     visitEvent(entity: Event, context: U): T;
 }

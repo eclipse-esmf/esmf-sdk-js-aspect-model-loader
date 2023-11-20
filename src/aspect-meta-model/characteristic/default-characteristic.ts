@@ -13,7 +13,7 @@
 
 import {Type} from '../type';
 import {Base, BaseMetaModelElement} from '../base';
-import {AspectModelVisitor} from '../../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../../visitor/model-visitor';
 
 export interface Characteristic extends BaseMetaModelElement {
     dataType?: Type;
@@ -32,7 +32,7 @@ export class DefaultCharacteristic extends Base implements Characteristic {
         return this._dataType;
     }
 
-    public accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitCharacteristic(this, context);
     }
 

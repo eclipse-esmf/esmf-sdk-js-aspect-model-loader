@@ -14,7 +14,7 @@
 import {Characteristic, DefaultCharacteristic} from './characteristic/default-characteristic';
 import {Base, BaseMetaModelElement} from './base';
 import {Type} from './type';
-import {AspectModelVisitor} from '../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../visitor/model-visitor';
 import {DefaultTrait} from './characteristic/default-trait';
 import {Constraint} from './constraint/default-constraint';
 
@@ -106,7 +106,7 @@ export class DefaultProperty extends Base implements Property {
         return DefaultCharacteristic.getEffectiveDataType(this.characteristic);
     }
 
-    public accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitProperty(this, context);
     }
 
@@ -142,6 +142,13 @@ export class DefaultPropertyInstanceDefinition implements Property {
 
     get extends(): Property {
         return this._extends;
+    }
+
+    get namespace(): string {
+        if (this._wrappedProperty.isAnonymousNode) {
+            return '';
+        }
+        return this._wrappedProperty.aspectModelUrn.split('#')[0] + '#';
     }
 
     set extends(value: Property) {
@@ -275,7 +282,7 @@ export class DefaultPropertyInstanceDefinition implements Property {
         return this._wrappedProperty.constraints;
     }
 
-    accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitProperty(this, context);
     }
 

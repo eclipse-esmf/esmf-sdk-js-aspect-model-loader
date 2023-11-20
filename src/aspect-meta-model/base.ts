@@ -14,10 +14,10 @@
 import {IsNamed} from './is-named';
 import {IsVersioned} from './is-versioned';
 import {IsDescribed} from './is-described';
-import {AspectModelVisitor} from '../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../visitor/model-visitor';
 
 export interface BaseMetaModelElement extends IsNamed, IsVersioned, IsDescribed {
-    accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T;
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T;
 
     parents: Array<BaseMetaModelElement>;
 }
@@ -35,6 +35,13 @@ export abstract class Base implements BaseMetaModelElement {
         private _name: string,
         private _isAnonymousNode: boolean = false
     ) {}
+
+    public get namespace(): string {
+        if (this._isAnonymousNode) {
+            return '';
+        }
+        return this._aspectModelUrn.split('#')[0] + '#';
+    }
 
     public get parents(): Array<BaseMetaModelElement> {
         return this._parents;
@@ -124,5 +131,5 @@ export abstract class Base implements BaseMetaModelElement {
         return this._see;
     }
 
-    abstract accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T;
+    abstract accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T;
 }

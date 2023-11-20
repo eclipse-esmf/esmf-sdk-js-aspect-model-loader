@@ -13,7 +13,7 @@
 
 import {Property} from './default-property';
 import {Base, BaseMetaModelElement} from './base';
-import {AspectModelVisitor} from '../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../visitor/model-visitor';
 
 export interface Operation extends BaseMetaModelElement {
     input: Array<Property>;
@@ -62,7 +62,7 @@ export class DefaultOperation extends Base implements Operation {
         return this._output;
     }
 
-    public accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitOperation(this, context);
     }
 }

@@ -13,7 +13,7 @@
 
 import {Base, BaseMetaModelElement} from './base';
 import {Property} from './default-property';
-import {AspectModelVisitor} from '../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../visitor/model-visitor';
 
 export interface Event extends BaseMetaModelElement {
     parameters: Array<Property>;
@@ -32,7 +32,7 @@ export class DefaultEvent extends Base implements Event {
         this._parameters = parameters;
     }
 
-    public accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitEvent(this, context);
     }
 }

@@ -17,6 +17,7 @@ import {Samm} from '../vocabulary/samm';
 import {SammC} from '../vocabulary/samm-c';
 import {SammE} from '../vocabulary/samm-e';
 import {SammU} from '../vocabulary/samm-u';
+import {KnownVersion} from './known-version';
 
 export class RdfModelUtil {
     static readonly defaultAspectModelAlias = '';
@@ -99,5 +100,13 @@ export class RdfModelUtil {
 
     static appendLocale(value: string, locale: string): string {
         return `${value} ${locale ? `@${locale}` : ''}`;
+    }
+
+    static throwErrorIfUnsupportedVersion(rdfModel: RdfModel): void {
+        if (rdfModel && KnownVersion.isVersionSupported(rdfModel.getMetaModelVersion()) === false) {
+            throw Error(
+                `SAMM ${rdfModel.getMetaModelVersion()} is not supported. Supported versions are: ${KnownVersion.getSupportedVersions().join()}`
+            );
+        }
     }
 }

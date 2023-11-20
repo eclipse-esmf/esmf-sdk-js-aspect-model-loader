@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AspectModelVisitor} from './aspect-model-visitor';
 import {
     Aspect,
     Base,
@@ -24,24 +23,20 @@ import {
     Operation,
     Property,
     QuantityKind,
-    Unit,
+    Unit
 } from '../aspect-meta-model';
+import { ModelVisitor } from './model-visitor';
 
-export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U> {
+export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
     skipProperties: Array<string> = ['_wrappedProperty', '_parents'];
 
-    private getObjectKeys(element: BaseMetaModelElement): Array<string> {
-        return Object.keys(element instanceof DefaultPropertyInstanceDefinition ? element.wrappedProperty : element);
-    }
-
-    private getValue(key: string, element: BaseMetaModelElement): any {
-        return element instanceof DefaultPropertyInstanceDefinition ? element.wrappedProperty[key] : element[key];
-    }
-
-    private isPropertyInstanceDefinition(attributeValue: any): boolean {
-        return attributeValue instanceof Base || attributeValue instanceof DefaultPropertyInstanceDefinition;
-    }
-
+    /**
+     * Visits each element and performs an operation on it.
+     *
+     * @param {BaseMetaModelElement} element element to visit.
+     * @param {U} context context for visiting the element.
+     * @return {T} result of visiting the element.
+     */
     visit(element: BaseMetaModelElement, context: U): T {
         const item: U = element.accept(<any>this, context);
         this.getObjectKeys(element).forEach(attributeKey => {
@@ -59,6 +54,18 @@ export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U>
             }
         });
         return null;
+    }
+
+    private getObjectKeys(element: BaseMetaModelElement): Array<string> {
+        return Object.keys(element instanceof DefaultPropertyInstanceDefinition ? element.wrappedProperty : element);
+    }
+
+    private getValue(key: string, element: BaseMetaModelElement): any {
+        return element instanceof DefaultPropertyInstanceDefinition ? element.wrappedProperty[key] : element[key];
+    }
+
+    private isPropertyInstanceDefinition(attributeValue: any): boolean {
+        return attributeValue instanceof Base || attributeValue instanceof DefaultPropertyInstanceDefinition;
     }
 
     visitAspect(aspect: Aspect, context: U): T {

@@ -13,7 +13,7 @@
 
 import {IsNamed} from './is-named';
 import {Base} from './base';
-import {AspectModelVisitor} from '../visitor/aspect-model-visitor';
+import {ModelVisitor} from '../visitor/model-visitor';
 
 export interface QuantityKind extends IsNamed {
     label: string;
@@ -32,7 +32,7 @@ export class DefaultQuantityKind extends Base implements QuantityKind {
         return this._label;
     }
 
-    public accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitQuantityKind(this, context);
     }
 }
