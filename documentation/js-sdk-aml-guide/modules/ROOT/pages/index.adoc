@@ -18,18 +18,11 @@ For example a newly added property and the related value could be shown in the U
 
 == Getting Started
 
-=== Install from the public npm (Currently not available):
+=== Install from GitHub release repository
 
-[source,bash]
+[source,shell,subs="attributes+,+quotes"]
 ----
-npm install @esmf/aspect-model-loader
-----
-
-=== Install from github release repository:
-
-[source,bash]
-----
-npm install https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/releases/download/<TAG_VERSION>/esmf-aspect-model-loader-x.x.x.tgz
+npm install https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/releases/download/v{esmf-sdk-js-aspect-model-loader-version}/esmf-aspect-model-loader-{esmf-sdk-js-aspect-model-loader-version}.tgz
 ----
 
 == Usage
@@ -38,7 +31,7 @@ This package contains two methods for loading Turtle (.ttl) files (string value 
 
 Load an aspect model which is self-contained (includes no imports to other ttl file):
 
-[source,bash]
+[source,javascript]
 ----
 new AspectModelLoader().loadSelfContainedModel(ttl).subscribe((aspect: Aspect) => {
 ...
@@ -47,7 +40,7 @@ new AspectModelLoader().loadSelfContainedModel(ttl).subscribe((aspect: Aspect) =
 
 or if the model contains imports to additional ttl files:
 
-[source,bash]
+[source,javascript]
 ----
 new AspectModelLoader().load('<aspect-model-urn>', ttl-1, ttl-2, ttl-3).subscribe((aspect: Aspect) => {
 ...
@@ -62,14 +55,14 @@ This module exposes some helper functions that can be used to find items inside 
 
 Find a specific model element, and returns it or undefined.
 
-[source,bash]
+[source,javascript]
 ----
 let specificElement = loader.findByUrn(options.urnSelectedModelElement)
 ----
 
 Find a specific model element by name, and returns the found elements.
 
-[source,bash]
+[source,javascript]
 ----
 let specificElement = loader.findByName(options.selectedModelName)
 ----
