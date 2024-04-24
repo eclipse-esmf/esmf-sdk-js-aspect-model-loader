@@ -139,8 +139,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
             });
         }
         if (resolvedBlankNodesValues.length) {
-            const test = this.retrieveStringFromArrayOfValues(resolvedBlankNodesValues);
-            return test;
+            return this.retrieveStringFromArrayOfValues(resolvedBlankNodesValues);
         }
         else {
             return '';
