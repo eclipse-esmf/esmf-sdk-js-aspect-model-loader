@@ -113,7 +113,13 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
             // create the related instance and attach the metamodel element to it
             const entityInstance = new DefaultEntityInstance(quad.object.value.split('#')[1], entity, descriptions);
             entityInstanceQuads.forEach(quad => {
-                entityInstance[quad.predicate.value.split('#')[1]] = quad.object.value;
+                if (Util.isBlankNode(quad.object)) {
+                    entityInstance[quad.predicate.value.split('#')[1]] =
+                        this.solveBlankNodeValues([...this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value)]);
+                }
+                else {
+                    entityInstance[quad.predicate.value.split('#')[1]] = quad.object.value;
+                }
             });
 
             return entityInstance;
@@ -123,5 +129,34 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
 
     shouldProcess(nameNode: NamedNode): boolean {
         return this.metaModelElementInstantiator.sammC.EnumerationCharacteristic().equals(nameNode);
+    }
+
+    solveBlankNodeValues(resolvedBlankNodes) {
+        const resolvedBlankNodesValues = [];
+        if (resolvedBlankNodes.length > 0) {
+            resolvedBlankNodes.forEach(item => {
+                resolvedBlankNodesValues.push({ value: item.object.value, language: item.object.language });
+            });
+        }
+        if (resolvedBlankNodesValues.length) {
+            const test = this.retrieveStringFromArrayOfValues(resolvedBlankNodesValues);
+            return test;
+        }
+        else {
+            return '';
+        }
+    }
+    retrieveStringFromArrayOfValues(values) {
+        let result = '';
+        values.forEach(obj => {
+            if (obj.language) {
+                result += `${obj.language}: ${obj.value}, `;
+            }
+            else {
+                result += `${obj.value}, `;
+            }
+        });
+        result = result.slice(0, -2);
+        return result;
     }
 }
