@@ -130,6 +130,71 @@ export const enumerationCharacteristicClassEntity = `
     :resultStateAttributeValue       "ok"^^xsd:string .
 `;
 
+export const enumerationCharacteristicWithEntityInstanceClass = `
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:org.eclipse.esmf.test:1.0.0#> .
+
+:TestAspect a samm:Aspect ;
+   samm:properties ( :result :metadata ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:result a samm:Property ;
+   samm:preferredName "result"@en ;
+   samm:characteristic :ResultTypes .
+
+:metadata a samm:Property ;
+   samm:characteristic :MetadataCharacteristic .
+
+:ResultTypes a samm-c:Enumeration ;
+   samm:preferredName "result types"@en ;
+   samm:description "The collection of known result types"@en ;
+   samm:dataType :ResultType ;
+   samm-c:values ( :ResultType1 :ResultType2 ) .
+
+:MetadataCharacteristic a samm:Characteristic ;
+   samm:dataType xsd:string .
+
+:ResultType a samm:Entity ;
+   samm:preferredName "Result Type"@en ;
+   samm:properties ( :resultTypeNumber [ samm:property :resultTypeDescription; samm:notInPayload true ] ) .
+
+:ResultType1 a :ResultType ;
+   :resultTypeDescription ( "ein"@de "one"@en ) ;
+   :resultTypeNumber "1"^^xsd:positiveInteger .
+
+:ResultType2 a :ResultType ;
+   :resultTypeDescription ( "zwei"@de "two"@en ) ;
+   :resultTypeNumber "2"^^xsd:positiveInteger .
+
+:resultTypeNumber a samm:Property ;
+   samm:preferredName "Result type number"@en ;
+   samm:description "result type number"@en ;
+   samm:characteristic :ResultNumbers .
+
+:resultTypeDescription a samm:Property ;
+   samm:preferredName "Result Type Description"@en ;
+   samm:description "Description of result type"@en ;
+   samm:characteristic :ResultTypeDescription .
+
+:ResultNumbers a samm-c:Enumeration ;
+   samm:preferredName "Result Numbers"@en ;
+   samm:description "result numbers"@en ;
+   samm:dataType xsd:positiveInteger ;
+   samm-c:values ( "1"^^xsd:positiveInteger "2"^^xsd:positiveInteger "21"^^xsd:positiveInteger "30"^^xsd:positiveInteger "35"^^xsd:positiveInteger "40"^^xsd:positiveInteger "41"^^xsd:positiveInteger "42"^^xsd:positiveInteger "43"^^xsd:positiveInteger "50"^^xsd:positiveInteger "60"^^xsd:positiveInteger "61"^^xsd:positiveInteger "70"^^xsd:positiveInteger "75"^^xsd:positiveInteger ) .
+
+:ResultTypeDescription a samm-c:Collection ;
+   samm:preferredName "Result Type Description"@en ;
+   samm:description "Descriptions of result types in English and German"@en ;
+   samm:dataType rdf:langString .
+`;
+
 export const eitherCharacteristicClass = `
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#>.

@@ -113,7 +113,14 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
             // create the related instance and attach the metamodel element to it
             const entityInstance = new DefaultEntityInstance(quad.object.value.split('#')[1], entity, descriptions);
             entityInstanceQuads.forEach(quad => {
-                entityInstance[quad.predicate.value.split('#')[1]] = quad.object.value;
+                const predicateKey = this.getPredicateKey(quad);
+                if (Util.isBlankNode(quad.object)) {
+                    entityInstance[predicateKey] =
+                        this.solveBlankNodeValues([...this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value)]);
+                }
+                else {
+                    entityInstance[predicateKey] = quad.object.value;
+                }
             });
 
             return entityInstance;
@@ -124,4 +131,21 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     shouldProcess(nameNode: NamedNode): boolean {
         return this.metaModelElementInstantiator.sammC.EnumerationCharacteristic().equals(nameNode);
     }
+
+    solveBlankNodeValues(resolvedBlankNodes: Array<Quad>) {
+        return resolvedBlankNodes.length > 0
+            ? resolvedBlankNodes.map(item => this.createLanguageObject(item))
+            : '';
+    }
+
+    private getPredicateKey(quad: Quad): string {
+        return quad.predicate.value.split('#')[1];
+    }
+
+    private createLanguageObject(quad: Quad): any {
+        return (quad.object as any).language
+            ? {value: quad.object.value, language: (quad.object as any).language}
+            : quad.object.value;
+    }
+
 }
