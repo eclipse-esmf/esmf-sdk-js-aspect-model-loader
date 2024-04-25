@@ -113,12 +113,13 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
             // create the related instance and attach the metamodel element to it
             const entityInstance = new DefaultEntityInstance(quad.object.value.split('#')[1], entity, descriptions);
             entityInstanceQuads.forEach(quad => {
+                const predicateKey = this.getPredicateKey(quad);
                 if (Util.isBlankNode(quad.object)) {
-                    entityInstance[quad.predicate.value.split('#')[1]] =
+                    entityInstance[predicateKey] =
                         this.solveBlankNodeValues([...this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value)]);
                 }
                 else {
-                    entityInstance[quad.predicate.value.split('#')[1]] = quad.object.value;
+                    entityInstance[predicateKey] = quad.object.value;
                 }
             });
 
@@ -131,31 +132,20 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
         return this.metaModelElementInstantiator.sammC.EnumerationCharacteristic().equals(nameNode);
     }
 
-    solveBlankNodeValues(resolvedBlankNodes) {
-        const resolvedBlankNodesValues = [];
-        if (resolvedBlankNodes.length > 0) {
-            resolvedBlankNodes.forEach(item => {
-                resolvedBlankNodesValues.push({ value: item.object.value, language: item.object.language });
-            });
-        }
-        if (resolvedBlankNodesValues.length) {
-            return this.retrieveStringFromArrayOfValues(resolvedBlankNodesValues);
-        }
-        else {
-            return '';
-        }
+    solveBlankNodeValues(resolvedBlankNodes: Array<Quad>) {
+        return resolvedBlankNodes.length > 0
+            ? resolvedBlankNodes.map(item => this.createLanguageObject(item))
+            : '';
     }
-    retrieveStringFromArrayOfValues(values) {
-        let result = '';
-        values.forEach(obj => {
-            if (obj.language) {
-                result += `${obj.language}: ${obj.value}, `;
-            }
-            else {
-                result += `${obj.value}, `;
-            }
-        });
-        result = result.slice(0, -2);
-        return result;
+
+    private getPredicateKey(quad: Quad): string {
+        return quad.predicate.value.split('#')[1];
     }
+
+    private createLanguageObject(quad: Quad): any {
+        return (quad.object as any).language
+            ? {value: quad.object.value, language: (quad.object as any).language}
+            : quad.object.value;
+    }
+
 }

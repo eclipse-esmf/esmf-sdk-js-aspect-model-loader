@@ -31,6 +31,7 @@ import {
     collectionCharacteristicClassString,
     eitherCharacteristicClass,
     enumerationCharacteristicClassEntity,
+    enumerationCharacteristicWithEntityInstanceClass
 } from './models/characteristics';
 import DoneCallback = jest.DoneCallback;
 
@@ -159,6 +160,42 @@ describe('Characteristics tests', (): void => {
             expect(valueInstance.descriptionKey).toBe('resultStateAttributeDescription');
             expect(valueInstance.localesDescriptions.length).toBe(2);
             expect(valueInstance.getDescription('de')).toBe('Result Status nicht OK');
+        });
+
+        afterAll((): void => {
+            if (subscription) {
+                subscription.unsubscribe();
+            }
+        });
+    });
+
+    describe('Enumeration class with Entity Instance', (): void => {
+        beforeAll((done: DoneCallback): void => {
+            loader = new AspectModelLoader();
+            subscription = loader.loadSelfContainedModel(enumerationCharacteristicWithEntityInstanceClass).subscribe((_aspect: TestAspect): void => {
+                aspect = _aspect;
+                testProperty = aspect.properties[0];
+                done();
+            });
+        });
+
+        it('should have enumeration type', (): void => {
+            expect(testProperty.characteristic instanceof DefaultEnumeration).toBe(true);
+        });
+
+        it('should have correct model urn', (): void => {
+            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn)
+                .toEqual('urn:samm:org.eclipse.esmf.test:1.0.0#resultTypeDescription');
+        });
+
+        it('should have two entries', (): void => {
+            const enumeration = testProperty.characteristic as DefaultEnumeration;
+            expect(enumeration.values.length).toBe(2);
+        });
+
+        it('Result type values should be instanceof DefaultEntityInstance class', (): void => {
+            const enumeration = testProperty.characteristic as DefaultEnumeration;
+            expect(enumeration.values[0] instanceof DefaultEntityInstance).toBe(true);
         });
 
         afterAll((): void => {
