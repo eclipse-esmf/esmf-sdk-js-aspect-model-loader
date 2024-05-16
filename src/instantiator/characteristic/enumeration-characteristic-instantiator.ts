@@ -133,7 +133,8 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
             return this.solveBlankNodeValues([...resolvedBlankNodes]);
         }
 
-        if ((quad.object as any).datatypeString === Samm.LANG_STRING) {
+        if (((quad.object as any).datatypeString === Samm.RDF_LANG_STRING) ||
+            ((quad.object as any).datatypeString === Samm.XML_LANG_STRING)) {
             return this.createLanguageObject(quad);
         }
 
