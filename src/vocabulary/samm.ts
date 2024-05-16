@@ -19,6 +19,8 @@ export class Samm {
     static readonly RDFS_URI = 'http://www.w3.org/2000/01/rdf-schema';
     static readonly BASE_URI = 'urn:samm:org.eclipse.esmf.samm:';
 
+    static readonly LANG_STRING = `${Samm.RDF_URI}#langString`;
+
     private alias = 'samm';
 
     constructor(public version: string) {}

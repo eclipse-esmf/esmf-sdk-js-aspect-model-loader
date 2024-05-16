@@ -11,8 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import { Aspect, BaseMetaModelElement, Characteristic, Constraint, Entity, Event, Operation, Property, QuantityKind, Unit } from '../aspect-meta-model';
-import { ModelVisitor } from './model-visitor';
+import {
+    Aspect,
+    BaseMetaModelElement,
+    Characteristic,
+    Constraint,
+    Entity,
+    Event,
+    Operation,
+    Property,
+    QuantityKind,
+    Unit,
+} from '../aspect-meta-model';
+import {ModelVisitor} from './model-visitor';
 
 /**
  * Default visitor to traverse alle concepts defined within the different namespaces.

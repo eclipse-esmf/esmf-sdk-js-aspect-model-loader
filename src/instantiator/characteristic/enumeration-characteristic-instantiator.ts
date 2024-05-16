@@ -19,6 +19,11 @@ import {Samm} from '../../vocabulary';
 import {EntityInstantiator} from '../entity-instantiator';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
 
+export interface MultiLanguageText {
+    value: string;
+    language: string;
+}
+
 export class EnumerationCharacteristicInstantiator extends CharacteristicInstantiator {
     constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
         super(metaModelElementInstantiator, nextProcessor);
@@ -114,13 +119,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
             const entityInstance = new DefaultEntityInstance(quad.object.value.split('#')[1], entity, descriptions);
             entityInstanceQuads.forEach(quad => {
                 const predicateKey = this.getPredicateKey(quad);
-                if (Util.isBlankNode(quad.object)) {
-                    entityInstance[predicateKey] =
-                        this.solveBlankNodeValues([...this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value)]);
-                }
-                else {
-                    entityInstance[predicateKey] = quad.object.value;
-                }
+                entityInstance[predicateKey] = this.resolveQuadObject(quad);
             });
 
             return entityInstance;
@@ -128,24 +127,32 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
         throw new Error(`Could resolve Entity instance ${entityTypeQuad.subject.value}`);
     }
 
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.EnumerationCharacteristic().equals(nameNode);
+    private resolveQuadObject(quad: Quad): MultiLanguageText | Array<MultiLanguageText> | string {
+        if (Util.isBlankNode(quad.object)) {
+            const resolvedBlankNodes = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
+            return this.solveBlankNodeValues([...resolvedBlankNodes]);
+        }
+
+        if ((quad.object as any).datatypeString === Samm.LANG_STRING) {
+            return this.createLanguageObject(quad);
+        }
+
+        return quad.object.value;
     }
 
-    solveBlankNodeValues(resolvedBlankNodes: Array<Quad>) {
-        return resolvedBlankNodes.length > 0
-            ? resolvedBlankNodes.map(item => this.createLanguageObject(item))
-            : '';
+    private solveBlankNodeValues(resolvedBlankNodes: Array<Quad>): Array<MultiLanguageText> {
+        return resolvedBlankNodes.length > 0 ? resolvedBlankNodes.map(item => this.createLanguageObject(item)) : [];
     }
 
     private getPredicateKey(quad: Quad): string {
         return quad.predicate.value.split('#')[1];
     }
 
-    private createLanguageObject(quad: Quad): any {
-        return (quad.object as any).language
-            ? {value: quad.object.value, language: (quad.object as any).language}
-            : quad.object.value;
+    private createLanguageObject(quad: Quad): MultiLanguageText {
+        return {value: quad.object.value, language: (quad.object as any).language};
     }
 
+    shouldProcess(nameNode: NamedNode): boolean {
+        return this.metaModelElementInstantiator.sammC.EnumerationCharacteristic().equals(nameNode);
+    }
 }

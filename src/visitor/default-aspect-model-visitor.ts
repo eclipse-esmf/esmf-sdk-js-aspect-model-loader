@@ -23,9 +23,9 @@ import {
     Operation,
     Property,
     QuantityKind,
-    Unit
+    Unit,
 } from '../aspect-meta-model';
-import { ModelVisitor } from './model-visitor';
+import {ModelVisitor} from './model-visitor';
 
 export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
     skipProperties: Array<string> = ['_wrappedProperty', '_parents'];
