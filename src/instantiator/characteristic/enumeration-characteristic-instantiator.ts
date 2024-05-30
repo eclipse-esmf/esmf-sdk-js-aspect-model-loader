@@ -27,23 +27,17 @@ export interface MultiLanguageText {
 export class EnumerationCharacteristicInstantiator extends CharacteristicInstantiator {
     constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
         super(metaModelElementInstantiator, nextProcessor);
-        console.log('+++ in EnumerationCharacteristicInstantiator constructor +++');
     }
 
     protected processElement(quads: Array<Quad>): Characteristic {
         const samm = this.metaModelElementInstantiator.samm;
         const sammC = this.metaModelElementInstantiator.sammC;
         const enumeration = this.creatEnumerationObject();
-        console.log('+++ in EnumerationCharacteristicInstantiator processElement +++');
         const dataType = quads.find(quad => this.samm.isDataTypeProperty(quad.predicate.value));
 
-        
         quads.forEach(quad => {
-            console.log('+++ quad.predicate.value+++', quad.predicate.value);
             if (samm.isValueProperty(quad.predicate.value) || sammC.isValuesProperty(quad.predicate.value)) {
-                console.log('+++ in EnumerationCharacteristicInstantiator quads.forEach in if +++');
                 if (Util.isBlankNode(quad.object)) {
-                    console.log('+++ in EnumerationCharacteristicInstantiator in if isBlankNode +++');
                     enumeration.values = this.getEnumerationValues(quad, dataType?.object.value);
                 }
             }
