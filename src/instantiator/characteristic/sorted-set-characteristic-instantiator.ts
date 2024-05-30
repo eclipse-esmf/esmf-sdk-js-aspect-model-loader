@@ -21,6 +21,7 @@ import {Characteristic} from '../../aspect-meta-model';
 import {Samm} from '../../vocabulary';
 import {EntityInstantiator} from '../entity-instantiator';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
+import { ValuesCollection } from '../../aspect-meta-model/characteristic/default-values-collection';
 
 export interface MultiLanguageText {
     value: string;

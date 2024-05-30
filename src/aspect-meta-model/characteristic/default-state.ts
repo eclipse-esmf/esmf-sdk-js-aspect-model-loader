@@ -12,10 +12,11 @@
  */
 
 import {Type} from '../type';
-import {DefaultEnumeration, Enumeration} from './default-enumeration';
+import {DefaultEnumeration} from './default-enumeration';
 import {DefaultEntityInstance} from '../default-entity-instance';
+import { ValuesCollection } from './default-values-collection';
 
-export interface State extends Enumeration {
+export interface State extends ValuesCollection {
     defaultValue: DefaultEntityInstance | string | number;
 }
 

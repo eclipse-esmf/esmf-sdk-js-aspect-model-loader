@@ -17,7 +17,7 @@ import {NamedNode, Quad, Util} from 'n3';
 import {Characteristic} from '../../aspect-meta-model';
 import {DefaultState} from '../../aspect-meta-model/characteristic/default-state';
 import {EnumerationCharacteristicInstantiator} from './enumeration-characteristic-instantiator';
-import {Enumeration} from '../../aspect-meta-model/characteristic/default-enumeration';
+import { ValuesCollection } from '../../aspect-meta-model/characteristic/default-values-collection';
 
 export class StateCharacteristicInstantiator extends EnumerationCharacteristicInstantiator {
     constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -37,7 +37,7 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
         return stateCharacteristic;
     }
 
-    protected creatEnumerationObject(): Enumeration {
+    protected creatEnumerationObject(): ValuesCollection {
         return new DefaultState(null, null, null, null, null);
     }
 

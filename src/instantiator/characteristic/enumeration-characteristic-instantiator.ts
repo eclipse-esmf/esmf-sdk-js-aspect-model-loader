@@ -14,10 +14,11 @@ import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad, Util} from 'n3';
 import {Characteristic} from '../../aspect-meta-model';
-import {DefaultEnumeration, Enumeration} from '../../aspect-meta-model/characteristic/default-enumeration';
+import {DefaultEnumeration} from '../../aspect-meta-model/characteristic/default-enumeration';
 import {Samm} from '../../vocabulary';
 import {EntityInstantiator} from '../entity-instantiator';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
+import { ValuesCollection } from '../../aspect-meta-model/characteristic/default-values-collection';
 
 export interface MultiLanguageText {
     value: string;
@@ -49,7 +50,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
      * Override the method in the corresponding specific enumeration class to create the correct type of
      * collection e.g. see state-characteristic-instantiator.
      */
-    protected creatEnumerationObject(): Enumeration {
+    protected creatEnumerationObject(): ValuesCollection {
         return new DefaultEnumeration(null, null, null, null, null);
     }
 

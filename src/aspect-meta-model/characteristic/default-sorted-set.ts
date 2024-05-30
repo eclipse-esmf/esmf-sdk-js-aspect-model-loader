@@ -16,14 +16,9 @@ import {Characteristic} from './default-characteristic';
 import {Type} from '../type';
 import { DefaultEntityInstance } from '../default-entity-instance';
 import { DefaultEntity } from '../default-entity';
+import { ValuesCollection } from './default-values-collection';
 
-export interface SortedSet extends Characteristic {
-    values: Array<DefaultEntityInstance | string | number>;
-
-    indexOf(value: string): number;
-}
-
-export class DefaultSortedSet extends DefaultCollection implements SortedSet {
+export class DefaultSortedSet extends DefaultCollection implements ValuesCollection {
     constructor(metaModelVersion: string, aspectModelUrn: string, name: string, elementCharacteristic?: Characteristic, dataType?: Type,private _values?: Array<DefaultEntityInstance | string | number>) {
         super(metaModelVersion, aspectModelUrn, name, false, true, elementCharacteristic, dataType);
     }
