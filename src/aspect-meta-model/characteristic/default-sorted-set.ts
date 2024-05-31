@@ -16,9 +16,9 @@ import {Characteristic} from './default-characteristic';
 import {Type} from '../type';
 import { DefaultEntityInstance } from '../default-entity-instance';
 import { DefaultEntity } from '../default-entity';
-import { ValuesCollection } from './default-values-collection';
+import { Enumeration } from './default-enumeration';
 
-export class DefaultSortedSet extends DefaultCollection implements ValuesCollection {
+export class DefaultSortedSet extends DefaultCollection implements Enumeration {
     constructor(metaModelVersion: string, aspectModelUrn: string, name: string, elementCharacteristic?: Characteristic, dataType?: Type,private _values?: Array<DefaultEntityInstance | string | number>) {
         super(metaModelVersion, aspectModelUrn, name, false, true, elementCharacteristic, dataType);
     }

@@ -11,12 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Type} from '../type';
-import {DefaultCharacteristic} from './default-characteristic';
+import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {DefaultEntityInstance} from '../default-entity-instance';
 import {DefaultEntity} from '../default-entity';
-import { ValuesCollection } from './default-values-collection';
 
-export class DefaultEnumeration extends DefaultCharacteristic implements ValuesCollection {
+export interface Enumeration extends Characteristic {
+    values: Array<DefaultEntityInstance | string | number>;
+
+    indexOf(value: string): number;
+}
+
+export class DefaultEnumeration extends DefaultCharacteristic implements Enumeration {
     constructor(
         metaModelVersion: string,
         aspectModelUrn: string,
