@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-
 import {Type} from '../type';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {DefaultEntityInstance} from '../default-entity-instance';

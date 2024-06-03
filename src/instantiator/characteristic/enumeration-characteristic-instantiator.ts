@@ -18,11 +18,7 @@ import {DefaultEnumeration, Enumeration} from '../../aspect-meta-model/character
 import {Samm} from '../../vocabulary';
 import {EntityInstantiator} from '../entity-instantiator';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
-
-export interface MultiLanguageText {
-    value: string;
-    language: string;
-}
+import {CharacteristicInstantiatorUtil, MultiLanguageText} from './characteristic-instantiator-util';
 
 export class EnumerationCharacteristicInstantiator extends CharacteristicInstantiator {
     constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -33,7 +29,6 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
         const samm = this.metaModelElementInstantiator.samm;
         const sammC = this.metaModelElementInstantiator.sammC;
         const enumeration = this.creatEnumerationObject();
-
         const dataType = quads.find(quad => this.samm.isDataTypeProperty(quad.predicate.value));
 
         quads.forEach(quad => {
@@ -57,36 +52,8 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     private getEnumerationValues(quad: Quad, dataType: string): Array<string | number | DefaultEntityInstance> {
         const quads = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
         return quads.map(quadValue =>
-            Util.isLiteral(quadValue.object) ? this.resolveValues(quadValue, dataType) : this.resolveEntityInstance(quadValue)
+            Util.isLiteral(quadValue.object) ? CharacteristicInstantiatorUtil.resolveValues(quadValue, dataType) : this.resolveEntityInstance(quadValue)
         );
-    }
-
-    private resolveValues(quad: Quad, dataType: string): string | number {
-        if (!dataType || !dataType.includes('#')) {
-            return `${quad.object.value}`;
-        }
-
-        switch (dataType.split('#')[1]) {
-            case 'decimal':
-            case 'integer':
-            case 'double':
-            case 'float':
-            case 'byte':
-            case 'short':
-            case 'int':
-            case 'long':
-            case 'unsignedByte':
-            case 'unsignedLong':
-            case 'unsignedInt':
-            case 'unsignedShort':
-            case 'positiveInteger':
-            case 'nonNegativeInteger':
-            case 'negativeInteger':
-            case 'nonPositiveInteger':
-                return Number(quad.object.value);
-            default:
-                return `${quad.object.value}`;
-        }
     }
 
     protected resolveEntityInstance(quad: Quad): DefaultEntityInstance {
@@ -118,7 +85,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
             // create the related instance and attach the metamodel element to it
             const entityInstance = new DefaultEntityInstance(quad.object.value.split('#')[1], entity, descriptions);
             entityInstanceQuads.forEach(quad => {
-                const predicateKey = this.getPredicateKey(quad);
+                const predicateKey = CharacteristicInstantiatorUtil.getPredicateKey(quad);
                 entityInstance[predicateKey] = this.resolveQuadObject(quad);
             });
 
@@ -130,27 +97,15 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     private resolveQuadObject(quad: Quad): MultiLanguageText | Array<MultiLanguageText> | string {
         if (Util.isBlankNode(quad.object)) {
             const resolvedBlankNodes = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
-            return this.solveBlankNodeValues([...resolvedBlankNodes]);
+            return CharacteristicInstantiatorUtil.solveBlankNodeValues([...resolvedBlankNodes]);
         }
 
         if (((quad.object as any).datatypeString === Samm.RDF_LANG_STRING) ||
             ((quad.object as any).datatypeString === Samm.XML_LANG_STRING)) {
-            return this.createLanguageObject(quad);
+            return CharacteristicInstantiatorUtil.createLanguageObject(quad);
         }
 
         return quad.object.value;
-    }
-
-    private solveBlankNodeValues(resolvedBlankNodes: Array<Quad>): Array<MultiLanguageText> {
-        return resolvedBlankNodes.length > 0 ? resolvedBlankNodes.map(item => this.createLanguageObject(item)) : [];
-    }
-
-    private getPredicateKey(quad: Quad): string {
-        return quad.predicate.value.split('#')[1];
-    }
-
-    private createLanguageObject(quad: Quad): MultiLanguageText {
-        return {value: quad.object.value, language: (quad.object as any).language};
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
