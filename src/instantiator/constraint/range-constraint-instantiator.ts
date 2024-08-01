@@ -11,36 +11,27 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultRangeConstraint} from '../../aspect-meta-model';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {Quad} from 'n3';
+import {DefaultRangeConstraint} from '../../aspect-meta-model';
 import {BoundDefinition} from '../../aspect-meta-model/bound-definition';
-import {ConstraintInstantiator} from './constraint-instantiator';
+import {generateConstraint} from './constraint-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class RangeConstraintInstantiator extends ConstraintInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const sammC = this.metaModelElementInstantiator.sammC;
-        const defaultRangeConstraint = new DefaultRangeConstraint(null, null, null, null, null, null, null);
-
-        quads.forEach(quad => {
-            if (sammC.isMinValueProperty(quad.predicate.value)) {
-                defaultRangeConstraint.minValue = quad.object.value;
-            } else if (sammC.isMaxValueProperty(quad.predicate.value)) {
-                defaultRangeConstraint.maxValue = quad.object.value;
-            } else if (sammC.isUpperBoundDefinitionProperty(quad.predicate.value)) {
-                defaultRangeConstraint.upperBoundDefinition = BoundDefinition[quad.object.value.replace(sammC.getNamespace(), '')];
-            } else if (sammC.isLowerBoundDefinitionProperty(quad.predicate.value)) {
-                defaultRangeConstraint.lowerBoundDefinition = BoundDefinition[quad.object.value.replace(sammC.getNamespace(), '')];
+export function createRangeConstraint(quad: Quad): DefaultRangeConstraint {
+    return generateConstraint(quad, (baseProperties, propertyQuads) => {
+        const {sammC} = getRdfModel();
+        const constraint = new DefaultRangeConstraint({...baseProperties});
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isMinValueProperty(propertyQuad.predicate.value)) {
+                constraint.minValue = Number(propertyQuad.object.value);
+            } else if (sammC.isMaxValueProperty(propertyQuad.predicate.value)) {
+                constraint.maxValue = Number(propertyQuad.object.value);
+            } else if (sammC.isUpperBoundDefinitionProperty(propertyQuad.predicate.value)) {
+                constraint.upperBoundDefinition = BoundDefinition[propertyQuad.object.value.replace(sammC.getNamespace(), '')];
+            } else if (sammC.isLowerBoundDefinitionProperty(propertyQuad.predicate.value)) {
+                constraint.lowerBoundDefinition = BoundDefinition[propertyQuad.object.value.replace(sammC.getNamespace(), '')];
             }
-        });
-        return defaultRangeConstraint;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.RangeConstraint().equals(nameNode);
-    }
+        }
+        return constraint;
+    });
 }

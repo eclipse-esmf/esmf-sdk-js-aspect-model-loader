@@ -11,10 +11,34 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export interface Type {
+import {ScalarProps} from '../shared/props';
+import {ModelElement} from './model-element';
+
+export abstract class Type extends ModelElement {
     urn: string;
-    shortUrn: string;
-    isScalar: boolean;
-    isComplex: boolean;
-    isAbstract: boolean;
+    scalar: boolean;
+    complexType: boolean;
+
+    constructor(props: ScalarProps) {
+        super(props);
+        this.urn = props.urn;
+        this.scalar = Boolean(props.scalar);
+        this.complexType = Boolean(props.complexType);
+    }
+
+    getShortType(): string {
+        return this.urn?.split('#')?.[1] || null;
+    }
+
+    getUrn(): string {
+        return this.urn;
+    }
+
+    isScalar(): boolean {
+        return this.scalar;
+    }
+
+    isComplexType(): boolean {
+        return this.complexType;
+    }
 }

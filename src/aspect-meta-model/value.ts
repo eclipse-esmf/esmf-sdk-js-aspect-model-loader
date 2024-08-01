@@ -11,6 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export interface IsVersioned {
-    metaModelVersion: string;
+import {ModelElement} from './model-element';
+import {Type} from './type';
+
+export abstract class Value extends ModelElement {
+    type: Type;
+    value: any;
+
+    getType(): Type {
+        return this.type;
+    }
+
+    getValue() {
+        return this.value;
+    }
 }

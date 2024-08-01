@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AspectModelLoader, DefaultAspect, Trait} from '../src';
+import {AspectModelLoader, DefaultAspect, DefaultTrait, Trait} from '../src';
 import {traitAspectModel} from './models/trait-model';
 import {Subscription} from 'rxjs';
 import DoneCallback = jest.DoneCallback;
+import {destroyRdfModel} from '../src/shared/rdf-model';
 
 describe('Traits tests', (): void => {
     let loader: AspectModelLoader;
@@ -45,12 +46,10 @@ describe('Traits tests', (): void => {
     });
 
     test('should check the effective data type', (): void => {
-        expect(aspect.properties[1].effectiveDataType.urn).toContain('string');
+        expect((aspect.properties[1].characteristic as DefaultTrait)?.baseCharacteristic?.dataType?.getShortType()).toContain('string');
     });
 
     afterEach((): void => {
-        if (subscription) {
-            subscription.unsubscribe();
-        }
+        destroyRdfModel();
     });
 });

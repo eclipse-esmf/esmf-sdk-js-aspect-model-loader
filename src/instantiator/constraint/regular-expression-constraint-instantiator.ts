@@ -11,31 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad} from 'n3';
-import {Characteristic} from '../../aspect-meta-model/characteristic/default-characteristic';
+import {Quad} from 'n3';
 import {DefaultRegularExpressionConstraint} from '../../aspect-meta-model/constraint/default-regular-expression-constraint';
-import {ConstraintInstantiator} from './constraint-instantiator';
+import {generateConstraint} from './constraint-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class RegularExpressionConstraintInstantiator extends ConstraintInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const samm = this.metaModelElementInstantiator.samm;
-        const encodingConstraint = new DefaultRegularExpressionConstraint(null, null, null, null);
-
-        quads.forEach(quad => {
-            if (samm.isValueProperty(quad.predicate.value)) {
-                encodingConstraint.value = quad.object.value;
+export function createRegularExpressionConstraint(quad: Quad): DefaultRegularExpressionConstraint {
+    return generateConstraint(quad, (baseProperties, propertyQuads) => {
+        const {samm} = getRdfModel();
+        const constraint = new DefaultRegularExpressionConstraint({...baseProperties, value: ''});
+        for (const propertyQuad of propertyQuads) {
+            if (samm.isValueProperty(propertyQuad.predicate.value)) {
+                constraint.value = propertyQuad.object.value;
             }
-        });
-
-        return encodingConstraint;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.RegularExpressionConstraint().equals(nameNode);
-    }
+        }
+        return constraint;
+    });
 }

@@ -11,62 +11,53 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, DefaultCollection, Event, Operation, Property} from './index';
-import {BaseMetaModelElement} from './base';
-import {HasProperties} from './has-properties';
+import {Event, Operation, Property} from './index';
 import {ModelVisitor} from '../visitor/model-visitor';
+import {StructureElement} from './structure-element';
+import {AspectProps} from '../shared/props';
 
-export interface Aspect extends BaseMetaModelElement, HasProperties {
+export interface Aspect extends StructureElement {
     operations: Array<Operation>;
     events: Array<Event>;
-    isCollectionAspect?: boolean;
+    isCollectionAspect: boolean;
+
+    getOperations(): Operation[];
+    setOperations(value: Operation[]): void;
+    getEvents(): Event[];
+    setEvents(value: Event[]): void;
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T;
 }
 
-export class DefaultAspect extends Base implements Aspect {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        private _properties: Array<Property> = [],
-        private _operations: Array<Operation> = [],
-        private _events: Array<Event> = [],
-        private _isCollectionAspect: boolean = false
-    ) {
-        super(metaModelVersion, aspectModelUrn, name);
-        const collectionProperty = _properties.find(property => property.characteristic instanceof DefaultCollection);
-        if (collectionProperty && collectionProperty.name === 'items') {
-            this._isCollectionAspect = true;
-        }
+export class DefaultAspect extends StructureElement implements Aspect {
+    operations: Operation[];
+    events: Event[];
+    isCollectionAspect: boolean;
+
+    constructor(props: AspectProps) {
+        super(props);
+        this.properties = props.properties || [];
+        this.operations = props.operations || [];
+        this.events = props.events || [];
+        this.isCollectionAspect = props.isCollectionAspect;
     }
 
-    public getProperty(name: string): Property {
-        if (!this._properties) {
-            return undefined;
-        }
-        return this._properties.find(property => property.name === name);
+    getOperations(): Operation[] {
+        return this.operations;
     }
 
-    public get properties(): Array<Property> {
-        return this._properties;
+    setOperations(value: Operation[]) {
+        this.operations = value;
     }
 
-    public get operations(): Array<Operation> {
-        return this._operations;
+    getEvents(): Event[] {
+        return this.events;
     }
 
-    public get isCollectionAspect(): boolean {
-        return this._isCollectionAspect;
+    setEvents(value: Event[]) {
+        this.events = value;
     }
 
-    get events(): Array<Event> {
-        return this._events;
-    }
-
-    set events(value: Array<Event>) {
-        this._events = value;
-    }
-
-    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitAspect(this, context);
     }
 }

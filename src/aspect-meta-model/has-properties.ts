@@ -13,13 +13,22 @@
 
 import {Property} from './default-property';
 
-export interface HasProperties {
-    properties: Array<Property>;
+export abstract class HasProperties {
+    properties: Property[];
+
+    /**
+     * @return the {@link Property}(ies) defined in the scope of this element.
+     */
+    getProperties() {
+        return this.properties;
+    }
 
     /**
      * Get a property by name
      * @param name name of the property
      * @return Property or undefined if no property with the name exists
      */
-    getProperty(name: string): Property;
+    getProperty(name: string): Property {
+        return this.properties.find(property => property.name === name);
+    }
 }

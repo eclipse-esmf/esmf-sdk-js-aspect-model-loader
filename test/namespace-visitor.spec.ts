@@ -11,17 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import { BaseMetaModelElement, DefaultAspect, DefaultCharacteristic, DefaultProperty, NamespaceLoader } from '../src';
-import { Subscription } from 'rxjs';
-import { characteristicDifferentNamespace } from './models/characteristics';
-import { movementAspectModelWithExternalReference } from './models/movement-model';
-import { DefaultNamespaceVisitor } from '../src/visitor/default-namespace-visitor';
+import {DefaultAspect, DefaultCharacteristic, DefaultProperty, destroyElementCache, NamespaceLoader} from '../src';
+import {Subscription} from 'rxjs';
+import {characteristicDifferentNamespace} from './models/characteristics';
+import {movementAspectModelWithExternalReference} from './models/movement-model';
+import {DefaultNamespaceVisitor} from '../src/visitor/default-namespace-visitor';
 import DoneCallback = jest.DoneCallback;
+import {NamedElement} from '../src/aspect-meta-model/named-element';
+import {destroyRdfModel} from '../src/shared/rdf-model';
 
 describe('Namespace visitor tests', (): void => {
     let loader: NamespaceLoader;
     let subscription: Subscription;
-    let namespaces: Map<string, Array<BaseMetaModelElement>>;
+    let namespaces: Map<string, Array<NamedElement>>;
 
     beforeEach((done: DoneCallback): void => {
         loader = new NamespaceLoader();
@@ -40,9 +42,7 @@ describe('Namespace visitor tests', (): void => {
     });
 
     afterEach((): void => {
-        if (subscription) {
-            subscription.unsubscribe();
-        }
+        destroyRdfModel();
     });
 });
 
@@ -51,17 +51,17 @@ class CountElementVisitor extends DefaultNamespaceVisitor {
     public countProperties = 0;
     public countCharacteristics = 0;
 
-    visitAspect(aspect: DefaultAspect, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+    visitAspect(aspect: DefaultAspect, context: Map<string, Array<NamedElement>>): NamedElement {
         this.countAspects++;
         return super.visitAspect(aspect, context);
     }
 
-    visitProperty(property: DefaultProperty, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+    visitProperty(property: DefaultProperty, context: Map<string, Array<NamedElement>>): NamedElement {
         this.countProperties++;
         return super.visitProperty(property, context);
     }
 
-    visitCharacteristic(characteristic: DefaultCharacteristic, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+    visitCharacteristic(characteristic: DefaultCharacteristic, context: Map<string, Array<NamedElement>>): NamedElement {
         this.countCharacteristics++;
         return super.visitCharacteristic(characteristic, context);
     }

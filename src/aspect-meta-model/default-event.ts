@@ -11,25 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from './base';
-import {Property} from './default-property';
 import {ModelVisitor} from '../visitor/model-visitor';
+import {StructureElement} from './structure-element';
+import {EventProps} from '../shared/props';
 
-export interface Event extends BaseMetaModelElement {
-    parameters: Array<Property>;
-}
+export interface Event extends StructureElement {}
 
-export class DefaultEvent extends Base implements Event {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _parameters: Array<Property> = []) {
-        super(metaModelVersion, aspectModelUrn, name);
-    }
-
-    public get parameters(): Array<Property> {
-        return this._parameters;
-    }
-
-    public set parameters(parameters: Array<Property>) {
-        this._parameters = parameters;
+export class DefaultEvent extends StructureElement implements Event {
+    constructor(props: EventProps) {
+        super(props);
     }
 
     public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {

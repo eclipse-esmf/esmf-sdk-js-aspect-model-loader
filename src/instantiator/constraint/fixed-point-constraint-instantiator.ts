@@ -11,32 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultFixedPointConstraint} from '../../aspect-meta-model';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {ConstraintInstantiator} from './constraint-instantiator';
+import {Quad} from 'n3';
+import {DefaultFixedPointConstraint} from '../../aspect-meta-model';
+import {generateConstraint} from './constraint-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class FixedPointConstraintInstantiator extends ConstraintInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const sammC = this.metaModelElementInstantiator.sammC;
-        const defaultFixedPointConstraint = new DefaultFixedPointConstraint(null, null, null, null, null);
-
-        quads.forEach(quad => {
-            if (sammC.isScaleValueProperty(quad.predicate.value)) {
-                defaultFixedPointConstraint.scale = Number(quad.object.value);
-            } else if (sammC.isIntegerValueProperty(quad.predicate.value)) {
-                defaultFixedPointConstraint.integer = Number(quad.object.value);
+export function createFixedPointConstraint(quad: Quad): DefaultFixedPointConstraint {
+    return generateConstraint(quad, (baseProperties, propertyQuads) => {
+        const {sammC} = getRdfModel();
+        const constraint = new DefaultFixedPointConstraint({...baseProperties, scale: null, integer: null});
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isScaleValueProperty(propertyQuad.predicate.value)) {
+                constraint.scale = Number(propertyQuad.object.value);
+            } else if (sammC.isIntegerValueProperty(propertyQuad.predicate.value)) {
+                constraint.integer = Number(propertyQuad.object.value);
             }
-        });
-
-        return defaultFixedPointConstraint;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.FixedPointConstraint().equals(nameNode);
-    }
+        }
+        return constraint;
+    });
 }

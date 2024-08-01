@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from '../aspect-meta-model';
+import {NamedElement} from '../aspect-meta-model/named-element';
 
 export interface CacheStrategy {
     /**
@@ -20,24 +20,24 @@ export interface CacheStrategy {
     reset(): void;
 
     /**
-     * Gets a BaseMetaModelElement, and returns the element or undefined.
+     * Gets a NamedElement, and returns the element or undefined.
      * @param key key of the element
-     * @return Element or undefined if it does not exists
+     * @return NamedElement or undefined if it does not exists
      */
-    get(key: string): BaseMetaModelElement | undefined;
+    get<T>(key: string): T;
 
     /**
      * Get element by name.
      *
      * @param name name of the element
-     * @return Array<BaseMetaModelElement> with the found elements or an empty Array
+     * @return T[] with the found elements or an empty Array
      */
-    getByName(name: string): Array<BaseMetaModelElement>;
+    getByName<T extends NamedElement>(name: string): T[];
 
     /**
      * Filter the cache to find elements matching the predicate filter
      */
-    filter(filterPredicate: FilterPredicate): Array<BaseMetaModelElement>;
+    filter<T extends NamedElement>(filterPredicate: FilterPredicate): T[];
 
     /**
      * Resolve cached element instance or add the given element to teh cache
@@ -45,16 +45,16 @@ export interface CacheStrategy {
      * @param modelElement element instance to resolve
      * @return cached element instance
      */
-    resolveInstance(modelElement: BaseMetaModelElement): BaseMetaModelElement;
+    resolveInstance<T extends NamedElement>(modelElement: T): T;
 
     /**
      * Add element explicitly to the cache
      *
-     * @param name name of the element
+     * @param aspectModelUrn urn of the element
      * @param modelElement element instance to resolve
      * @param overwrite force to overwrite it if an element with the name already exists
      */
-    addElement(name: string, modelElement: BaseMetaModelElement, overwrite?: boolean);
+    addElement<T extends NamedElement>(aspectModelUrn: string, modelElement: T, overwrite?: boolean): void;
 }
 
 /**
@@ -62,55 +62,73 @@ export interface CacheStrategy {
  * to keep the element, or to false otherwise.
  */
 export interface FilterPredicate {
-    (baseMetaModelElement: BaseMetaModelElement): boolean;
+    (NamedElement: NamedElement): boolean;
 }
 
-export class ModelElementCacheService implements CacheStrategy {
-    private instanceCache: Map<string, BaseMetaModelElement>;
+export class ModelElementCache implements CacheStrategy {
+    private instanceCache: Map<string, NamedElement>;
 
     constructor() {
-        this.instanceCache = new Map<string, BaseMetaModelElement>();
+        this.instanceCache = new Map<string, NamedElement>();
     }
 
     public reset(): void {
         this.instanceCache.clear();
     }
 
-    public get(key: string): BaseMetaModelElement | undefined {
-        return this.instanceCache.get(key);
+    public get<T>(key: string): T {
+        return this.instanceCache.get(key) as T;
     }
 
-    public filter(filterPredicate: FilterPredicate): Array<BaseMetaModelElement> {
-        return [...this.instanceCache.values()].filter(filterPredicate);
+    public filter<T>(filterPredicate: FilterPredicate): T[] {
+        return [...this.instanceCache.values()].filter(filterPredicate) as T[];
     }
 
-    public getByName(name: string): Array<BaseMetaModelElement> {
-        return [...this.instanceCache.values()].filter(element => element.name === name);
+    public getByName<T>(name: string): T[] {
+        return [...this.instanceCache.values()].filter(element => element.name === name) as T[];
     }
 
-    public resolveInstance(instance: BaseMetaModelElement): BaseMetaModelElement {
-        if ((<Base>instance).isAnonymousNode) {
+    public resolveInstance<T extends NamedElement>(instance: T): T {
+        if (instance.isAnonymous()) {
             return instance;
         }
 
         const aspectModelUrn = instance.aspectModelUrn;
         const resolvedInstance = this.get(aspectModelUrn);
         if (resolvedInstance) {
-            return resolvedInstance;
+            return resolvedInstance as T;
         }
 
         this.instanceCache.set(aspectModelUrn, instance);
         return instance;
     }
 
-    public addElement(name: string, modelElement: BaseMetaModelElement, overwrite = false) {
-        const cachedElement = this.instanceCache.get(name);
+    public addElement<T>(aspectModelUrn: string, modelElement: T, overwrite = false) {
+        const cachedElement = this.instanceCache.get(aspectModelUrn);
         if (!overwrite && cachedElement) {
             return;
         }
         if (cachedElement) {
-            console.info(`Element with the name ${name} already exist. Overwrite existing element.`);
+            console.info(`Element with the name ${aspectModelUrn} already exist. Overwriting existing element.`);
         }
-        this.instanceCache.set(name, modelElement);
+        this.instanceCache.set(aspectModelUrn, modelElement as NamedElement);
     }
+}
+
+let modelElementsCache: CacheStrategy;
+
+export function createCacheInstance() {
+    return new ModelElementCache();
+}
+
+export function initElementCache() {
+    return (modelElementsCache = createCacheInstance());
+}
+
+export function getElementsCache() {
+    return modelElementsCache;
+}
+
+export function destroyElementCache() {
+    modelElementsCache = null;
 }

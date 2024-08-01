@@ -13,10 +13,13 @@
 
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {Type} from '../type';
+import {EitherProps} from '../../shared/props';
 
 export interface Either extends Characteristic {
     left: Characteristic;
     right: Characteristic;
+
+    // @TODO check if it is necessary to have these methods
     /**
      * Get the effective type for the left characteristic.
      */
@@ -28,37 +31,29 @@ export interface Either extends Characteristic {
 }
 
 export class DefaultEither extends DefaultCharacteristic implements Either {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        private _left: Characteristic,
-        private _right: Characteristic
-    ) {
-        super(metaModelVersion, aspectModelUrn, name);
+    left: Characteristic;
+    right: Characteristic;
+
+    constructor(props: EitherProps) {
+        super(props);
+        this.left = props.left;
+        this.right = props.right;
     }
 
-    public set left(value: Characteristic) {
-        this._left = value;
+    getLeft(): Characteristic {
+        return this.left;
     }
 
-    public get left(): Characteristic {
-        return this._left;
+    getRight(): Characteristic {
+        return this.right;
     }
 
-    public set right(value: Characteristic) {
-        this._right = value;
-    }
-
-    public get right(): Characteristic {
-        return this._right;
-    }
-
+    // @TODO check if it is necessary to have these methods
     public get effectiveLeftDataType(): Type | undefined {
-        return DefaultCharacteristic.getEffectiveDataType(this._left);
+        return DefaultCharacteristic.getEffectiveDataType(this.left);
     }
 
     public get effectiveRightDataType(): Type | undefined {
-        return DefaultCharacteristic.getEffectiveDataType(this._right);
+        return DefaultCharacteristic.getEffectiveDataType(this.right);
     }
 }

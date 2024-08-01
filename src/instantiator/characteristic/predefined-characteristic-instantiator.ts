@@ -11,173 +11,229 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Characteristic} from '../../aspect-meta-model';
+import {Characteristic, DefaultScalar} from '../../aspect-meta-model';
 import {DefaultCharacteristic} from '../../aspect-meta-model/characteristic/default-characteristic';
-import {DefaultScalar} from '../../aspect-meta-model/characteristic/default-scalar';
-import {NamedNode} from 'n3';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {XsdDataTypes} from '../../shared/xsd-datatypes';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class PredefinedCharacteristicInstantiator {
-    private characteristicInstanceList = [];
-    private readonly xsdDataTypes: XsdDataTypes;
+const predefinedCharacteristicCreators = {};
+let initialized = false;
+function initPredefinedCharacteristicCreatorsList() {
+    const {sammC} = getRdfModel();
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}Timestamp`] = createTimestampCharacteristic;
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}Text`] = createTextCharacteristic;
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}MultiLanguageText`] = createMultiLanguageTextCharacteristic;
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}Boolean`] = createBooleanCharacteristic;
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}Locale`] = createLocaleCharacteristic;
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}Language`] = createLanguageCharacteristic;
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}UnitReference`] = createUnitReferenceCharacteristic;
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}ResourcePath`] = createResourcePathCharacteristic;
+    predefinedCharacteristicCreators[`${sammC.getNamespace()}MimeType`] = createMimeTypeCharacteristic;
+    initialized = true;
+}
 
-    constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
-        this.xsdDataTypes = metaModelElementInstantiator.rdfModel.xsdDataTypes;
-        const sammC = metaModelElementInstantiator.sammC;
-        this.characteristicInstanceList[`${sammC.getNamespace()}Timestamp`] = this.createTimestampCharacteristic.bind(this);
-        this.characteristicInstanceList[`${sammC.getNamespace()}Text`] = this.createTextCharacteristic.bind(this);
-        this.characteristicInstanceList[`${sammC.getNamespace()}MultiLanguageText`] = this.createMultiLanguageTextCharacteristic.bind(this);
-        this.characteristicInstanceList[`${sammC.getNamespace()}Boolean`] = this.createBooleanCharacteristic.bind(this);
-        this.characteristicInstanceList[`${sammC.getNamespace()}Locale`] = this.createLocaleCharacteristic.bind(this);
-        this.characteristicInstanceList[`${sammC.getNamespace()}Language`] = this.createLanguageCharacteristic.bind(this);
-        this.characteristicInstanceList[`${sammC.getNamespace()}UnitReference`] = this.createUnitReferenceCharacteristic.bind(this);
-        this.characteristicInstanceList[`${sammC.getNamespace()}ResourcePath`] = this.createResourcePathCharacteristic.bind(this);
-        this.characteristicInstanceList[`${sammC.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic.bind(this);
+export function createTextCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('string');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('Text'),
+        name: 'Text',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'Text');
+    characteristic.descriptions.set(
+        'en',
+        'Describes a Property which contains plain text. This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.'
+    );
+
+    return characteristic;
+}
+
+export function createTimestampCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('dateTime');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('Timestamp'),
+        name: 'Timestamp',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'Timestamp');
+    characteristic.descriptions.set('en', 'Describes a Property which contains the date and time with an optional timezone.');
+
+    return characteristic;
+}
+
+export function createMultiLanguageTextCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('langString');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('MultiLanguageText'),
+        name: 'MultiLanguageText',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'Multi-Language Text');
+    characteristic.descriptions.set(
+        'en',
+        'Describes a Property which contains plain text in multiple languages. This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.'
+    );
+
+    return characteristic;
+}
+
+export function createBooleanCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('boolean');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('Boolean'),
+        name: 'Boolean',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'Boolean');
+    characteristic.descriptions.set('en', 'Represents a boolean value (i.e. a "flag").');
+
+    return characteristic;
+}
+
+export function createLocaleCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('string');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('Locale'),
+        name: 'Locale',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'Locale');
+    characteristic.descriptions.set('en', 'Describes a Property containing a locale according to IETF BCP 47, for example "de-DE".');
+
+    return characteristic;
+}
+
+export function createLanguageCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('string');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('Language'),
+        name: 'Language',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'Language');
+    characteristic.descriptions.set('en', 'Describes a Property containing a language according to ISO 639-1, for example "de".');
+
+    return characteristic;
+}
+
+export function createUnitReferenceCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('curie');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('UnitReference'),
+        name: 'UnitReference',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'Unit Reference');
+    characteristic.descriptions.set('en', 'Describes a Property containing a reference to one of the units in the Unit Catalog.');
+
+    return characteristic;
+}
+
+export function createResourcePathCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('anyURI');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('ResourcePath'),
+        name: 'ResourcePath',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'Resource Path');
+    characteristic.descriptions.set('en', 'The path of a resource.');
+
+    return characteristic;
+}
+
+export function createMimeTypeCharacteristic(): Characteristic {
+    const rdfModel = getRdfModel();
+    const {samm, sammC} = rdfModel;
+    const type = rdfModel.xsdDataTypes.getDataType('string');
+
+    const characteristic = new DefaultCharacteristic({
+        metaModelVersion: samm.version,
+        aspectModelUrn: sammC.getAspectModelUrn('MimeType'),
+        name: 'MimeType',
+        dataType: new DefaultScalar({
+            urn: type.isDefinedBy,
+            metaModelVersion: samm.version,
+        }),
+    });
+
+    characteristic.preferredNames.set('en', 'MIME Type');
+    characteristic.descriptions.set('en', 'A MIME type as defined in RFC 2046, for example "application/pdf.');
+
+    return characteristic;
+}
+
+export function createPredefinedCharacteristic(aspectModelUrn: string) {
+    if (!initialized) {
+        initPredefinedCharacteristicCreatorsList();
     }
 
-    createTextCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Text'),
-            'Text',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('string').isDefinedBy}`)
-        );
+    return predefinedCharacteristicCreators[aspectModelUrn]?.();
+}
 
-        characteristic.addPreferredName('en', 'Text');
-        characteristic.addDescription(
-            'en',
-            'Describes a Property which contains plain text. This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.'
-        );
-
-        return characteristic;
-    }
-
-    createTimestampCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Timestamp'),
-            'Timestamp',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('dateTime').isDefinedBy}`)
-        );
-
-        characteristic.addPreferredName('en', 'Timestamp');
-        characteristic.addDescription('en', 'Describes a Property which contains the date and time with an optional timezone.');
-
-        return characteristic;
-    }
-
-    createMultiLanguageTextCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('MultiLanguageText'),
-            'MultiLanguageText',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('langString').isDefinedBy}`)
-        );
-
-        characteristic.addPreferredName('en', 'Multi-Language Text');
-        characteristic.addDescription(
-            'en',
-            'Describes a Property which contains plain text in multiple languages. This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.'
-        );
-
-        return characteristic;
-    }
-
-    createBooleanCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Boolean'),
-            'Boolean',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('boolean').isDefinedBy}`)
-        );
-
-        characteristic.addPreferredName('en', 'Boolean');
-        characteristic.addDescription('en', 'Represents a boolean value (i.e. a "flag").');
-
-        return characteristic;
-    }
-
-    createLocaleCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Locale'),
-            'Locale',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('string').isDefinedBy}`)
-        );
-
-        characteristic.addPreferredName('en', 'Locale');
-        characteristic.addDescription('en', 'Describes a Property containing a locale according to IETF BCP 47, for example "de-DE".');
-
-        return characteristic;
-    }
-
-    createLanguageCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Language'),
-            'Language',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('string').isDefinedBy}`)
-        );
-
-        characteristic.addPreferredName('en', 'Language');
-        characteristic.addDescription('en', 'Describes a Property containing a language according to ISO 639-1, for example "de".');
-
-        return characteristic;
-    }
-
-    createUnitReferenceCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('UnitReference'),
-            'UnitReference',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('curie').isDefinedBy}`)
-        );
-
-        characteristic.addPreferredName('en', 'Unit Reference');
-        characteristic.addDescription('en', 'Describes a Property containing a reference to one of the units in the Unit Catalog.');
-
-        return characteristic;
-    }
-
-    createResourcePathCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('ResourcePath'),
-            'ResourcePath',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('anyURI').isDefinedBy}`)
-        );
-
-        characteristic.addPreferredName('en', 'Resource Path');
-        characteristic.addDescription('en', 'The path of a resource.');
-
-        return characteristic;
-    }
-
-    createMimeTypeCharacteristic(): Characteristic {
-        const characteristic = new DefaultCharacteristic(
-            this.metaModelElementInstantiator.samm.version,
-            this.metaModelElementInstantiator.sammC.getAspectModelUrn('MimeType'),
-            'MimeType',
-            new DefaultScalar(`${this.xsdDataTypes.getDataType('string').isDefinedBy}`)
-        );
-
-        characteristic.addPreferredName('en', 'MIME Type');
-        characteristic.addDescription('en', 'A MIME type as defined in RFC 2046, for example "application/pdf.');
-
-        return characteristic;
-    }
-
-    createCharacteristic(name: NamedNode): Characteristic {
-        const createFunction = this.characteristicInstanceList[name.value];
-        if (createFunction) {
-            return createFunction();
-        } else {
-            return null;
-        }
-    }
-
-    getSupportedCharacteristicNames(): Array<string> {
-        return Object.keys(this.characteristicInstanceList);
-    }
+export function getSupportedCharacteristicNames(): Array<string> {
+    return Object.keys(predefinedCharacteristicCreators);
 }

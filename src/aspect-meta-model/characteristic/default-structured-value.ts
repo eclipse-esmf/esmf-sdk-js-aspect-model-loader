@@ -12,39 +12,31 @@
  */
 
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
-import {Type} from '../type';
 import {Property} from '../default-property';
+import {StructuredValueProps} from '../../shared/props';
 
 export interface StructuredValue extends Characteristic {
     deconstructionRule: string;
     elements: Array<string | Property>;
+    getDeconstructionRule(): string;
+    getElements(): (string | Property)[];
 }
 
 export class DefaultStructuredValue extends DefaultCharacteristic implements StructuredValue {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        private _deconstructionRule: string,
-        private _elements: Array<string | Property>,
-        dataType?: Type
-    ) {
-        super(metaModelVersion, aspectModelUrn, name, dataType);
+    deconstructionRule: string;
+    elements: (string | Property)[];
+
+    constructor(props: StructuredValueProps) {
+        super(props);
+        this.deconstructionRule = props.deconstructionRule;
+        this.elements = props.elements || [];
     }
 
-    public set deconstructionRule(value: string) {
-        this._deconstructionRule = value;
+    getDeconstructionRule(): string {
+        return this.deconstructionRule;
     }
 
-    public get deconstructionRule(): string {
-        return this._deconstructionRule;
-    }
-
-    public set elements(value: Array<string | Property>) {
-        this._elements = value;
-    }
-
-    public get elements(): Array<string | Property> {
-        return this._elements;
+    getElements(): (string | Property)[] {
+        return this.elements;
     }
 }

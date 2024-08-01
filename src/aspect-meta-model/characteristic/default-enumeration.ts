@@ -10,54 +10,36 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Type} from '../type';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
-import {DefaultEntityInstance} from '../default-entity-instance';
+import {DefaultEntityInstance, EntityInstance} from '../default-entity-instance';
 import {DefaultEntity} from '../default-entity';
+import {EnumerationProps} from '../../shared/props';
+import {Value} from '../value';
+import {ComplexType} from '../complex-type';
 
 export interface Enumeration extends Characteristic {
-    values: Array<DefaultEntityInstance | string | number>;
-
-    indexOf(value: string): number;
+    values: Value[];
 }
 
 export class DefaultEnumeration extends DefaultCharacteristic implements Enumeration {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        private _values: Array<DefaultEntityInstance | string | number>,
-        dataType?: Type
-    ) {
-        super(metaModelVersion, aspectModelUrn, name, dataType);
+    values: Value[];
+
+    constructor(props: EnumerationProps) {
+        super(props);
+        this.values = props.values || [];
     }
 
-    public set values(values: Array<DefaultEntityInstance | string | number>) {
-        this._values = values;
+    getValues(): Value[] {
+        return this.values;
     }
 
-    public get values(): Array<DefaultEntityInstance | string | number> {
-        return this._values;
-    }
+    getValue(valueOrUrn: string): Value | EntityInstance {
+        return this.values.find(v => {
+            if (v instanceof DefaultEntityInstance && v.aspectModelUrn === valueOrUrn) {
+                return true;
+            }
 
-    /**
-     * Find the index of the given value in the values array.
-     *
-     * @return returns the index of the value or -1
-     */
-    public indexOf(value: string): number {
-        if (!this.values) {
-            return -1;
-        }
-
-        if (this.dataType && this.dataType.isComplex) {
-            const propertyValue = (<DefaultEntity>this.dataType).properties.find(property => property.isNotInPayload === false);
-
-            return this.values.findIndex((valueEntry: DefaultEntityInstance) => {
-                return valueEntry[propertyValue.name] === value;
-            });
-        } else {
-            return this.values.findIndex(valueEntry => valueEntry === value);
-        }
+            return v.value === valueOrUrn;
+        });
     }
 }

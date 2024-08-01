@@ -35,6 +35,7 @@ import {
 } from './models/constraints';
 import {Subscription} from 'rxjs';
 import DoneCallback = jest.DoneCallback;
+import {destroyRdfModel} from '../src/shared/rdf-model';
 
 describe('Constraints tests', (): void => {
     let loader: AspectModelLoader;
@@ -60,9 +61,7 @@ describe('Constraints tests', (): void => {
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
@@ -81,11 +80,11 @@ describe('Constraints tests', (): void => {
         });
 
         test('should has an EncodingConstraint defined', (): void => {
-            expect(aspect.properties[0].constraints).toHaveLength(1);
+            expect((aspect.properties[0].characteristic as DefaultTrait).constraints).toHaveLength(1);
         });
 
         test('should have a value defined from a list of available encodings', (): void => {
-            const trait = aspect.properties[0].characteristic as unknown as DefaultTrait;
+            const trait = aspect.properties[0].characteristic as DefaultTrait;
             const urn = 'urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#';
             const encodingConstraint = trait.constraints[0] as DefaultEncodingConstraint;
             const definedEncodings = [
@@ -100,9 +99,7 @@ describe('Constraints tests', (): void => {
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
@@ -133,9 +130,7 @@ describe('Constraints tests', (): void => {
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
@@ -160,9 +155,7 @@ describe('Constraints tests', (): void => {
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
@@ -195,13 +188,11 @@ describe('Constraints tests', (): void => {
         test('should have a maxValue greater than minValue', (): void => {
             const trait = aspect.properties[0].characteristic as unknown as DefaultTrait;
             const lengthConstraint = trait.constraints[0] as unknown as DefaultLengthConstraint;
-            expect(lengthConstraint.maxValue).toBeGreaterThanOrEqual(lengthConstraint.minValue);
+            expect(lengthConstraint.maxValue).toBeGreaterThanOrEqual(lengthConstraint.minValue as number);
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
@@ -226,9 +217,7 @@ describe('Constraints tests', (): void => {
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
@@ -265,14 +254,12 @@ describe('Constraints tests', (): void => {
             const listForUpperBoundDefinition = ['LESS_THAN', 'AT_MOST'];
             const trait = aspect.properties[0].characteristic as unknown as DefaultTrait;
             const lengthConstraint = trait.constraints[0] as unknown as DefaultRangeConstraint;
-            expect(listForLowerBoundDefinition.includes(lengthConstraint.lowerBoundDefinition)).toBeTruthy();
-            expect(listForUpperBoundDefinition.includes(lengthConstraint.upperBoundDefinition)).toBeTruthy();
+            expect(listForLowerBoundDefinition.includes(lengthConstraint.lowerBoundDefinition as string)).toBeTruthy();
+            expect(listForUpperBoundDefinition.includes(lengthConstraint.upperBoundDefinition as string)).toBeTruthy();
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
@@ -297,9 +284,7 @@ describe('Constraints tests', (): void => {
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 });

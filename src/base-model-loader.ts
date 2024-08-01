@@ -11,24 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement, DefaultPropertyInstanceDefinition} from './aspect-meta-model';
-import {CacheStrategy, FilterPredicate} from './shared/model-element-cache.service';
+import {DefaultProperty} from './aspect-meta-model';
+import {NamedElement} from './aspect-meta-model/named-element';
+import {CacheStrategy, FilterPredicate, initElementCache} from './shared/model-element-cache.service';
 
 export abstract class BaseModelLoader {
+    protected cacheService: CacheStrategy;
+
     /**
      * Creates a AspectModelLoader instance.
      *
      * @param cacheService cache strategy to cache created elements to ensure uniqueness and a fast lookup of it.
      *                     The default cache strategy ignores inline defined elements.
      */
-    protected constructor(protected cacheService: CacheStrategy) {}
+    protected constructor() {
+        this.cacheService = initElementCache();
+    }
 
     /**
      * Find a specific model element, and returns it or undefined.
      *
      * @param modelElementUrn urn of the model element
      */
-    public findByUrn(modelElementUrn: string): BaseMetaModelElement {
+    public findByUrn(modelElementUrn: string): NamedElement {
         return this.cacheService.get(modelElementUrn);
     }
 
@@ -37,14 +42,14 @@ export abstract class BaseModelLoader {
      *
      * @param modelElementName name of the element
      */
-    public findByName(modelElementName: string): Array<BaseMetaModelElement> {
+    public findByName(modelElementName: string): Array<NamedElement> {
         return this.cacheService.getByName(modelElementName);
     }
 
     /**
      * Filter the cache to find elements matching the predicate filter
      */
-    public filterElements(filterPredicate: FilterPredicate): Array<BaseMetaModelElement> {
+    public filterElements(filterPredicate: FilterPredicate): Array<NamedElement> {
         return this.cacheService.filter(filterPredicate);
     }
 
@@ -53,9 +58,9 @@ export abstract class BaseModelLoader {
      *
      * @param baseElement Element for determine the path
      */
-    public determineAccessPath(baseElement: BaseMetaModelElement): Array<Array<string>> {
+    public determineAccessPath(baseElement: NamedElement): Array<Array<string>> {
         const path = [];
-        if (baseElement instanceof DefaultPropertyInstanceDefinition) {
+        if (baseElement instanceof DefaultProperty) {
             path.push([baseElement.payloadName || baseElement.name]);
         } else {
             path.push([]);
@@ -63,18 +68,18 @@ export abstract class BaseModelLoader {
         return this._determineAccessPath(baseElement, path);
     }
 
-    private _determineAccessPath(baseElement: BaseMetaModelElement, path: Array<Array<string>>): Array<Array<string>> {
-        if (!baseElement || (baseElement as Base | DefaultPropertyInstanceDefinition).parents.length === 0) {
+    private _determineAccessPath(baseElement: NamedElement, path: Array<Array<string>>): Array<Array<string>> {
+        if (!baseElement || baseElement.parents.length === 0) {
             return path;
         }
 
         // in case of multiple parent get the number of additional parents and clone the existing paths
-        for (let i = 0; i < (baseElement as Base | DefaultPropertyInstanceDefinition).parents.length - path.length; i++) {
+        for (let i = 0; i < baseElement.parents.length - path.length; i++) {
             path.push([...path[0]]);
         }
 
         baseElement.parents.forEach((parent, i) => {
-            if (parent instanceof DefaultPropertyInstanceDefinition) {
+            if (parent instanceof DefaultProperty) {
                 const pathSegment = parent.payloadName || parent.name;
                 if ((path[i].length > 0 && path[i][0] !== pathSegment) || path[0].length === 0) {
                     path[i].unshift(pathSegment);

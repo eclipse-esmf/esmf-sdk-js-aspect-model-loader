@@ -1,66 +1,46 @@
-import {RdfModel} from '../shared/rdf-model';
-import {CacheStrategy} from '../shared/model-element-cache.service';
-import {BaseMetaModelElement} from '../aspect-meta-model';
+import {getRdfModel, getStore} from '../shared/rdf-model';
 import {NamedNode, Quad} from 'n3';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {EntityInstantiator} from './entity-instantiator';
-import {AspectInstantiator} from './aspect-instantiator';
+import {createEntity} from './entity-instantiator';
+import {createAspect} from './aspect-instantiator';
+import {getEvents} from './event-instantiator';
+import {getOperations} from './operation-instantiator';
+import {getProperties} from './property-instantiator';
+import {NamedElement} from '../aspect-meta-model/named-element';
+import {getElementsCache} from '../shared/model-element-cache.service';
 
-export class NamespaceInstantiator {
-    private readonly recursiveModelElements: Map<string, Array<BaseMetaModelElement>>;
+export function createNamespaces(): Map<string, Array<NamedElement>> {
+    const rdfModel = getRdfModel();
+    const elementsCache = getElementsCache();
+    const store = getStore();
 
-    constructor(private rdfModel: RdfModel, private cacheService: CacheStrategy) {
-        this.recursiveModelElements = new Map<string, Array<BaseMetaModelElement>>();
-    }
-    /**
-     * Iterates over all triples in the store and instantiate it. Related to that
-     * all object will be pushed to the cache which can be used later to group all
-     * object by namespace.
-     */
-    createNamespaces(): Map<string, Array<BaseMetaModelElement>> {
-        const metaModelElementInstantiator = new MetaModelElementInstantiator(
-            this.rdfModel,
-            this.cacheService,
-            this.recursiveModelElements
-        );
+    loadModelElements(rdfModel.samm.Aspect(), (quad: Quad) => createAspect(quad.subject.value));
 
-        const aspectInstantiator = new AspectInstantiator(this.rdfModel, this.cacheService);
-        const entityInstantiator = new EntityInstantiator(metaModelElementInstantiator);
+    loadModelElements(rdfModel.samm.Entity(), (quad: Quad) => createEntity(store.getQuads(quad.object, null, null, null)));
 
-        this.loadModelElements(this.rdfModel.samm.Aspect(), (quad: Quad) => aspectInstantiator.createAspect(quad.subject.value));
+    loadModelElements(rdfModel.samm.Event(), (quad: Quad) => getEvents(quad.subject));
 
-        this.loadModelElements(this.rdfModel.samm.Entity(), (quad: Quad) =>
-            entityInstantiator.createEntity(metaModelElementInstantiator.rdfModel.store.getQuads(quad.object, null, null, null))
-        );
+    loadModelElements(rdfModel.samm.Operation(), (quad: Quad) => getOperations(quad.subject));
 
-        this.loadModelElements(this.rdfModel.samm.Event(), (quad: Quad) =>
-            metaModelElementInstantiator.getEvents(quad.subject as NamedNode)
-        );
+    loadModelElements(rdfModel.samm.Property(), (quad: Quad) => getProperties(quad.subject));
 
-        this.loadModelElements(this.rdfModel.samm.Operation(), (quad: Quad) =>
-            metaModelElementInstantiator.getOperations(quad.subject as NamedNode)
-        );
+    const allElementsByNamespace = new Map<string, Array<NamedElement>>();
+    elementsCache.filter(element => {
+        if (!element.namespace || element.namespace.length == 0) {
+            return true;
+        }
+        if (!allElementsByNamespace.has(element.namespace)) {
+            allElementsByNamespace.set(element.namespace, []);
+        }
+        allElementsByNamespace.get(element.namespace).push(element);
+        return false;
+    });
 
-        this.loadModelElements(this.rdfModel.samm.Property(), (quad: Quad) =>
-            metaModelElementInstantiator.getProperties(quad.subject as NamedNode)
-        );
+    return allElementsByNamespace;
+}
 
-        const allElementsByNamespace = new Map<string, Array<BaseMetaModelElement>>();
-        this.cacheService.filter(baseMetaModelElement => {
-            if (!baseMetaModelElement.namespace || baseMetaModelElement.namespace.length == 0) {
-                return true;
-            }
-            if (!allElementsByNamespace.has(baseMetaModelElement.namespace)) {
-                allElementsByNamespace.set(baseMetaModelElement.namespace, []);
-            }
-            allElementsByNamespace.get(baseMetaModelElement.namespace).push(baseMetaModelElement);
-            return false;
-        });
+function loadModelElements(type: NamedNode, instantiatorFunction) {
+    const rdfModel = getRdfModel();
+    const store = getStore();
 
-        return allElementsByNamespace;
-    }
-
-    private loadModelElements(type: NamedNode, instantiatorFunction) {
-        this.rdfModel.store.getQuads(null, this.rdfModel.samm.RdfType(), type, null).forEach(instantiatorFunction);
-    }
+    store.getQuads(null, rdfModel.samm.RdfType(), type, null).forEach(instantiatorFunction);
 }

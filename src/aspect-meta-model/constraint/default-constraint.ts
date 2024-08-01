@@ -11,14 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from '../base';
 import {ModelVisitor} from '../../visitor/model-visitor';
+import {NamedElement} from '../named-element';
+import {ConstraintProps} from '../../shared/props';
 
-export type Constraint = BaseMetaModelElement;
+export interface Constraint extends NamedElement {}
 
-export class DefaultConstraint extends Base implements Constraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string) {
-        super(metaModelVersion, aspectModelUrn, name);
+export class DefaultConstraint extends NamedElement implements Constraint {
+    constructor(props: ConstraintProps) {
+        super(props);
     }
 
     accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {

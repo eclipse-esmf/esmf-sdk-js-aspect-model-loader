@@ -13,37 +13,35 @@
 
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {Constraint} from '../constraint/default-constraint';
-import {ModelVisitor} from '../../visitor/model-visitor';
+import {TraitProps} from '../../shared/props';
+import {Type} from '../type';
 
 export interface Trait extends Characteristic {
     baseCharacteristic?: Characteristic;
-    constraints?: Array<Constraint>;
+    constraints: Array<Constraint>;
+    getBaseCharacteristic(): Characteristic;
+    getConstraints(): Constraint[];
 }
 
 export class DefaultTrait extends DefaultCharacteristic implements Trait {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        private _baseCharacteristic?: Characteristic,
-        private _constraints?: Array<Constraint>
-    ) {
-        super(metaModelVersion, aspectModelUrn, name);
+    baseCharacteristic?: Characteristic;
+    constraints: Constraint[] = [];
+
+    constructor(props: TraitProps) {
+        super(props);
+        this.baseCharacteristic = props.baseCharacteristic;
+        this.constraints = props.constraints || [];
     }
 
-    public get baseCharacteristic(): Characteristic {
-        return this._baseCharacteristic;
+    getBaseCharacteristic(): Characteristic {
+        return this.baseCharacteristic;
     }
 
-    public set baseCharacteristic(baseCharacteristic: Characteristic) {
-        this._baseCharacteristic = baseCharacteristic;
+    getConstraints(): Constraint[] {
+        return this.constraints;
     }
 
-    public get constraints(): Array<Constraint> {
-        return this._constraints;
-    }
-
-    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
-        return visitor.visitCharacteristic(this, context);
+    override getDatatype(): Type {
+        return this.baseCharacteristic?.getDatatype();
     }
 }

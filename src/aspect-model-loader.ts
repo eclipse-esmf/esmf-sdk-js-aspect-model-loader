@@ -13,24 +13,16 @@
 
 import {Observable, Subject} from 'rxjs';
 import {Aspect} from './aspect-meta-model';
-import {CacheStrategy, ModelElementCacheService} from './shared/model-element-cache.service';
 import {RdfLoader} from './shared/rdf-loader';
 import {RdfModel} from './shared/rdf-model';
-import {AspectInstantiator} from './instantiator/aspect-instantiator';
 import {BaseModelLoader} from './base-model-loader';
 import {RdfModelUtil} from './shared/rdf-model-util';
+import {createAspect} from './instantiator/aspect-instantiator';
 
 export class AspectModelLoader extends BaseModelLoader {
-    /**
-     * Creates a AspectModelLoader instance.
-     *
-     * @param cacheService cache strategy to cache created elements to ensure uniqueness and a fast lookup of it.
-     *                     The default cache strategy ignores inline defined elements.
-     */
-    constructor(protected cacheService: CacheStrategy = new ModelElementCacheService()) {
-        super(cacheService);
+    constructor() {
+        super();
     }
-
     /**
      * Load and instantiate an Aspect Model based on an RDF/Turtle. Related imports are not resolved.
      *
@@ -54,23 +46,22 @@ export class AspectModelLoader extends BaseModelLoader {
      * @return Observable<Aspect> Aspect including all information from the given RDF
      */
     public load(modelAspectUrn: string, ...rdfContent: string[]): Observable<Aspect> {
-        this.cacheService.reset();
         const subject = new Subject<Aspect>();
-        new RdfLoader().loadModel(rdfContent).subscribe(
-            (rdfModel: RdfModel) => {
+        new RdfLoader().loadModel(rdfContent).subscribe({
+            next: (rdfModel: RdfModel) => {
                 try {
                     RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);
-                    subject.next(Object.freeze(new AspectInstantiator(rdfModel, this.cacheService).createAspect(modelAspectUrn)));
+                    subject.next(Object.freeze(createAspect(modelAspectUrn)));
                 } catch (error: any) {
                     subject.error(error);
                 } finally {
                     subject.complete();
                 }
             },
-            error => {
+            error: error => {
                 subject.error(error);
-            }
-        );
+            },
+        });
 
         return subject;
     }

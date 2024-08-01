@@ -12,10 +12,10 @@
  */
 
 import {DefaultCharacteristic} from './default-characteristic';
-import {Type} from '../type';
+import {CharacteristicProps} from '../../shared/props';
 
 export class DefaultSingleEntity extends DefaultCharacteristic {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, dataType?: Type) {
-        super(metaModelVersion, aspectModelUrn, name, dataType);
+    constructor(props: CharacteristicProps) {
+        super(props);
     }
 }

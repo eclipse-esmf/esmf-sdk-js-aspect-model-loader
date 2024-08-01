@@ -11,33 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad} from 'n3';
-import {Characteristic} from '../../aspect-meta-model';
+import {generateCharacteristic, getDataType} from '../characteristic/characteristic-instantiator';
+import {Quad} from 'n3';
 import {DefaultDuration} from '../../aspect-meta-model/characteristic/default-duration';
-import {PredefinedUnitInstantiator} from '../predefined-unit-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
+import {createUnit} from '../predefined-unit-instantiator';
 
-export class DurationCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
+export function createDurationCharacteristic(quad: Quad): DefaultDuration {
+    return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
+        const {samm, sammC} = getRdfModel();
+        const characteristic = new DefaultDuration({...baseProperties});
 
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const durationCharacteristic = new DefaultDuration(null, null, null, null, null);
-
-        quads.forEach(quad => {
-            if (this.metaModelElementInstantiator.sammC.isUnitProperty(quad.predicate.value)) {
-                durationCharacteristic.unit = new PredefinedUnitInstantiator(this.metaModelElementInstantiator).createUnit(
-                    quad.object.value
-                );
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isUnitProperty(quad.predicate.value)) {
+                characteristic.unit = createUnit(quad.object.value);
+            } else if (samm.isDataTypeProperty(propertyQuad.predicate.value)) {
+                characteristic.dataType = getDataType(propertyQuad);
             }
-        });
-
-        return durationCharacteristic;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.DurationCharacteristic().equals(nameNode);
-    }
+        }
+        return characteristic;
+    });
 }

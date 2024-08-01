@@ -11,22 +11,23 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {EncodingConstraintProps} from '../../shared/props';
 import {Constraint, DefaultConstraint} from './default-constraint';
 
 export interface EncodingConstraint extends Constraint {
     value: string;
+    getValue(): string;
 }
 
 export class DefaultEncodingConstraint extends DefaultConstraint implements EncodingConstraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _value: string) {
-        super(metaModelVersion, aspectModelUrn, name);
+    value: string;
+
+    constructor(props: EncodingConstraintProps) {
+        super(props);
+        this.value = props.value;
     }
 
-    public set value(value: string) {
-        this._value = value;
-    }
-
-    public get value(): string {
-        return this._value;
+    getValue(): string {
+        return this.value;
     }
 }

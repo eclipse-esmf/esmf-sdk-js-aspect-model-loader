@@ -11,47 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad} from 'n3';
-import {Characteristic, Collection} from '../../aspect-meta-model';
-import {DefaultCollection} from '../../aspect-meta-model/characteristic/default-collection';
+import {generateCharacteristic, getDataType} from '../characteristic/characteristic-instantiator';
+import {Quad} from 'n3';
+import {Characteristic} from '../../aspect-meta-model';
+import {Collection, DefaultCollection} from '../../aspect-meta-model/characteristic/default-collection';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class CollectionCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
+export function createCollectionCharacteristic(quad: Quad, characteristicCreator: (quad: Quad) => Characteristic): Collection {
+    return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
+        const {samm, sammC} = getRdfModel();
+        const characteristic = new DefaultCollection({...baseProperties});
 
-    protected processElement(quads: Array<Quad>): Characteristic {
-        return this.initProperties(this.creatCollectionObject(), quads);
-    }
-
-    /**
-     * Override the method in the corresponding specific collection class to create the correct type of
-     * collection e.g. see ListCharacteristicInstantiator.
-     */
-    protected creatCollectionObject(): Collection {
-        return new DefaultCollection(null, null, null, true, false, null);
-    }
-
-    private initProperties(collectionCharacteristic: Collection, quads: Array<Quad>): Collection {
-        const samm = this.metaModelElementInstantiator.samm;
-        const sammC = this.metaModelElementInstantiator.sammC;
-        quads.forEach(quad => {
-            if (samm.isDataTypeProperty(quad.predicate.value)) {
-                collectionCharacteristic.dataType = this.getDataType(quad);
-            } else if (sammC.isAllowDuplicatesProperty(quad.predicate.value)) {
-                collectionCharacteristic.isAllowDuplicates = Boolean(quad.object.value);
-            } else if (sammC.isOrderedProperty(quad.predicate.value)) {
-                collectionCharacteristic.isOrdered = Boolean(quad.object.value);
-            } else if (sammC.isElementCharacteristicProperty(quad.predicate.value)) {
-                collectionCharacteristic.elementCharacteristic = this.create(quad);
+        for (const propertyQuad of propertyQuads) {
+            if (samm.isDataTypeProperty(propertyQuad.predicate.value)) {
+                characteristic.dataType = getDataType(propertyQuad);
+            } else if (sammC.isAllowDuplicatesProperty(propertyQuad.predicate.value)) {
+                characteristic.allowDuplicates = Boolean(propertyQuad.object.value);
+            } else if (sammC.isOrderedProperty(propertyQuad.predicate.value)) {
+                characteristic.ordered = Boolean(propertyQuad.object.value);
+            } else if (sammC.isElementCharacteristicProperty(propertyQuad.predicate.value)) {
+                characteristic.elementCharacteristic = characteristicCreator(propertyQuad);
             }
-        });
-        return collectionCharacteristic;
-    }
+        }
 
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.CollectionCharacteristic().equals(nameNode);
-    }
+        return characteristic;
+    });
 }

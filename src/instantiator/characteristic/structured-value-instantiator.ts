@@ -11,41 +11,34 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from './characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad, Util} from 'n3';
-import {Characteristic} from '../../aspect-meta-model';
+import {generateCharacteristic, getDataType} from './characteristic-instantiator';
+import {Quad, Util} from 'n3';
 import {DefaultStructuredValue} from '../../aspect-meta-model/characteristic/default-structured-value';
-import {PropertyInstantiator} from '../property-instantiator';
+import {createProperty} from '../property-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class StructuredValueCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const sammC = this.metaModelElementInstantiator.sammC;
-        const structuredValueCharacteristic = new DefaultStructuredValue(null, null, null, null, null, null);
-        const property = new PropertyInstantiator(this.metaModelElementInstantiator);
-        quads.forEach(quad => {
-            if (sammC.isDeconstructionRuleProperty(quad.predicate.value)) {
-                structuredValueCharacteristic.deconstructionRule = quad.object.value;
-            } else if (sammC.isElementsProperty(quad.predicate.value)) {
-                structuredValueCharacteristic.elements = [];
-                const structuredValueElementsQuad = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
-                structuredValueCharacteristic.elements = structuredValueElementsQuad.map(elementQuad => {
-                    if (Util.isNamedNode(elementQuad.object)) {
-                        return property.createProperty(elementQuad);
-                    }
-                    return elementQuad.object.value;
-                });
-            }
+export function createStructuredValueCharacteristic(quad: Quad): DefaultStructuredValue {
+    return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
+        const rdfModel = getRdfModel();
+        const {samm, sammC} = rdfModel;
+        const characteristic = new DefaultStructuredValue({
+            ...baseProperties,
+            dataType: getDataType(propertyQuads.find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value))),
+            deconstructionRule: null,
+            elements: [],
         });
 
-        return structuredValueCharacteristic;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.StructuredValueCharacteristic().equals(nameNode);
-    }
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isDeconstructionRuleProperty(propertyQuad.predicate.value)) {
+                characteristic.deconstructionRule = propertyQuad.object.value;
+            } else if (sammC.isElementsProperty(propertyQuad.predicate.value)) {
+                characteristic.elements = rdfModel
+                    .resolveBlankNodes(propertyQuad.object.value)
+                    .map((elementQuad: Quad) =>
+                        Util.isNamedNode(elementQuad.object) ? createProperty(elementQuad) : elementQuad.object.value
+                    );
+            }
+        }
+        return characteristic;
+    });
 }

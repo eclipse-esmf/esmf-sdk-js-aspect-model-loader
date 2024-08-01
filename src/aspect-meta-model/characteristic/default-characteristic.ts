@@ -12,27 +12,28 @@
  */
 
 import {Type} from '../type';
-import {Base, BaseMetaModelElement} from '../base';
 import {ModelVisitor} from '../../visitor/model-visitor';
+import {NamedElement} from '../named-element';
+import {CharacteristicProps} from '../../shared/props';
 
-export interface Characteristic extends BaseMetaModelElement {
+export interface Characteristic extends NamedElement {
     dataType?: Type;
+    getDatatype(): Type;
 }
 
-export class DefaultCharacteristic extends Base implements Characteristic {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _dataType?: Type) {
-        super(metaModelVersion, aspectModelUrn, name);
+export class DefaultCharacteristic extends NamedElement implements Characteristic {
+    dataType?: Type;
+
+    constructor(props: CharacteristicProps) {
+        super(props);
+        this.dataType = props.dataType;
     }
 
-    public set dataType(value: Type | undefined) {
-        this._dataType = value;
+    getDatatype(): Type {
+        return this.dataType;
     }
 
-    public get dataType(): Type | undefined {
-        return this._dataType;
-    }
-
-    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitCharacteristic(this, context);
     }
 

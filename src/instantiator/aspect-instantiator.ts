@@ -11,71 +11,62 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-    Aspect,
-    BaseMetaModelElement,
-    DefaultEvent,
-    DefaultOperation,
-    DefaultPropertyInstanceDefinition,
-    Property,
-} from '../aspect-meta-model';
+import {Aspect, DefaultCollection} from '../aspect-meta-model';
 import {DefaultAspect} from '../aspect-meta-model/default-aspect';
-import {RdfModel} from '../shared/rdf-model';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {NamedNode, Quad} from 'n3';
-import {CacheStrategy} from '../shared/model-element-cache.service';
+import {getElementsCache} from '../shared/model-element-cache.service';
+import {getRdfModel, getStore} from '../shared/rdf-model';
+import {getBaseProperties} from './meta-model-element-instantiator';
+import {Quad} from 'n3';
+import {getProperties} from './property-instantiator';
+import {getEvents} from './event-instantiator';
+import {getOperations} from './operation-instantiator';
 
-export class AspectInstantiator {
-    private readonly recursiveModelElements: Map<string, Array<BaseMetaModelElement>>;
+export function createAspect(aspectModelUrn?: string): Aspect {
+    const elementsCache = getElementsCache();
+    const aspectQuad = getAspectQuad(aspectModelUrn);
+    const aspectNode = aspectQuad.subject;
 
-    constructor(private rdfModel: RdfModel, private cacheService: CacheStrategy) {
-        this.recursiveModelElements = new Map<string, Array<BaseMetaModelElement>>();
+    if (elementsCache.get(aspectNode.value)) {
+        return elementsCache.get(aspectNode.value);
     }
 
-    createAspect(aspectModelUrn?: string): Aspect {
-        const aspectQuad = this.getAspectQuad(this.rdfModel, aspectModelUrn);
-        const aspectNode = aspectQuad.subject as NamedNode;
-        const metaModelElementInstantiator = new MetaModelElementInstantiator(
-            this.rdfModel,
-            this.cacheService,
-            this.recursiveModelElements
-        );
-        const properties = metaModelElementInstantiator.getProperties(aspectNode);
-        const operations = metaModelElementInstantiator.getOperations(aspectNode);
-        const events = metaModelElementInstantiator.getEvents(aspectNode);
-        const aspect = new DefaultAspect(null, null, null, properties, operations, events);
+    const baseProperties = getBaseProperties(aspectNode);
+    const properties = getProperties(aspectNode);
+    const operations = getOperations(aspectNode);
+    const events = getEvents(aspectNode);
 
-        properties.forEach(property => (property as DefaultPropertyInstanceDefinition).addParent(aspect));
-        operations.forEach(operation => (operation as DefaultOperation).addParent(aspect));
-        events.forEach(event => (event as DefaultEvent).addParent(aspect));
+    const aspect = new DefaultAspect({
+        metaModelVersion: baseProperties.metaModelVersion,
+        aspectModelUrn: baseProperties.aspectModelUrn,
+        hasSyntheticName: baseProperties.hasSyntheticName,
+        properties,
+        operations,
+        events,
+        name: baseProperties.name,
+        isCollectionAspect: properties.some(property => property.characteristic instanceof DefaultCollection),
+    });
 
-        metaModelElementInstantiator.initBaseProperties(this.rdfModel.findAnyProperty(aspectNode), aspect, this.rdfModel);
+    properties.forEach(property => property.addParent(aspect));
+    operations.forEach(operation => operation.addParent(aspect));
+    events.forEach(event => event.addParent(aspect));
 
-        this.recursiveModelElements.forEach((recursiveProperties: Array<Property>, key: string) => {
-            recursiveProperties.forEach((property: Property) => {
-                if (property) {
-                    property.characteristic = this.cacheService.get(key);
-                }
-            });
-        });
+    return elementsCache.resolveInstance(aspect);
+}
 
-        return <Aspect>metaModelElementInstantiator.cacheService.resolveInstance(aspect);
-    }
+function getAspectQuad(aspectModelUrn?: string): Quad {
+    const {samm} = getRdfModel();
+    const store = getStore();
 
-    private getAspectQuad(rdfModel: RdfModel, aspectModelUrn?: string): Quad {
-        const aspectQuad = rdfModel.store
-            .getQuads(null, rdfModel.samm.RdfType(), rdfModel.samm.Aspect(), null)
-            .find((quad, index, foundQuads) => {
-                if (foundQuads.length > 1 && aspectModelUrn == undefined) {
-                    throw new Error('More than one aspect found. Please provide the aspectModelUrn to load the desired one.');
-                }
-                return foundQuads.length == 1 || (aspectModelUrn && quad.subject.value === aspectModelUrn);
-            });
-
-        if (!aspectQuad) {
-            throw new Error('No aspect found. Please verify if the aspectModelUrn is correct and the ttl includes an aspect definition.');
+    const aspectQuad = store.getQuads(null, samm.RdfType(), samm.Aspect(), null).find((quad, index, foundQuads) => {
+        if (foundQuads.length > 1 && aspectModelUrn == undefined) {
+            throw new Error('More than one aspect found. Please provide the aspectModelUrn to load the desired one.');
         }
+        return foundQuads.length == 1 || (aspectModelUrn && quad.subject.value === aspectModelUrn);
+    });
 
-        return aspectQuad;
+    if (!aspectQuad) {
+        throw new Error('No aspect found. Please verify if the aspectModelUrn is correct and the ttl includes an aspect definition.');
     }
+
+    return aspectQuad;
 }

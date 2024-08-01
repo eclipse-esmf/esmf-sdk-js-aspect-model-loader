@@ -11,37 +11,59 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DataFactory, Quad} from 'n3';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity';
-import {DefaultPropertyInstanceDefinition, Property} from '../aspect-meta-model';
+import {NamedNode, Quad} from 'n3';
+import {getBaseProperties} from './meta-model-element-instantiator';
+import {DefaultEntity} from '../aspect-meta-model/default-entity';
+import {Property} from '../aspect-meta-model';
+import {getRdfModel, getStore} from '../shared/rdf-model';
+import {getElementsCache} from '../shared/model-element-cache.service';
+import {ComplexType} from '../aspect-meta-model/complex-type';
+import {getProperties} from './property-instantiator';
 
-export class EntityInstantiator {
-    constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
+export function createEntity(quads: Quad[], isAbstract = false, extending?: ComplexType) {
+    if (!quads?.length) return null;
 
-    createEntity(quads: Array<Quad>, isAbstract = false): Entity {
-        const samm = this.metaModelElementInstantiator.samm;
-        const entity = new DefaultEntity(null, null, null, new Array<Property>(), isAbstract);
+    const rdfModel = getRdfModel();
+    const samm = rdfModel.samm;
+    const elementsCache = getElementsCache();
 
-        this.metaModelElementInstantiator.initBaseProperties(quads, entity, this.metaModelElementInstantiator.rdfModel);
-
-        quads.forEach(quad => {
-            if (samm.isPropertiesProperty(quad.predicate.value)) {
-                entity.properties = this.metaModelElementInstantiator.getProperties(DataFactory.namedNode(quad.subject.value));
-            }
-            if (samm.isExtends(quad.predicate.value)) {
-                const abstractQuadEntity = this.metaModelElementInstantiator.rdfModel.store.getQuads(quad.object, null, null, null);
-                if (abstractQuadEntity && abstractQuadEntity.length > 0) {
-                    entity.extends = new EntityInstantiator(this.metaModelElementInstantiator).createEntity(
-                        abstractQuadEntity,
-                        true
-                    ) as DefaultEntity;
-                }
-            }
-        });
-
-        entity.properties.forEach(property => (property as DefaultPropertyInstanceDefinition).addParent(entity));
-
-        return <Entity>this.metaModelElementInstantiator.cacheService.resolveInstance(entity);
+    const subject = quads?.[0].subject as NamedNode;
+    const cachedEntity = elementsCache.get<DefaultEntity>(subject.value);
+    if (cachedEntity) {
+        if (extending && !cachedEntity.extendingElements.find(el => el.aspectModelUrn === extending.aspectModelUrn)) {
+            cachedEntity.extendingElements.push(extending);
+        }
+        return cachedEntity;
     }
+
+    const baseProperties = getBaseProperties(subject);
+    const properties: Property[] = [];
+
+    const entity = new DefaultEntity({
+        ...baseProperties,
+        properties,
+        isAbstract,
+    });
+
+    for (const quad of quads) {
+        if (samm.isPropertiesProperty(quad.predicate.value)) {
+            properties.push(...getProperties(quad.subject as NamedNode));
+            continue;
+        }
+
+        if (samm.isExtends(quad.predicate.value)) {
+            const extendsEntityQuads = getStore().getQuads(quad.object, null, null, null);
+            if (extendsEntityQuads && extendsEntityQuads.length > 0) {
+                entity.extends_ = createEntity(
+                    extendsEntityQuads,
+                    extendsEntityQuads.some(q => samm.isAbstractEntity(q.object.value)),
+                    entity
+                );
+            }
+        }
+    }
+
+    properties.forEach(property => property.addParent(entity));
+
+    return elementsCache.resolveInstance(entity);
 }

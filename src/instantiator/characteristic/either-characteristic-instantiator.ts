@@ -11,32 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad} from 'n3';
+import {generateCharacteristic} from '../characteristic/characteristic-instantiator';
+import {Quad} from 'n3';
 import {Characteristic} from '../../aspect-meta-model';
-import {DefaultEither} from '../../aspect-meta-model/characteristic/default-either';
+import {DefaultEither, Either} from '../../aspect-meta-model/characteristic/default-either';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class EitherCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const sammC = this.metaModelElementInstantiator.sammC;
-        const defaultEither = new DefaultEither(null, null, null, null, null);
-        quads.forEach(quad => {
-            if (sammC.isEitherLeftProperty(quad.predicate.value)) {
-                defaultEither.left = this.metaModelElementInstantiator.getCharacteristic(quad);
-            } else if (sammC.isEitherRightProperty(quad.predicate.value)) {
-                defaultEither.right = this.metaModelElementInstantiator.getCharacteristic(quad);
-            }
+export function createEitherCharacteristic(quad: Quad, characteristicCreator: (quad: Quad) => Characteristic): Either {
+    return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
+        const {sammC} = getRdfModel();
+        const characteristic = new DefaultEither({
+            ...baseProperties,
+            left: null,
+            right: null,
         });
 
-        return defaultEither;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.EitherCharacteristic().equals(nameNode);
-    }
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isEitherLeftProperty(propertyQuad.predicate.value)) {
+                characteristic.left = characteristicCreator(propertyQuad);
+            } else if (sammC.isEitherRightProperty(propertyQuad.predicate.value)) {
+                characteristic.right = characteristicCreator(propertyQuad);
+            }
+        }
+        return characteristic;
+    });
 }

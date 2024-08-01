@@ -11,31 +11,53 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Quad} from 'n3';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {PropertyInstantiator} from './property-instantiator';
-import {DefaultEvent, DefaultPropertyInstanceDefinition, Event} from '../aspect-meta-model';
+import {NamedNode, Quad, Quad_Subject} from 'n3';
+import {getBaseProperties} from './meta-model-element-instantiator';
+import {DefaultEvent, Event} from '../aspect-meta-model';
+import {getRdfModel, getStore} from '../shared/rdf-model';
+import {getElementsCache} from '../shared/model-element-cache.service';
+import {createProperty} from './property-instantiator';
 
-export class EventInstantiator {
-    constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
+export function createEvent(quad: Quad): Event {
+    const rdfModel = getRdfModel();
+    const {samm} = rdfModel;
+    const modelElementCache = getElementsCache();
 
-    createEvent(quad: Quad): Event {
-        const samm = this.metaModelElementInstantiator.samm;
-        const rdfModel = this.metaModelElementInstantiator.rdfModel;
-        const event = new DefaultEvent(null, null, null);
-        const quads = rdfModel.findAnyProperty(quad);
-        const propertyInstantiator = new PropertyInstantiator(this.metaModelElementInstantiator);
-
-        quads.forEach(quad => {
-            if (samm.isParametersProperty(quad.predicate.value)) {
-                const parametersQuads = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
-                event.parameters = parametersQuads.map(input => propertyInstantiator.createProperty(input));
-                event.parameters.forEach(property => (property as DefaultPropertyInstanceDefinition).addParent(event));
-            }
-        });
-
-        this.metaModelElementInstantiator.initBaseProperties(quads, event, rdfModel);
-
-        return <Event>this.metaModelElementInstantiator.cacheService.resolveInstance(event);
+    if (modelElementCache.get(quad.object.value)) {
+        return modelElementCache.get(quad.object.value);
     }
+
+    const quads = rdfModel.findAnyProperty(quad);
+    const baseProperties = getBaseProperties(quad.object as NamedNode);
+    const event = new DefaultEvent({
+        ...baseProperties,
+        properties: [],
+    });
+
+    for (const quad of quads) {
+        if (samm.isParametersProperty(quad.predicate.value)) {
+            const parametersQuads = rdfModel.resolveBlankNodes(quad.object.value);
+            event.properties = parametersQuads.map(input => {
+                const property = createProperty(input);
+                property.addParent(event);
+                return property;
+            });
+        }
+    }
+
+    return modelElementCache.resolveInstance(event);
+}
+
+export function getEvents(subject: Quad_Subject): Array<Event> {
+    const events: Array<Event> = [];
+
+    const rdfModel = getRdfModel();
+    const store = getStore();
+    const {samm} = rdfModel;
+
+    store.getQuads(subject, samm.EventsProperty(), null, null).forEach(eventQuad => {
+        rdfModel.resolveBlankNodes(eventQuad.object.value).forEach(resolvedEventQuad => events.push(createEvent(resolvedEventQuad)));
+    });
+
+    return events;
 }

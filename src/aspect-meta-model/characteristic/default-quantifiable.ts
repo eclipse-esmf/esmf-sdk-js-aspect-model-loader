@@ -13,14 +13,21 @@
 
 import {Unit} from '../default-unit';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
-import {Type} from '../type';
+import {QuantifiableProps} from '../../shared/props';
 
 export interface Quantifiable extends Characteristic {
     unit?: Unit;
 }
 
 export class DefaultQuantifiable extends DefaultCharacteristic implements Quantifiable {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, dataType?: Type, public unit?: Unit) {
-        super(metaModelVersion, aspectModelUrn, name, dataType);
+    unit?: Unit;
+
+    constructor(props: QuantifiableProps) {
+        super(props);
+        this.unit = props.unit;
+    }
+
+    getUnit(): Unit {
+        return this.unit;
     }
 }

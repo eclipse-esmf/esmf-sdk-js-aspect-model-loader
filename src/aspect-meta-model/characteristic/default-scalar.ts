@@ -11,28 +11,23 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ScalarProps} from '../../shared/props';
+import {ModelVisitor} from '../../visitor/model-visitor';
 import {Type} from '../type';
 
-export class DefaultScalar implements Type {
-    constructor(private _urn: string) {}
-
-    public get urn(): string {
-        return this._urn;
+export class DefaultScalar extends Type {
+    constructor(props: ScalarProps) {
+        super(props);
+        this.urn = props.urn;
+        this.metaModelVersion = props.metaModelVersion;
+        this.scalar = true;
     }
 
-    public get isComplex(): boolean {
-        return false;
-    }
-
-    public get isScalar(): boolean {
+    override isScalar(): boolean {
         return true;
     }
 
-    public get shortUrn(): string {
-        return this.urn.split('#').pop();
-    }
-
-    public get isAbstract(): boolean {
-        return false;
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
+        return visitor.visitScalar(this, context);
     }
 }

@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from './base';
-import {QuantityKind} from './default-quantity-kind';
 import {ModelVisitor} from '../visitor/model-visitor';
+import {NamedElement} from './named-element';
+import {UnitProps} from '../shared/props';
 
-export interface Unit extends BaseMetaModelElement {
+export interface Unit extends NamedElement {
     symbol?: string;
     code?: string;
     name: string;
@@ -24,58 +24,20 @@ export interface Unit extends BaseMetaModelElement {
     quantityKinds?: Array<any>;
 }
 
-export class DefaultUnit extends Base implements Unit {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        private _symbol?: string,
-        private _code?: string,
-        private _referenceUnit?: string,
-        private _conversionFactor?: string,
-        private _quantityKinds: Array<QuantityKind> = []
-    ) {
-        super(metaModelVersion, aspectModelUrn, name);
-    }
+export class DefaultUnit extends NamedElement implements Unit {
+    symbol?: string;
+    code?: string;
+    referenceUnit?: string;
+    conversionFactor?: string;
+    quantityKinds?: Array<any>;
 
-    public set symbol(value: string | undefined) {
-        this._symbol = value;
-    }
-
-    public get symbol(): string | undefined {
-        return this._symbol;
-    }
-
-    public get code(): string | undefined {
-        return this._code;
-    }
-
-    public set code(value: string | undefined) {
-        this._code = value;
-    }
-
-    public set referenceUnit(value: string | undefined) {
-        this._referenceUnit = value;
-    }
-
-    public get referenceUnit(): string | undefined {
-        return this._referenceUnit;
-    }
-
-    public set conversionFactor(value: string | undefined) {
-        this._conversionFactor = value;
-    }
-
-    public get conversionFactor(): string | undefined {
-        return this._conversionFactor;
-    }
-
-    public set quantityKinds(value: Array<QuantityKind>) {
-        this._quantityKinds = value;
-    }
-
-    public get quantityKinds(): Array<QuantityKind> {
-        return this._quantityKinds;
+    constructor(props: UnitProps) {
+        super(props);
+        this.symbol = props.symbol;
+        this.code = props.code;
+        this.referenceUnit = props.referenceUnit;
+        this.conversionFactor = props.conversionFactor;
+        this.quantityKinds = props.quantityKinds || [];
     }
 
     public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {

@@ -13,7 +13,7 @@
 
 import {Parser, Store} from 'n3';
 import {Observable, Subject} from 'rxjs';
-import {RdfModel} from './rdf-model';
+import {createOrGetStore, RdfModel, useRdfModel} from './rdf-model';
 
 export class RdfLoader {
     /**
@@ -22,10 +22,10 @@ export class RdfLoader {
      */
     public loadModel(rdfContent: string[]): Observable<RdfModel> {
         const subject = new Subject<RdfModel>();
-        const store: Store = new Store();
+        const store: Store = createOrGetStore();
         const parsedRdf = [];
 
-        rdfContent.forEach((rdf, index) => {
+        rdfContent.forEach(rdf => {
             new Parser().parse(rdf, (error, quad, prefixes) => {
                 if (error) {
                     subject.error(error);
@@ -42,7 +42,7 @@ export class RdfLoader {
 
                 // complete and push result to the caller using the subject
                 if (parsedRdf.length === rdfContent.length) {
-                    subject.next(new RdfModel(store));
+                    subject.next(useRdfModel(new RdfModel(store)));
                     subject.complete();
                 }
             });

@@ -11,7 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Aspect, Characteristic, Constraint, Entity, Event, Operation, Property, QuantityKind, Unit} from '../aspect-meta-model';
+import {
+    Aspect,
+    Characteristic,
+    Constraint,
+    DefaultScalar,
+    Entity,
+    EntityInstance,
+    Event,
+    Operation,
+    Property,
+    QuantityKind,
+    Unit,
+} from '../aspect-meta-model';
+import {ScalarValue} from '../aspect-meta-model/scalar-value';
 
 /**
  * Visitor interface to traverse a loaded model and apply operations to the
@@ -39,4 +52,10 @@ export interface ModelVisitor<T, U> {
     visitEntity(entity: Entity, context: U): T;
     /** Visit an Event definition */
     visitEvent(entity: Event, context: U): T;
+    /** Visit an Scalar definition */
+    visitScalar(scalar: DefaultScalar, context: U): T;
+    /** Visit an ScalarValue definition */
+    visitScalarValue(scalarValue: ScalarValue, context: U): T;
+    /** Visit an Scalar definition */
+    visitEntityInstance(scalarValue: EntityInstance, context: U): T;
 }

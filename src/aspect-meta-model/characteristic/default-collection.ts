@@ -11,49 +11,47 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Type} from '../type';
+import {CollectionProps} from '../../shared/props';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 
+export enum CollectionType {
+    COLLECTION,
+    SET,
+    SORTEDSET,
+    LIST,
+}
+
 export interface Collection extends Characteristic {
-    isAllowDuplicates: boolean;
-    isOrdered: boolean;
+    allowDuplicates: boolean;
+    ordered: boolean;
     elementCharacteristic?: Characteristic;
 }
 
 export class DefaultCollection extends DefaultCharacteristic implements Collection {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        private _isAllowDuplicates: boolean,
-        private _isOrdered: boolean,
-        private _elementCharacteristic?: Characteristic,
-        dataType?: Type
-    ) {
-        super(metaModelVersion, aspectModelUrn, name, dataType);
+    allowDuplicates: boolean;
+    ordered: boolean;
+    elementCharacteristic?: Characteristic;
+
+    constructor(props: CollectionProps) {
+        super(props);
+        this.allowDuplicates = Boolean(props.allowDuplicates);
+        this.ordered = Boolean(props.ordered);
+        this.elementCharacteristic = props.elementCharacteristic;
     }
 
-    public set isAllowDuplicates(value: boolean) {
-        this._isAllowDuplicates = value;
+    isAllowedDuplicates(): boolean {
+        return this.allowDuplicates;
     }
 
-    public get isAllowDuplicates(): boolean {
-        return this._isAllowDuplicates;
+    isOrdered(): boolean {
+        return this.ordered;
     }
 
-    public set isOrdered(value: boolean) {
-        this._isOrdered = value;
+    getElementCharacteristic(): Characteristic {
+        return this.elementCharacteristic;
     }
 
-    public get isOrdered(): boolean {
-        return this._isOrdered;
-    }
-
-    public set elementCharacteristic(value: Characteristic | undefined) {
-        this._elementCharacteristic = value;
-    }
-
-    public get elementCharacteristic(): Characteristic | undefined {
-        return this._elementCharacteristic;
+    getCollectionType(): CollectionType {
+        return CollectionType.COLLECTION;
     }
 }

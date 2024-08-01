@@ -11,31 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Type} from '../type';
 import {DefaultEnumeration, Enumeration} from './default-enumeration';
-import {DefaultEntityInstance} from '../default-entity-instance';
+import {StateProps} from '../../shared/props';
+import {Value} from '../value';
 
 export interface State extends Enumeration {
-    defaultValue: DefaultEntityInstance | string | number;
+    defaultValue: Value;
+    getDefaultValue(): Value;
 }
 
 export class DefaultState extends DefaultEnumeration implements State {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        values: Array<DefaultEntityInstance | string | number>,
-        private _defaultValue: DefaultEntityInstance | string | number,
-        dataType?: Type
-    ) {
-        super(metaModelVersion, aspectModelUrn, name, values, dataType);
+    defaultValue: Value;
+
+    constructor(props: StateProps) {
+        super(props);
+        this.defaultValue = props.defaultValue;
     }
 
-    public set defaultValue(value: DefaultEntityInstance | string | number) {
-        this._defaultValue = value;
-    }
-
-    public get defaultValue(): DefaultEntityInstance | string | number {
-        return this._defaultValue;
+    getDefaultValue(): Value {
+        return this.defaultValue;
     }
 }

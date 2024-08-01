@@ -11,12 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultCollection} from './default-collection';
-import {Characteristic} from './default-characteristic';
-import {Type} from '../type';
+import {CollectionType, DefaultCollection} from './default-collection';
+import {CollectionProps} from '../../shared/props';
 
 export class DefaultList extends DefaultCollection {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, elementCharacteristic?: Characteristic, dataType?: Type) {
-        super(metaModelVersion, aspectModelUrn, name, true, true, elementCharacteristic, dataType);
+    constructor(props: CollectionProps) {
+        super(props);
+        this.allowDuplicates = true;
+        this.ordered = true;
+    }
+
+    override getCollectionType(): CollectionType {
+        return CollectionType.LIST;
     }
 }

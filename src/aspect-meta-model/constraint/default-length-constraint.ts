@@ -11,31 +11,31 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LengthConstraintProps} from '../../shared/props';
 import {Constraint, DefaultConstraint} from './default-constraint';
 
 export interface LengthConstraint extends Constraint {
     minValue?: number;
     maxValue?: number;
+    getMinValue(): number;
+    getMaxValue(): number;
 }
 
 export class DefaultLengthConstraint extends DefaultConstraint implements LengthConstraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _minValue?: number, private _maxValue?: number) {
-        super(metaModelVersion, aspectModelUrn, name);
+    minValue?: number;
+    maxValue?: number;
+
+    constructor(props: LengthConstraintProps) {
+        super(props);
+        this.minValue = props.minValue;
+        this.maxValue = props.maxValue;
     }
 
-    public set minValue(value: number | undefined) {
-        this._minValue = value;
+    getMinValue(): number {
+        return this.minValue;
     }
 
-    public get minValue(): number | undefined {
-        return this._minValue;
-    }
-
-    public set maxValue(value: number | undefined) {
-        this._maxValue = value;
-    }
-
-    public get maxValue(): number | undefined {
-        return this._maxValue;
+    getMaxValue(): number {
+        return this.maxValue;
     }
 }
