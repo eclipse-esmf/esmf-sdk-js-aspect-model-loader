@@ -12,10 +12,11 @@
  */
 
 import {Property} from './default-property';
-import {Base, BaseMetaModelElement} from './base';
 import {ModelVisitor} from '../visitor/model-visitor';
+import {NamedElement} from './named-element';
+import {OperationProps} from '../shared/props';
 
-export interface Operation extends BaseMetaModelElement {
+export interface Operation extends NamedElement {
     input: Array<Property>;
     output?: Property;
 
@@ -28,41 +29,24 @@ export interface Operation extends BaseMetaModelElement {
     getInputProperty(name: string): Property;
 }
 
-export class DefaultOperation extends Base implements Operation {
-    constructor(
-        metaModelVersion: string,
-        aspectModelUrn: string,
-        name: string,
-        private _input: Array<Property> = [],
-        private _output?: Property
-    ) {
-        super(metaModelVersion, aspectModelUrn, name);
+export class DefaultOperation extends NamedElement implements Operation {
+    input: Property[] = [];
+    output: Property;
+
+    constructor(props: OperationProps) {
+        super(props);
+        this.input = props.input || [];
+        this.output = props.output;
     }
 
-    public getInputProperty(name: string): Property {
-        if (!this._input) {
-            return undefined;
+    getInputProperty(name: string): Property {
+        if (!this.input || !this.input.length) {
+            return null;
         }
-        return this._input.find(property => property.name === name);
+        return this.input.find(property => property.getName() === name);
     }
 
-    public set input(value: Array<Property>) {
-        this._input = value;
-    }
-
-    public get input(): Array<Property> {
-        return this._input;
-    }
-
-    public set output(value: Property | undefined) {
-        this._output = value;
-    }
-
-    public get output(): Property | undefined {
-        return this._output;
-    }
-
-    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
         return visitor.visitOperation(this, context);
     }
 }

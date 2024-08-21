@@ -11,31 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad} from 'n3';
-import {Characteristic} from '../../aspect-meta-model';
-import {PredefinedUnitInstantiator} from '../predefined-unit-instantiator';
+import {generateCharacteristic, getDataType} from '../characteristic/characteristic-instantiator';
+import {Quad} from 'n3';
+import {createUnit} from '../predefined-unit-instantiator';
 import {DefaultQuantifiable} from '../../aspect-meta-model/characteristic/default-quantifiable';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class QuantifiableCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const quantifiable = new DefaultQuantifiable(null, null, null, null, null);
-
-        quads.forEach(quad => {
-            if (this.metaModelElementInstantiator.sammC.isUnitProperty(quad.predicate.value)) {
-                quantifiable.unit = new PredefinedUnitInstantiator(this.metaModelElementInstantiator).createUnit(quad.object.value);
-            }
+export function createQuantifiableCharacteristic(quad: Quad): DefaultQuantifiable {
+    return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
+        const {samm, sammC} = getRdfModel();
+        const characteristic = new DefaultQuantifiable({
+            ...baseProperties,
+            dataType: getDataType(propertyQuads.find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value))),
         });
 
-        return quantifiable;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.QuantifiableCharacteristic().equals(nameNode);
-    }
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isUnitProperty(propertyQuad.predicate.value)) {
+                characteristic.unit = createUnit(propertyQuad.object.value);
+            }
+        }
+        return characteristic;
+    });
 }

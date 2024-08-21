@@ -13,14 +13,17 @@
 
 import {DataFactory, NamedNode} from 'n3';
 
+const RDF_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns';
+const XSD_URI = 'http://www.w3.org/2001/XMLSchema';
+
 export class Samm {
-    static readonly XSD_URI = 'http://www.w3.org/2001/XMLSchema';
-    static readonly RDF_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns';
+    static readonly XSD_URI = XSD_URI;
+    static readonly RDF_URI = RDF_URI;
     static readonly RDFS_URI = 'http://www.w3.org/2000/01/rdf-schema';
     static readonly BASE_URI = 'urn:samm:org.eclipse.esmf.samm:';
 
-    static readonly RDF_LANG_STRING = `${Samm.RDF_URI}#langString`;
-    static readonly XML_LANG_STRING = `${Samm.XSD_URI}#langString`;
+    static readonly RDF_LANG_STRING = `${RDF_URI}#langString`;
+    static readonly XML_LANG_STRING = `${XSD_URI}#langString`;
 
     private alias = 'samm';
 

@@ -11,9 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from './base';
+import {BaseProps} from '../shared/props';
+import {ModelVisitor} from '../visitor/model-visitor';
 
-export interface IsInstance<T extends BaseMetaModelElement> {
-    name: string;
-    metaModelType: T;
+export abstract class ModelElement {
+    metaModelVersion: string;
+
+    constructor(props: BaseProps) {
+        this.metaModelVersion = props.metaModelVersion;
+    }
+
+    getMetaModelVersion() {
+        return this.metaModelVersion;
+    }
+
+    abstract accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T;
 }

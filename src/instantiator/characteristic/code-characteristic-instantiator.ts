@@ -11,31 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad} from 'n3';
-import {Characteristic} from '../../aspect-meta-model';
+import {generateCharacteristic, getDataType} from '../characteristic/characteristic-instantiator';
+import {Quad} from 'n3';
 import {DefaultCode} from '../../aspect-meta-model/characteristic/default-code';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class CodeCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const samm = this.metaModelElementInstantiator.samm;
-        const defaultCode = new DefaultCode(null, null, null, null);
-
-        quads.forEach(quad => {
-            if (samm.isDataTypeProperty(quad.predicate.value)) {
-                defaultCode.dataType = this.getDataType(quad);
-            }
+export function createCodeCharacteristic(quad: Quad): DefaultCode {
+    const {samm} = getRdfModel();
+    return generateCharacteristic<DefaultCode>(quad, (baseProperties, propertyQuads) => {
+        return new DefaultCode({
+            ...baseProperties,
+            dataType: getDataType(propertyQuads.find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value))),
         });
-
-        return defaultCode;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.CodeCharacteristic().equals(nameNode);
-    }
+    });
 }

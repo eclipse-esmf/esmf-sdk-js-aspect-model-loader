@@ -11,35 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamedNode, Quad} from 'n3';
-import {CharacteristicInstantiator} from './characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {Characteristic, Constraint, DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '../../aspect-meta-model';
+import {Quad} from 'n3';
+import {generateCharacteristic} from './characteristic-instantiator';
+import {Characteristic, DefaultTrait} from '../../aspect-meta-model';
+import {getRdfModel} from '../../shared/rdf-model';
+import {detectAndCreateConstraint} from '../constraint';
 
-export class TraitCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
+export function createTraitCharacteristic(quad: Quad, characteristicCreator: (quad: Quad) => Characteristic): DefaultTrait {
+    return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
+        const {sammC} = getRdfModel();
+        const characteristic = new DefaultTrait({...baseProperties});
 
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const sammC = this.metaModelElementInstantiator.sammC;
-        const trait = new DefaultTrait(null, null, null, null, new Array<Constraint>());
-
-        quads.forEach(quad => {
-            if (sammC.isBaseCharacteristicProperty(quad.predicate.value)) {
-                trait.baseCharacteristic = this.metaModelElementInstantiator.getCharacteristic(quad);
-                (trait.baseCharacteristic as DefaultCharacteristic).addParent(trait);
-            } else if (sammC.isConstraintProperty(quad.predicate.value)) {
-                const constraint = this.metaModelElementInstantiator.getConstraint(quad);
-                (constraint as DefaultConstraint).addParent(trait);
-                trait.constraints.push(constraint);
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isBaseCharacteristicProperty(propertyQuad.predicate.value)) {
+                characteristic.baseCharacteristic = characteristicCreator(propertyQuad);
+                characteristic.baseCharacteristic?.addParent(characteristic);
+            } else if (sammC.isConstraintProperty(propertyQuad.predicate.value)) {
+                const constraint = detectAndCreateConstraint(propertyQuad);
+                if (constraint) {
+                    characteristic.constraints.push(constraint);
+                    constraint?.addParent(characteristic);
+                }
             }
-        });
-
-        return trait;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.TraitCharacteristic().equals(nameNode);
-    }
+        }
+        return characteristic;
+    });
 }

@@ -1,99 +1,99 @@
-name: "Create Tagged Release"
+name: 'Create Tagged Release'
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_version:
-        description: 'Version number of the release'
-        required: true
+    workflow_dispatch:
+        inputs:
+            release_version:
+                description: 'Version number of the release'
+                required: true
 
 jobs:
-  gh_tagged_release:
-    name: Create tagged release
-    runs-on: ubuntu-latest
+    gh_tagged_release:
+        name: Create tagged release
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout project
-        uses: actions/checkout@v3
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v3
 
-      - name: Setup Git
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+            - name: Setup Git
+              run: |
+                  git config user.name github-actions
+                  git config user.email github-actions@github.com
 
-      - name: Cache node modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-
-            ${{ runner.os }}-
+            - name: Cache node modules
+              uses: actions/cache@v3
+              env:
+                  cache-name: cache-node-modules
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-${{ env.cache-name }}-
+                      ${{ runner.os }}-
 
-      - name: Setup NodeJs
-        uses: actions/setup-node@v3
-        with:
-          node-version: '17'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+            - name: Setup NodeJs
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18'
+                  cache: 'npm'
+                  cache-dependency-path: '**/package-lock.json'
 
-      - name: Set versions
-        run: |
-          release_version=${{ github.event.inputs.release_version }}
-          release_branch_name=${release_version%.*}.x
-          echo "release_branch_name=$release_branch_name" >> $GITHUB_ENV
+            - name: Set versions
+              run: |
+                  release_version=${{ github.event.inputs.release_version }}
+                  release_branch_name=${release_version%.*}.x
+                  echo "release_branch_name=$release_branch_name" >> $GITHUB_ENV
 
-      - name: Set antora version
-        run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/js-sdk-aml-guide/antora.yml
+            - name: Set antora version
+              run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/js-sdk-aml-guide/antora.yml
 
-      - name: Commit version changes and push to upstream repository
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: ${{ env.release_branch_name }}
-          commit_user_name: github-actions
-          commit_user_email: github-actions@github.com
-          commit_author: Author <actions@github.com>
-          file_pattern: 'documentation/js-sdk-aml-guide/antora.yml'
+            - name: Commit version changes and push to upstream repository
+              uses: stefanzweifel/git-auto-commit-action@v4
+              with:
+                  branch: ${{ env.release_branch_name }}
+                  commit_user_name: github-actions
+                  commit_user_email: github-actions@github.com
+                  commit_author: Author <actions@github.com>
+                  file_pattern: 'documentation/js-sdk-aml-guide/antora.yml'
 
-      - name: Install Dependencies
-        run: npm install
+            - name: Install Dependencies
+              run: npm install
 
-      - name: Set app version (Unix)
-        run: npm version ${{ github.event.inputs.release_version }} --no-git-tag-version
+            - name: Set app version (Unix)
+              run: npm version ${{ github.event.inputs.release_version }} --no-git-tag-version
 
-      - name: Build Project
-        run: npm run build
+            - name: Build Project
+              run: npm run build
 
-      # This should be removed as soon as we go towards nodejs package repository
-      - name: Pack Project as tgz
-        run: npm pack
+            # This should be removed as soon as we go towards nodejs package repository
+            - name: Pack Project as tgz
+              run: npm pack
 
-      - name: "Create Github release (full)"
-        if: ${{ !contains( github.event.inputs.release_version, '-rc' ) }}
-        uses: softprops/action-gh-release@v1
-        id: esmf_sdk_js_aml_release
-        with:
-          body: "Release version ${{ github.event.inputs.release_version }}."
-          tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: ${{ env.release_branch_name }}
-          draft: false
-          prerelease: false
-          files: esmf-aspect-model-loader-${{ github.event.inputs.release_version }}.tgz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+            - name: 'Create Github release (full)'
+              if: ${{ !contains( github.event.inputs.release_version, '-rc' ) }}
+              uses: softprops/action-gh-release@v1
+              id: esmf_sdk_js_aml_release
+              with:
+                  body: 'Release version ${{ github.event.inputs.release_version }}.'
+                  tag_name: v${{ github.event.inputs.release_version }}
+                  target_commitish: ${{ env.release_branch_name }}
+                  draft: false
+                  prerelease: false
+                  files: esmf-aspect-model-loader-${{ github.event.inputs.release_version }}.tgz
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: "Create Github release (milestone)"
-        if: contains( github.event.inputs.release_version, '-rc' )
-        uses: softprops/action-gh-release@v1
-        id: sds_sdk_js_aml_release
-        with:
-          body: "Release version ${{ github.event.inputs.release_version }}."
-          tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: ${{ env.release_branch_name }}
-          draft: false
-          prerelease: true
-          files: esmf-aspect-model-loader-${{ github.event.inputs.release_version }}.tgz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+            - name: 'Create Github release (milestone)'
+              if: contains( github.event.inputs.release_version, '-rc' )
+              uses: softprops/action-gh-release@v1
+              id: sds_sdk_js_aml_release
+              with:
+                  body: 'Release version ${{ github.event.inputs.release_version }}.'
+                  tag_name: v${{ github.event.inputs.release_version }}
+                  target_commitish: ${{ env.release_branch_name }}
+                  draft: false
+                  prerelease: true
+                  files: esmf-aspect-model-loader-${{ github.event.inputs.release_version }}.tgz
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}

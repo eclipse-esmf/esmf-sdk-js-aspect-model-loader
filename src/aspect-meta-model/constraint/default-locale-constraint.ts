@@ -11,22 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LocaleConstraintProps} from '../../shared/props';
+import {LangString} from '../named-element';
 import {Constraint, DefaultConstraint} from './default-constraint';
 
 export interface LocaleConstraint extends Constraint {
-    localeCode: string;
+    localeCode: LangString;
+    getLocaleCode(): LangString;
 }
 
 export class DefaultLocaleConstraint extends DefaultConstraint implements LocaleConstraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _localeCode: string) {
-        super(metaModelVersion, aspectModelUrn, name);
+    localeCode: string;
+
+    constructor(props: LocaleConstraintProps) {
+        super(props);
+        this.localeCode = props.localeCode;
     }
 
-    public set localeCode(value: string) {
-        this._localeCode = value;
-    }
-
-    public get localeCode(): string {
-        return this._localeCode;
+    getLocaleCode(): LangString {
+        return this.localeCode;
     }
 }

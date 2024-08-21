@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './base';
 export * from './default-aspect';
 export * from './characteristic/default-characteristic';
 export * from './characteristic/default-code';
@@ -46,8 +45,4 @@ export * from './characteristic/default-trait';
 export * from './default-unit';
 export * from './default-entity-instance';
 export * from './has-properties';
-export * from './is-described';
-export * from './is-instance';
-export * from './is-named';
-export * from './is-versioned';
 export * from './type';

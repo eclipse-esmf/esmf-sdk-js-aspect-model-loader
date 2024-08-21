@@ -11,23 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelVisitor} from '../visitor/model-visitor';
+import {use} from 'typescript-mix';
+import {HasProperties} from './has-properties';
 import {NamedElement} from './named-element';
-import {QuantityKindProps} from '../shared/props';
+import {StructuredElementProps} from '../shared/props';
 
-export interface QuantityKind {
-    label: string;
-}
+export interface StructureElement extends HasProperties, NamedElement {}
+export abstract class StructureElement extends NamedElement {
+    @use(HasProperties) _: StructureElement;
 
-export class DefaultQuantityKind extends NamedElement {
-    label: string;
-
-    constructor(props: QuantityKindProps) {
+    constructor(props: StructuredElementProps) {
         super(props);
-        this.label = props.label;
+        this.properties = props.properties || [];
     }
 
-    public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
-        return visitor.visitQuantityKind(this, context);
+    isComplexType() {
+        return false;
     }
 }

@@ -73,5 +73,4 @@ export const extendsAspectModel = `@prefix xsd: <http://www.w3.org/2001/XMLSchem
 
 :abstractTestProperty a samm:AbstractProperty ;
     samm:description "The something part of the vector"@en .
-    
 `;

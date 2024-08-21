@@ -11,37 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-    AspectModelLoader,
-    DefaultAspect,
-    DefaultAspectModelVisitor,
-    DefaultCharacteristic,
-    DefaultOperation,
-    DefaultProperty,
-} from '../src';
+import {AspectModelLoader} from '../src';
+import {CountElementVisitor} from './count-elements';
 import {traitAspectModel} from './models/trait-model';
 import {Subscription} from 'rxjs';
-import DoneCallback = jest.DoneCallback;
 
 describe('Aspect model visitor tests', (): void => {
     let loader: AspectModelLoader;
-    let aspect: DefaultAspect;
     let subscription: Subscription;
 
-    beforeEach((done: DoneCallback): void => {
+    test('should visit the aspect successfully', (done): void => {
         loader = new AspectModelLoader();
-        subscription = loader.loadSelfContainedModel(traitAspectModel).subscribe(_aspect => {
-            aspect = <DefaultAspect>_aspect;
+        subscription = loader.loadSelfContainedModel(traitAspectModel).subscribe(aspect => {
+            const visitor = new CountElementVisitor();
+            visitor.visit(aspect);
+            expect(visitor.counts.characteristics.count).toBe(4);
+            expect(visitor.counts.operations.count).toBe(0);
+            expect(visitor.counts.properties.count).toBe(2);
             done();
         });
-    });
-
-    test('should visit the aspect successfully', (): void => {
-        const visitor = new CountElementVisitor<any, any>();
-        visitor.visit(aspect, {});
-        expect(visitor.countCharacteristics).toEqual(4);
-        expect(visitor.countOperations).toEqual(0);
-        expect(visitor.countProperties).toEqual(2);
     });
 
     afterEach((): void => {
@@ -50,24 +38,3 @@ describe('Aspect model visitor tests', (): void => {
         }
     });
 });
-
-class CountElementVisitor<T, U> extends DefaultAspectModelVisitor<T, U> {
-    public countOperations = 0;
-    public countProperties = 0;
-    public countCharacteristics = 0;
-
-    visitOperation(operation: DefaultOperation, context: U): T {
-        this.countOperations++;
-        return super.visitOperation(operation, context);
-    }
-
-    visitProperty(property: DefaultProperty, context: U): T {
-        this.countProperties++;
-        return super.visitProperty(property, context);
-    }
-
-    visitCharacteristic(characteristic: DefaultCharacteristic, context: U): T {
-        this.countCharacteristics++;
-        return super.visitCharacteristic(characteristic, context);
-    }
-}

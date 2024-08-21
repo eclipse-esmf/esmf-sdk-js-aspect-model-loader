@@ -13,31 +13,33 @@
 
 import {
     Aspect,
-    Base,
-    BaseMetaModelElement,
     Characteristic,
     Constraint,
-    DefaultPropertyInstanceDefinition,
     Entity,
     Event,
     Operation,
     Property,
     QuantityKind,
     Unit,
+    EntityInstance,
+    DefaultProperty,
+    DefaultScalar,
 } from '../aspect-meta-model';
+import {NamedElement} from '../aspect-meta-model/named-element';
+import {ScalarValue} from '../aspect-meta-model/scalar-value';
 import {ModelVisitor} from './model-visitor';
 
-export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
-    skipProperties: Array<string> = ['_wrappedProperty', '_parents'];
+export class DefaultAspectModelVisitor<T extends NamedElement, U> implements ModelVisitor<T, U> {
+    skipProperties: Array<string> = ['_wrappedProperty', '_parents', 'parents'];
 
     /**
      * Visits each element and performs an operation on it.
      *
-     * @param {BaseMetaModelElement} element element to visit.
+     * @param {NamedElement} element element to visit.
      * @param {U} context context for visiting the element.
      * @return {T} result of visiting the element.
      */
-    visit(element: BaseMetaModelElement, context: U): T {
+    visit(element: NamedElement, context: U): T {
         const item: U = element.accept(<any>this, context);
         this.getObjectKeys(element).forEach(attributeKey => {
             const attributeValue: any = this.getValue(attributeKey, element);
@@ -56,16 +58,16 @@ export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
         return null;
     }
 
-    private getObjectKeys(element: BaseMetaModelElement): Array<string> {
-        return Object.keys(element instanceof DefaultPropertyInstanceDefinition ? element.wrappedProperty : element);
+    private getObjectKeys(element: NamedElement): Array<string> {
+        return Object.keys(element);
     }
 
-    private getValue(key: string, element: BaseMetaModelElement): any {
-        return element instanceof DefaultPropertyInstanceDefinition ? element.wrappedProperty[key] : element[key];
+    private getValue(key: string, element: NamedElement): any {
+        return element[key];
     }
 
     private isPropertyInstanceDefinition(attributeValue: any): boolean {
-        return attributeValue instanceof Base || attributeValue instanceof DefaultPropertyInstanceDefinition;
+        return attributeValue instanceof DefaultProperty;
     }
 
     visitAspect(aspect: Aspect, context: U): T {
@@ -101,6 +103,18 @@ export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
     }
 
     visitUnit(unit: Unit, context: U): T {
+        return undefined;
+    }
+
+    visitScalar(scalar: DefaultScalar, context: U): T {
+        return undefined;
+    }
+
+    visitScalarValue(scalarValue: ScalarValue, context: U): T {
+        return undefined;
+    }
+
+    visitEntityInstance(scalarValue: EntityInstance, context: U): T {
         return undefined;
     }
 }

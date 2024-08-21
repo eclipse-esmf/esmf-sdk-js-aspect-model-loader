@@ -12,11 +12,10 @@
  */
 
 import {DefaultQuantifiable} from './default-quantifiable';
-import {Type} from '../type';
-import {Unit} from '../default-unit';
+import {QuantifiableProps} from '../../shared/props';
 
 export class DefaultMeasurement extends DefaultQuantifiable {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, unit: Unit, dataType?: Type) {
-        super(metaModelVersion, aspectModelUrn, name, dataType, unit);
+    constructor(props: QuantifiableProps) {
+        super(props);
     }
 }

@@ -11,36 +11,34 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad, Util} from 'n3';
-import {Characteristic, Enumeration} from '../../aspect-meta-model';
+import {generateCharacteristic, getDataType} from '../characteristic/characteristic-instantiator';
+import {Quad, Util} from 'n3';
 import {DefaultState} from '../../aspect-meta-model/characteristic/default-state';
-import {EnumerationCharacteristicInstantiator} from './enumeration-characteristic-instantiator';
+import {getEnumerationValues, resolveEntityInstance} from './enumeration-characteristic-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
+import {ScalarValue} from '../../aspect-meta-model/scalar-value';
 
-export class StateCharacteristicInstantiator extends EnumerationCharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const sammC = this.metaModelElementInstantiator.sammC;
-        const stateCharacteristic = <DefaultState>super.processElement(quads);
-
-        quads.forEach(quad => {
-            if (sammC.isDefaultValueProperty(quad.predicate.value)) {
-                stateCharacteristic.defaultValue = Util.isLiteral(quad.object) ? `${quad.object.value}` : this.resolveEntityInstance(quad);
-            }
+export function createStateCharacteristic(quad: Quad): DefaultState {
+    return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
+        const {samm, sammC} = getRdfModel();
+        const characteristic = new DefaultState({
+            ...baseProperties,
+            dataType: getDataType(propertyQuads.find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value))),
+            values: [],
+            defaultValue: null,
         });
 
-        return stateCharacteristic;
-    }
-
-    protected creatEnumerationObject(): Enumeration {
-        return new DefaultState(null, null, null, null, null);
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.StateCharacteristic().equals(nameNode);
-    }
+        for (const propertyQuad of propertyQuads) {
+            if (samm.isValueProperty(propertyQuad.predicate.value) || sammC.isValuesProperty(propertyQuad.predicate.value)) {
+                if (Util.isBlankNode(propertyQuad.object)) {
+                    characteristic.values = getEnumerationValues(propertyQuad, characteristic.dataType);
+                }
+            } else if (sammC.isDefaultValueProperty(quad.predicate.value)) {
+                characteristic.defaultValue = Util.isLiteral(quad.object)
+                    ? new ScalarValue({value: `${quad.object.value}`, type: characteristic.dataType})
+                    : resolveEntityInstance(quad);
+            }
+        }
+        return characteristic;
+    });
 }

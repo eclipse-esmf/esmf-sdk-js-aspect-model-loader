@@ -11,31 +11,31 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {FixedPointConstraintProps} from '../../shared/props';
 import {Constraint, DefaultConstraint} from './default-constraint';
 
 export interface FixedPointConstraint extends Constraint {
     scale: number;
     integer: number;
+    getScale(): number;
+    getInteger(): number;
 }
 
 export class DefaultFixedPointConstraint extends DefaultConstraint implements FixedPointConstraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _scale: number, private _integer: number) {
-        super(metaModelVersion, aspectModelUrn, name);
+    scale: number;
+    integer: number;
+
+    constructor(props: FixedPointConstraintProps) {
+        super(props);
+        this.scale = props.scale;
+        this.integer = props.integer;
     }
 
-    public set scale(value: number) {
-        this._scale = value;
+    getScale(): number {
+        return this.scale;
     }
 
-    public get scale(): number {
-        return this._scale;
-    }
-
-    public set integer(value: number) {
-        this._integer = value;
-    }
-
-    public get integer(): number {
-        return this._integer;
+    getInteger(): number {
+        return this.integer;
     }
 }

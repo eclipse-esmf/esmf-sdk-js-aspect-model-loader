@@ -11,22 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LanguageConstraintProps} from '../../shared/props';
+import {LangString} from '../named-element';
 import {Constraint, DefaultConstraint} from './default-constraint';
 
 export interface LanguageConstraint extends Constraint {
-    languageCode: string;
+    languageCode: LangString;
+    getLanguageCode(): LangString;
 }
 
 export class DefaultLanguageConstraint extends DefaultConstraint implements LanguageConstraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _languageCode: string) {
-        super(metaModelVersion, aspectModelUrn, name);
+    languageCode: string;
+
+    constructor(props: LanguageConstraintProps) {
+        super(props);
+        this.languageCode = props.languageCode;
     }
 
-    public set languageCode(value: string) {
-        this._languageCode = value;
-    }
-
-    public get languageCode(): string {
-        return this._languageCode;
+    getLanguageCode(): LangString {
+        return this.languageCode;
     }
 }

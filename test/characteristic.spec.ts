@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Subscription} from 'rxjs';
+import {lastValueFrom} from 'rxjs';
 import {
+    Aspect,
     AspectModelLoader,
     Characteristic,
     DefaultAspect,
@@ -23,7 +24,6 @@ import {
     DefaultEntityInstance,
     DefaultEnumeration,
     DefaultList,
-    DefaultScalar,
     Property,
 } from '../src';
 import {
@@ -31,25 +31,26 @@ import {
     collectionCharacteristicClassString,
     eitherCharacteristicClass,
     enumerationCharacteristicClassEntity,
-    enumerationCharacteristicWithEntityInstanceClass
+    enumerationCharacteristicWithEntityInstanceClass,
 } from './models/characteristics';
 import DoneCallback = jest.DoneCallback;
+import {destroyRdfModel} from '../src/shared/rdf-model';
 
 describe('Characteristics tests', (): void => {
-    let loader: AspectModelLoader;
-    let aspect: DefaultAspect;
-    let testProperty: Property;
-    let testCharacteristic: Characteristic;
-    let subscription: Subscription;
     const currentLocale = 'en';
+
     describe('Characteristic class with string datatype', (): void => {
-        beforeAll((done: DoneCallback): void => {
+        let testCharacteristic: Characteristic;
+        let loader: AspectModelLoader;
+        let aspect: DefaultAspect;
+        let testProperty: Property;
+
+        beforeAll(() => {
             loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(characteristicClassString).subscribe((_aspect: DefaultAspect): void => {
+            lastValueFrom(loader.loadSelfContainedModel(characteristicClassString)).then(_aspect => {
                 aspect = _aspect;
                 testProperty = aspect.properties[0];
                 testCharacteristic = testProperty.characteristic;
-                done();
             });
         });
 
@@ -59,34 +60,38 @@ describe('Characteristics tests', (): void => {
 
         it('should populate Characteristic with available data from fields', (): void => {
             expect(testCharacteristic.metaModelVersion).toBe('2.1.0');
-            expect(testCharacteristic.dataType).toEqual({_urn: 'http://www.w3.org/2001/XMLSchema#string'});
+            expect(testCharacteristic.dataType?.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
             expect(testCharacteristic.name).toBe('CharacteristicTest');
-            expect(testCharacteristic.localesDescriptions).toEqual([currentLocale]);
+            expect(Array.from(testCharacteristic.descriptions.keys())).toEqual([currentLocale]);
             expect(testCharacteristic.getDescription(currentLocale)).toBe('This is a test description!');
-            expect(testCharacteristic.seeReferences).toEqual(['https%3A%2F%2Ftestcharacteristic.com']);
-            expect((testCharacteristic as DefaultCharacteristic).isAnonymousNode).toEqual(false);
+            expect(testCharacteristic.see).toEqual(['https%3A%2F%2Ftestcharacteristic.com']);
+            expect(testCharacteristic.isAnonymous()).toEqual(false);
         });
 
-        afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+        afterAll(() => {
+            destroyRdfModel();
         });
     });
 
     describe('Collection class with string datatype', (): void => {
-        beforeAll((done: DoneCallback): void => {
+        let testCharacteristic: Characteristic;
+        let loader: AspectModelLoader;
+        let aspect: DefaultAspect;
+        let testProperty: Property;
+
+        beforeAll(() => {
             loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(collectionCharacteristicClassString).subscribe((_aspect: DefaultAspect): void => {
+            lastValueFrom(loader.loadSelfContainedModel(collectionCharacteristicClassString)).then(_aspect => {
                 aspect = _aspect;
                 testProperty = aspect.properties[0];
                 testCharacteristic = testProperty.characteristic;
-                done();
-            }, error => console.error(error));
+            });
         });
 
         it('should have set datatype string', (): void => {
-            expect((testProperty.effectiveDataType as DefaultScalar).shortUrn).toEqual('string');
+            expect((testProperty.characteristic as DefaultCollection)?.elementCharacteristic?.dataType?.urn).toEqual(
+                'http://www.w3.org/2001/XMLSchema#string'
+            );
         });
 
         it('should have collection type', (): void => {
@@ -101,31 +106,33 @@ describe('Characteristics tests', (): void => {
             const currentLocale = 'en';
             expect(testCharacteristic.metaModelVersion).toBe('2.1.0');
             expect(testCharacteristic.name).toBe('CharacteristicTest');
-            expect(testCharacteristic.localesDescriptions).toEqual([currentLocale]);
+            expect(Array.from(testCharacteristic.descriptions.keys())).toEqual([currentLocale]);
             expect(testCharacteristic.getDescription(currentLocale)).toBe('This is a test description!');
-            expect(testCharacteristic.seeReferences).toEqual(['https%3A%2F%2Ftestcharacteristic.com']);
-            expect((testCharacteristic as DefaultCollection).isAnonymousNode).toEqual(false);
-            expect((testCharacteristic as DefaultCollection).isOrdered).toEqual(false);
+            expect(testCharacteristic.see).toEqual(['https%3A%2F%2Ftestcharacteristic.com']);
+            expect((testCharacteristic as DefaultCollection).isAnonymous()).toEqual(false);
+            expect((testCharacteristic as DefaultCollection).isOrdered()).toEqual(false);
         });
 
         it('should have element characteristic with correct fields', (): void => {
             const elementCharacteristic = (testCharacteristic as DefaultCollection).elementCharacteristic;
             expect(elementCharacteristic instanceof DefaultCharacteristic).toBe(true);
-            expect(elementCharacteristic.aspectModelUrn.indexOf('Characteristic1')).toBeGreaterThan(-1);
-            expect(elementCharacteristic.getDescription(currentLocale)).toBe('This is an element Characteristic!');
+            expect(elementCharacteristic?.aspectModelUrn.indexOf('Characteristic1')).toBeGreaterThan(-1);
+            expect(elementCharacteristic?.getDescription(currentLocale)).toBe('This is an element Characteristic!');
         });
 
-        afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+        afterAll(() => {
+            destroyRdfModel();
         });
     });
 
     describe('Enumeration class with Entity datatype', (): void => {
+        let loader: AspectModelLoader;
+        let aspect: DefaultAspect;
+        let testProperty: Property;
+
         beforeAll((done: DoneCallback): void => {
             loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(enumerationCharacteristicClassEntity).subscribe((_aspect: DefaultAspect): void => {
+            lastValueFrom(loader.loadSelfContainedModel(enumerationCharacteristicClassEntity)).then((_aspect: DefaultAspect): void => {
                 aspect = _aspect;
                 testProperty = aspect.properties[0];
                 done();
@@ -137,8 +144,9 @@ describe('Characteristics tests', (): void => {
         });
 
         it('should have correct model urn', (): void => {
-            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn)
-                .toEqual('urn:samm:org.eclipse.esmf.test:1.0.0#resultStateAttributeDescription');
+            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn).toEqual(
+                'urn:samm:org.eclipse.esmf.test:1.0.0#resultStateAttributeDescription'
+            );
         });
 
         it('should have no description and loads successfully', (): void => {
@@ -149,33 +157,34 @@ describe('Characteristics tests', (): void => {
         it('should have two entries', (): void => {
             const enumeration = testProperty.characteristic as DefaultEnumeration;
             expect(enumeration.values.length).toBe(2);
-            expect(enumeration.indexOf('ok')).toBe(0);
-            expect(enumeration.indexOf('nok')).toBe(1);
 
-            const valueInstance = enumeration.values[enumeration.indexOf('nok')] as DefaultEntityInstance;
+            const valueInstance = enumeration.getValue('urn:samm:org.eclipse.esmf.test:1.0.0#NOKState') as DefaultEntityInstance;
             expect(valueInstance.name).toBe('NOKState');
-            expect(valueInstance.value).toBe('nok');
-            expect(valueInstance.valuePayloadKey).toBe('resultStateAttributeValue');
-            expect(valueInstance.getDescription()).toBe('Result state not OK');
-            expect(valueInstance.descriptionKey).toBe('resultStateAttributeDescription');
-            expect(valueInstance.localesDescriptions.length).toBe(2);
-            expect(valueInstance.getDescription('de')).toBe('Result Status nicht OK');
+            expect(valueInstance.assertions.has('resultStateAttributeValue')).toBe(true);
+            expect(valueInstance.assertions.get('resultStateAttributeValue')?.value).toEqual('nok');
+
+            expect(valueInstance.assertions.has('resultStateAttributeDescription')).toBe(true);
+            expect(valueInstance.assertions.get('resultStateAttributeDescription')?.value).toEqual([
+                {language: 'en', value: 'Result state not OK'},
+                {language: 'de', value: 'Result Status nicht OK'},
+            ]);
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
     describe('Enumeration class with Entity Instance', (): void => {
-        beforeAll((done: DoneCallback): void => {
+        let loader: AspectModelLoader;
+        let aspect: DefaultAspect;
+        let testProperty: Property;
+
+        beforeAll((): void => {
             loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(enumerationCharacteristicWithEntityInstanceClass).subscribe((_aspect: TestAspect): void => {
+            lastValueFrom(loader.loadSelfContainedModel(enumerationCharacteristicWithEntityInstanceClass)).then((_aspect: Aspect): void => {
                 aspect = _aspect;
                 testProperty = aspect.properties[0];
-                done();
             });
         });
 
@@ -184,8 +193,9 @@ describe('Characteristics tests', (): void => {
         });
 
         it('should have correct model urn', (): void => {
-            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn)
-                .toEqual('urn:samm:org.eclipse.esmf.test:1.0.0#resultTypeDescription');
+            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn).toEqual(
+                'urn:samm:org.eclipse.esmf.test:1.0.0#resultTypeDescription'
+            );
         });
 
         it('should have two entries', (): void => {
@@ -199,48 +209,47 @@ describe('Characteristics tests', (): void => {
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 
     describe('Either class with list and simple characteristic', (): void => {
-        beforeAll((done: DoneCallback): void => {
+        let loader: AspectModelLoader;
+        let aspect: DefaultAspect;
+        let testProperty: Property;
+
+        beforeAll((): void => {
             loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(eitherCharacteristicClass).subscribe((_aspect: DefaultAspect): void => {
+            lastValueFrom(loader.loadSelfContainedModel(eitherCharacteristicClass)).then((_aspect: DefaultAspect): void => {
                 aspect = _aspect;
                 testProperty = aspect.properties[0];
-                done();
             });
         });
 
-        it('should property1 has left type float', (): void => {
+        it('should not have a datatype', (): void => {
             expect(testProperty.characteristic instanceof DefaultEither).toBeTruthy();
-            expect((testProperty.characteristic as DefaultEither).effectiveLeftDataType.urn).toContain('string');
+            expect(testProperty.characteristic.dataType?.urn).toBeUndefined();
         });
 
         it('should property1 has right type float', (): void => {
             expect(testProperty.characteristic instanceof DefaultEither).toBeTruthy();
             expect((testProperty.characteristic as DefaultEither).right).toBeInstanceOf(DefaultList);
-            expect((testProperty.characteristic as DefaultEither).effectiveRightDataType.urn).toContain('float');
+            expect((testProperty.characteristic as DefaultEither).right.dataType?.getShortType()).toBe('float');
         });
 
         it('should property2 has left type SpatialPosition', (): void => {
-            expect((aspect.properties[1].characteristic as DefaultEither).effectiveLeftDataType.urn).toContain('SpatialPosition');
-            expect((aspect.properties[1].characteristic as DefaultEither).effectiveLeftDataType.constructor.name).toBe('DefaultEntity');
+            expect((aspect.properties[1].characteristic as DefaultEither).left.dataType?.urn).toContain('SpatialPosition');
+            expect((aspect.properties[1].characteristic as DefaultEither).left.constructor.name).toBe('DefaultSingleEntity');
         });
 
         it('should property2 has right type string', (): void => {
             expect(aspect.properties[1].characteristic instanceof DefaultEither).toBeTruthy();
             expect((aspect.properties[1].characteristic as DefaultEither).right).toBeInstanceOf(DefaultList);
-            expect((aspect.properties[1].characteristic as DefaultEither).effectiveRightDataType.urn).toContain('string');
+            expect((aspect.properties[1].characteristic as DefaultEither).right.dataType?.getShortType()).toContain('string');
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
         });
     });
 });

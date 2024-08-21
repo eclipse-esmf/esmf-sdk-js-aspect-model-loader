@@ -11,26 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammU} from '../vocabulary';
+import {getRdfModel} from './rdf-model';
 
-export class Units {
-    constructor(private sammU: SammU) {}
+export function getPredefinedUnit(name: string) {
+    const {sammU} = getRdfModel();
+    return units.units[name.replace(sammU.getNamespace(), '')];
+}
 
-    getUnit(name: string) {
-        return units.units[name.replace(this.sammU.getNamespace(), '')];
-    }
+export function getQuantityKind(name: string) {
+    const {sammU} = getRdfModel();
+    return units.quantityKinds[name.replace(sammU.getNamespace(), '')];
+}
 
-    getQuantityKind(name: string) {
-        return units.quantityKinds[name.replace(this.sammU.getNamespace(), '')];
-    }
+export function getSupportedQuantityKindsNames(): Array<string> {
+    return Object.keys(units.quantityKinds);
+}
 
-    getSupportedQuantityKindsNames(): Array<string> {
-        return Object.keys(units.quantityKinds);
-    }
-
-    getSupportedUnitNames(): Array<string> {
-        return Object.keys(units.units);
-    }
+export function getSupportedUnitNames(): Array<string> {
+    return Object.keys(units.units);
 }
 
 const units = {

@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AspectModelLoader, DefaultAspect} from '../src';
+import {AspectModelLoader, DefaultAspect, DefaultProperty, getElementsCache} from '../src';
 import {traitAspectModel} from './models/trait-model';
 import {Subscription} from 'rxjs';
 import DoneCallback = jest.DoneCallback;
+import {destroyRdfModel} from '../src/shared/rdf-model';
 
 describe('Traits tests', (): void => {
     let loader: AspectModelLoader;
@@ -30,7 +31,7 @@ describe('Traits tests', (): void => {
     });
 
     test('should get cached element by key', (): void => {
-        const element = loader['cacheService'].get(aspect.properties[0].aspectModelUrn);
+        const element = getElementsCache().get<DefaultProperty>(aspect.properties[0].aspectModelUrn);
         expect(element.aspectModelUrn).toEqual(aspect.properties[0].aspectModelUrn);
     });
 
@@ -58,8 +59,6 @@ describe('Traits tests', (): void => {
     });
 
     afterEach((): void => {
-        if (subscription) {
-            subscription.unsubscribe();
-        }
+        destroyRdfModel();
     });
 });

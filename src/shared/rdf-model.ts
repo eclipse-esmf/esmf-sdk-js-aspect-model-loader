@@ -32,6 +32,7 @@ export class RdfModel {
     public xsdDataTypes: XsdDataTypes;
 
     constructor(public store: Store, metaModelVersion?: string, aspectModelUrn?: string) {
+        this.store = store;
         if (metaModelVersion) {
             this.metaModelVersion = metaModelVersion;
         } else {
@@ -133,4 +134,50 @@ export class RdfModel {
             }
         });
     }
+}
+
+let rdfModel: RdfModel;
+let store: Store;
+
+export function getRdfModel(): RdfModel {
+    return rdfModel;
+}
+
+export function useRdfModel(rdfModel_: RdfModel): RdfModel {
+    if (rdfModel_ instanceof RdfModel) {
+        return (rdfModel = rdfModel_);
+    }
+
+    throw new Error('Wrong instance of RdfModel used');
+}
+
+export function initiateRdfModel(metaModelVersion?: string, aspectModelUrn?: string): RdfModel {
+    if (rdfModel) {
+        throw new Error(
+            'Rdf Model already initiated. If a new instance is needed, call destroyRdfModel() then recall this function, else you can get the already initiated Rdf Model by calling getRdfModel()'
+        );
+    }
+
+    const store = new Store();
+    rdfModel = new RdfModel(store, metaModelVersion, aspectModelUrn);
+    return rdfModel;
+}
+
+export function createOrGetStore() {
+    if (!store) store = new Store();
+    return store;
+}
+
+export function getStore(): Store {
+    return rdfModel?.store || store;
+}
+
+export function destroyStore() {
+    store = null;
+    rdfModel && (rdfModel.store = null);
+}
+
+export function destroyRdfModel({keepStore}: {keepStore: boolean} = {keepStore: false}) {
+    !keepStore && destroyStore();
+    rdfModel = null;
 }

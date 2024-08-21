@@ -11,23 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode} from 'n3';
-import {Collection} from '../../aspect-meta-model';
+import {generateCharacteristic, getDataType} from '../characteristic/characteristic-instantiator';
+import {Quad} from 'n3';
 import {DefaultList} from '../../aspect-meta-model/characteristic/default-list';
-import {CollectionCharacteristicInstantiator} from './collection-characteristic-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class ListCharacteristicInstantiator extends CollectionCharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected creatCollectionObject(): Collection {
-        return new DefaultList(null, null, null, null);
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.ListCharacteristic().equals(nameNode);
-    }
+export function createListCharacteristic(quad: Quad): DefaultList {
+    return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
+        const {samm} = getRdfModel();
+        return new DefaultList({
+            ...baseProperties,
+            dataType: getDataType(propertyQuads.find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value))),
+        });
+    });
 }

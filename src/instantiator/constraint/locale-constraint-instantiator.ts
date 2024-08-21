@@ -11,30 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultLocaleConstraint} from '../../aspect-meta-model';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {ConstraintInstantiator} from './constraint-instantiator';
+import {Quad} from 'n3';
+import {DefaultLocaleConstraint} from '../../aspect-meta-model';
+import {generateConstraint} from './constraint-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class LocaleConstraintInstantiator extends ConstraintInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const sammC = this.metaModelElementInstantiator.sammC;
-        const defaultLocaleConstraint = new DefaultLocaleConstraint(null, null, null, null);
-
-        quads.forEach(quad => {
-            if (sammC.isLocaleCodeProperty(quad.predicate.value)) {
-                defaultLocaleConstraint.localeCode = quad.object.value;
+export function createLocaleConstraint(quad: Quad): DefaultLocaleConstraint {
+    return generateConstraint(quad, (baseProperties, propertyQuads) => {
+        const {sammC} = getRdfModel();
+        const constraint = new DefaultLocaleConstraint({...baseProperties, localeCode: null});
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isLocaleCodeProperty(propertyQuad.predicate.value)) {
+                constraint.localeCode = propertyQuad.object.value;
             }
-        });
-
-        return defaultLocaleConstraint;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.LocaleConstraint().equals(nameNode);
-    }
+        }
+        return constraint;
+    });
 }

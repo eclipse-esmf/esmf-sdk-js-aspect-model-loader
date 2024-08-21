@@ -11,43 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultCollection} from './default-collection';
-import {Characteristic} from './default-characteristic';
-import {Type} from '../type';
-import { DefaultEntityInstance } from '../default-entity-instance';
-import { DefaultEntity } from '../default-entity';
-import { Enumeration } from './default-enumeration';
+import {CollectionType, DefaultCollection} from './default-collection';
+import {CollectionProps} from '../../shared/props';
 
-export class DefaultSortedSet extends DefaultCollection implements Enumeration {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, elementCharacteristic?: Characteristic, dataType?: Type,private _values?: Array<DefaultEntityInstance | string | number>) {
-        super(metaModelVersion, aspectModelUrn, name, false, true, elementCharacteristic, dataType);
-    }
-    public set values(values: Array<DefaultEntityInstance | string | number>) {
-        this._values = values;
+export class DefaultSortedSet extends DefaultCollection {
+    constructor(props: CollectionProps) {
+        super(props);
+        this.allowDuplicates = false;
+        this.ordered = true;
     }
 
-    public get values(): Array<DefaultEntityInstance | string | number> {
-        return this._values;
+    override getCollectionType(): CollectionType {
+        return CollectionType.SORTEDSET;
     }
-
-        /**
-     * Find the index of the given value in the values array.
-     *
-     * @return returns the index of the value or -1
-     */
-        public indexOf(value: string): number {
-            if (!this.values) {
-                return -1;
-            }
-    
-            if (this.dataType && this.dataType.isComplex) {
-                const propertyValue = (<DefaultEntity>this.dataType).properties.find(property => property.isNotInPayload === false);
-    
-                return this.values.findIndex((valueEntry: DefaultEntityInstance) => {
-                    return valueEntry[propertyValue.name] === value;
-                });
-            } else {
-                return this.values.findIndex(valueEntry => valueEntry === value);
-            }
-        }
 }

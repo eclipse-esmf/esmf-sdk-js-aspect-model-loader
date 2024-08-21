@@ -11,47 +11,54 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {use} from 'typescript-mix';
+import {NamedElement} from './named-element';
+import {Value} from './value';
+import {ModelVisitor} from '../visitor/model-visitor';
+import {EntityInstanceProps} from '../shared/props';
 import {Entity} from './default-entity';
-import {IsInstance} from './is-instance';
 
-export class DefaultEntityInstance implements IsInstance<Entity> {
-    private _metaModelType: Entity;
-    private _name: string;
-    private _descriptions: Map<string, string>;
+export type PropertyUrn = string;
 
-    constructor(name: string, metaModelType: Entity, description?: Map<string, string>) {
-        this._name = name;
-        this._metaModelType = metaModelType;
-        this._descriptions = description || new Map();
+export interface EntityInstance extends NamedElement, Value {
+    assertions: Map<PropertyUrn, Value>;
+    type: Entity;
+    getAssertions(): Map<PropertyUrn, Value>;
+    getAssertion(propertyUrn: PropertyUrn): Value;
+    setAssertion(propertyUrn: PropertyUrn, value: Value): void;
+}
+
+export interface DefaultEntityInstance extends EntityInstance {}
+export class DefaultEntityInstance extends NamedElement implements EntityInstance {
+    @use(Value) _: DefaultEntityInstance;
+
+    assertions: Map<PropertyUrn, Value> = new Map();
+    type: Entity;
+
+    constructor(props: EntityInstanceProps) {
+        super(props);
+        this.type = props.type;
+        this.assertions = props.assertions || new Map();
     }
 
-    public get metaModelType(): Entity {
-        return this._metaModelType;
+    getType(): Entity {
+        return this.type as Entity;
     }
 
-    public get name(): string {
-        return this._name;
+    getAssertions(): Map<PropertyUrn, Value> {
+        return this.assertions;
     }
 
-    public get descriptionKey(): string | undefined {
-        return this._metaModelType.properties.find(
-            property => property.name.toLowerCase().includes('description') && property.isNotInPayload === true
-        ).name;
+    getAssertion(propertyUrn: PropertyUrn): Value {
+        return this.assertions.get(propertyUrn);
     }
 
-    public get valuePayloadKey(): string {
-        return this._metaModelType.properties.find(property => property.isNotInPayload === false).name;
+    setAssertion(propertyUrn: PropertyUrn, value: Value) {
+        if (!value) return;
+        this.assertions.set(propertyUrn, value);
     }
 
-    public get value(): string | number | boolean {
-        return this[this.valuePayloadKey];
-    }
-
-    public getDescription(locale = 'en'): string | undefined {
-        return this._descriptions.get(locale);
-    }
-
-    public get localesDescriptions(): Array<string> {
-        return Array.from(this._descriptions.keys());
+    accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
+        return visitor.visitEntityInstance(this, context);
     }
 }

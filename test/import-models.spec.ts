@@ -16,6 +16,7 @@ import {movementAspectModelWithExternalReference} from './models/movement-model'
 import {testAspectModel} from './models/test-model';
 import {Subscription} from 'rxjs';
 import DoneCallback = jest.DoneCallback;
+import {destroyRdfModel} from '../src/shared/rdf-model';
 
 describe('Import model tests', (): void => {
     let loader: AspectModelLoader;
@@ -51,8 +52,6 @@ describe('Import model tests', (): void => {
     });
 
     afterEach((): void => {
-        if (subscription) {
-            subscription.unsubscribe();
-        }
+        destroyRdfModel();
     });
 });

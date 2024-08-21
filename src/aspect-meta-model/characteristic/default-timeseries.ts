@@ -11,12 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Characteristic} from './default-characteristic';
-import {Type} from '../type';
 import {DefaultSortedSet} from './default-sorted-set';
+import {CollectionProps} from '../../shared/props';
 
 export class DefaultTimeSeries extends DefaultSortedSet {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, elementCharacteristic?: Characteristic, dataType?: Type) {
-        super(metaModelVersion, aspectModelUrn, name, elementCharacteristic, dataType);
+    constructor(props: CollectionProps) {
+        super(props);
     }
 }

@@ -11,34 +11,52 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Quad} from 'n3';
+import {Quad, Util} from 'n3';
 import {Constraint, DefaultConstraint} from '../../aspect-meta-model';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {BaseConstraintCharacteristicInstantiator} from '../base-constraint-characteristic-instantiator';
+import {getBaseProperties} from '../meta-model-element-instantiator';
+import {getElementsCache} from '../../shared/model-element-cache.service';
+import {NamedElementProps} from '../../shared/props';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class ConstraintInstantiator extends BaseConstraintCharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
+export function createDefaultConstraint(quad: Quad): DefaultConstraint {
+    return generateConstraint(quad, baseProperties => {
+        return new DefaultConstraint({...baseProperties});
+    });
+}
+
+export function generateConstraint<C extends Constraint>(
+    quad: Quad,
+    constraintFactory: (baseProperties: NamedElementProps, propertyQuads: Quad[]) => C
+): C {
+    const modelElementCache = getElementsCache();
+    if (modelElementCache.get(quad.subject.value)) return modelElementCache.get(quad.subject.value);
+
+    const rdfModel = getRdfModel();
+
+    const isAnonymous = Util.isBlankNode(quad.object);
+    const propertyQuads: Quad[] = rdfModel.findAnyProperty(quad);
+    const elementQuad = isAnonymous ? rdfModel.resolveBlankNodes(quad.object.value).shift() : propertyQuads.shift();
+    const baseProperties = getBaseProperties(elementQuad.subject);
+
+    const constraint: C = constraintFactory(baseProperties, propertyQuads);
+
+    constraint.anonymous = isAnonymous;
+    if (constraint.isAnonymous()) {
+        generateConstraintName(constraint);
     }
 
-    create(quad: Quad): Constraint {
-        const constraint = super.create(quad);
+    return modelElementCache.resolveInstance(constraint);
+}
 
-        // Anonymous nodes are stored in the array for later processing of the name
+export function generateConstraintName(constraint: Constraint) {
+    const modelElementCache = getElementsCache();
+    const rdfModel = getRdfModel();
 
-        if ((constraint as DefaultConstraint).isAnonymousNode) {
-            const initialName: string = constraint.name;
+    const initialName: string = constraint.name;
 
-            // assign a unique random name
-            constraint.name = constraint.name ? constraint.name : 'constraint_' + Math.random().toString(36).substr(2, 9);
-            constraint.aspectModelUrn = `${this.metaModelElementInstantiator.rdfModel.getAspectModelUrn()}${constraint.name}`;
-            this.metaModelElementInstantiator.cacheService.addElement(initialName, constraint);
-        }
-
-        return <DefaultConstraint>this.metaModelElementInstantiator.cacheService.resolveInstance(constraint);
-    }
-
-    protected processElement(quads: Array<Quad>): Constraint {
-        return new DefaultConstraint(null, null, 'Constraint');
-    }
+    // assign a unique random name
+    constraint.name = constraint.name ? constraint.name : 'constraint_' + Math.random().toString(36).substring(2, 9);
+    constraint.aspectModelUrn = `${rdfModel.getAspectModelUrn()}${constraint.name}`;
+    constraint.syntheticName = true;
+    modelElementCache.addElement(initialName, constraint);
 }

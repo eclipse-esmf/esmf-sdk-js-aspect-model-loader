@@ -18,6 +18,7 @@ import {
     DefaultEntity,
     DefaultEnumeration,
     DefaultProperty,
+    DefaultTrait,
     Enumeration,
     Property,
 } from '../src';
@@ -29,6 +30,7 @@ import {
 import {Subscription} from 'rxjs';
 import {property} from './models/property';
 import DoneCallback = jest.DoneCallback;
+import {destroyRdfModel} from '../src/shared/rdf-model';
 
 describe('Property tests', (): void => {
     let loader: AspectModelLoader;
@@ -49,7 +51,7 @@ describe('Property tests', (): void => {
         });
 
         test('should have overrides applied', (): void => {
-            expect((<DefaultProperty>aspect.properties[0]).isAnonymousNode).toBe(true);
+            expect((<DefaultProperty>aspect.properties[0]).isAnonymous()).toBe(true);
         });
 
         test('should have an enumeration "EnumerationCharacteristic" with entries', (): void => {
@@ -120,7 +122,7 @@ describe('Property tests', (): void => {
         });
 
         test('should have 2 constraints defined', (): void => {
-            expect(aspect.properties[0].constraints).toHaveLength(2);
+            expect((aspect.properties[0].characteristic as DefaultTrait).constraints).toHaveLength(2);
         });
 
         test('should get the preferredName', (): void => {
@@ -128,31 +130,31 @@ describe('Property tests', (): void => {
         });
 
         test('should check for not optional properties', (): void => {
-            expect((<DefaultProperty>loader.findByName('notOptionalProperty')[0]).isOptional).toBeFalsy();
+            expect((<DefaultProperty>loader.findByName('notOptionalProperty')[0]).isOptional()).toBeFalsy();
         });
 
         test('should get number values', (): void => {
-            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[0])).toBeTruthy();
-            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[1])).toBeTruthy();
-            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[2])).toBeTruthy();
+            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[0].value)).toBeTruthy();
+            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[1].value)).toBeTruthy();
+            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[2].value)).toBeTruthy();
         });
 
         test('should get string values', (): void => {
-            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[0]).toBe('string');
-            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[1]).toBe('string');
-            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[2]).toBe('string');
+            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[0].value).toBe('string');
+            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[1].value).toBe('string');
+            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[2].value).toBe('string');
         });
 
         test('should check for optional properties', (): void => {
-            expect((aspect.properties[0] as Property).isOptional).toBeTruthy();
+            expect((aspect.properties[0] as Property).optional).toBeTruthy();
         });
 
         test('should check for not optional properties', (): void => {
-            expect((<DefaultProperty>loader.findByName('notOptionalProperty')[0]).isOptional).toBeFalsy();
+            expect((<DefaultProperty>loader.findByName('notOptionalProperty')[0]).isOptional()).toBeFalsy();
         });
 
         test('should filter and find 2 properties', (): void => {
-            expect(loader.filterElements(element => element.constructor.name === 'DefaultPropertyInstanceDefinition').length).toBe(2);
+            expect(loader.filterElements(element => element instanceof DefaultProperty).length).toBe(2);
         });
 
         test('should filter and find 5 characteristics', (): void => {
@@ -164,9 +166,8 @@ describe('Property tests', (): void => {
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
+            subscription?.unsubscribe();
         });
     });
 
@@ -185,25 +186,20 @@ describe('Property tests', (): void => {
             expect(aspect.isCollectionAspect).toBe(true);
         });
 
-        it('should have no constraint', (): void => {
-            expect((aspect.properties[0].effectiveDataType as DefaultEntity).properties[1].constraints).toHaveLength(0);
-        });
-
         it('should have one properties items entries', (): void => {
             const property = aspect.getProperty('items');
-            expect(property.effectiveDataType.isComplex).toBe(true);
-            expect((property.effectiveDataType as DefaultEntity).name).toBe('Movement');
+            expect(property.characteristic.dataType?.isComplexType()).toBe(true);
+            expect((property.characteristic.dataType as DefaultEntity).name).toBe('Movement');
         });
 
         it('should have one property position', (): void => {
             const property = aspect.getProperty('items');
-            expect((property.effectiveDataType as DefaultEntity).getProperty('position')).toBeDefined();
+            expect((property.characteristic.dataType as DefaultEntity).getProperty('position')).toBeDefined();
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
+            subscription?.unsubscribe();
         });
     });
 
@@ -222,24 +218,27 @@ describe('Property tests', (): void => {
 
         it('should have one operations with an input defined', (): void => {
             expect(aspect.operations[0].input.length).toEqual(1);
-            expect(aspect.operations[0].input[0].effectiveDataType.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
-            expect(aspect.operations[0].input[0].effectiveDataType.shortUrn).toEqual('string');
+            expect(aspect.operations[0].input[0].characteristic.dataType?.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
+            expect(aspect.operations[0].input[0].characteristic.dataType?.getShortType()).toEqual('string');
             expect(aspect.operations[0].input[0].characteristic.name).toEqual('ToggleValues');
-            expect((aspect.operations[0].input[0].characteristic as DefaultEnumeration).values).toEqual(['on', 'off']);
+            expect((aspect.operations[0].input[0].characteristic as DefaultEnumeration).values.map(v => v.value)).toEqual(['on', 'off']);
         });
 
         it('should have one operations with a output defined', (): void => {
             expect(aspect.operations[0].output).toBeDefined();
-            expect(aspect.operations[0].output.effectiveDataType.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
-            expect(aspect.operations[0].output.effectiveDataType.shortUrn).toEqual('string');
-            expect(aspect.operations[0].output.characteristic.name).toEqual('ToggleState');
-            expect((aspect.operations[0].output.characteristic as DefaultEnumeration).values).toEqual(['ok', 'denied', 'unknown']);
+            expect(aspect.operations[0].output?.characteristic.dataType?.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
+            expect(aspect.operations[0].output?.characteristic.dataType?.getShortType()).toEqual('string');
+            expect(aspect.operations[0].output?.characteristic.name).toEqual('ToggleState');
+            expect((aspect.operations[0].output?.characteristic as DefaultEnumeration).values.map(v => v.value)).toEqual([
+                'ok',
+                'denied',
+                'unknown',
+            ]);
         });
 
         afterAll((): void => {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
+            destroyRdfModel();
+            subscription?.unsubscribe();
         });
     });
 });

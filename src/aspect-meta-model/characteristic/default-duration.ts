@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultQuantifiable} from './default-quantifiable';
-import {Type} from '../type';
-import {Unit} from '../default-unit';
+import {DefaultQuantifiable, Quantifiable} from './default-quantifiable';
+import {QuantifiableProps} from '../../shared/props';
 
-export class DefaultDuration extends DefaultQuantifiable {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, dataType?: Type, public unit?: Unit) {
-        super(metaModelVersion, aspectModelUrn, name, dataType);
+export interface Duration extends Quantifiable {}
+export class DefaultDuration extends DefaultQuantifiable implements Quantifiable {
+    constructor(props: QuantifiableProps) {
+        super(props);
     }
 }

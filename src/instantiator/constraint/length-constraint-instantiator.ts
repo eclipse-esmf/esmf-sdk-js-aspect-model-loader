@@ -11,32 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultLengthConstraint} from '../../aspect-meta-model';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {ConstraintInstantiator} from './constraint-instantiator';
+import {Quad} from 'n3';
+import {DefaultLengthConstraint} from '../../aspect-meta-model';
+import {generateConstraint} from './constraint-instantiator';
+import {getRdfModel} from '../../shared/rdf-model';
 
-export class LengthConstraintInstantiator extends ConstraintInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected processElement(quads: Array<Quad>): Characteristic {
-        const sammC = this.metaModelElementInstantiator.sammC;
-        const defaultLanguageConstraint = new DefaultLengthConstraint(null, null, null, null, null);
-
-        quads.forEach(quad => {
-            if (sammC.isMinValueProperty(quad.predicate.value)) {
-                defaultLanguageConstraint.minValue = Number(quad.object.value);
-            } else if (sammC.isMaxValueProperty(quad.predicate.value)) {
-                defaultLanguageConstraint.maxValue = Number(quad.object.value);
+export function createLengthConstraint(quad: Quad): DefaultLengthConstraint {
+    return generateConstraint(quad, (baseProperties, propertyQuads) => {
+        const {sammC} = getRdfModel();
+        const constraint = new DefaultLengthConstraint({...baseProperties});
+        for (const propertyQuad of propertyQuads) {
+            if (sammC.isMinValueProperty(propertyQuad.predicate.value)) {
+                constraint.minValue = Number(propertyQuad.object.value);
+            } else if (sammC.isMaxValueProperty(propertyQuad.predicate.value)) {
+                constraint.maxValue = Number(propertyQuad.object.value);
             }
-        });
-
-        return defaultLanguageConstraint;
-    }
-
-    shouldProcess(nameNode: NamedNode): boolean {
-        return this.metaModelElementInstantiator.sammC.LengthConstraint().equals(nameNode);
-    }
+        }
+        return constraint;
+    });
 }
