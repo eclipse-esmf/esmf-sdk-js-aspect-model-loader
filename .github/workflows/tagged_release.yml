@@ -40,13 +40,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
             ${{ runner.os }}-
+          lookup-only: true
 
       - name: Setup NodeJs
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # 6.1.0
         with:
-          node-version: '17'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          node-version: '22'
+          package-manager-cache: false
 
       - name: Set versions
         run: |
