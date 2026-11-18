@@ -14,9 +14,10 @@
 import {Type} from '../type';
 import {DefaultEnumeration, Enumeration} from './default-enumeration';
 import {DefaultEntityInstance} from '../default-entity-instance';
+import {Value} from '../default-value';
 
 export interface State extends Enumeration {
-    defaultValue: DefaultEntityInstance | string | number;
+    defaultValue: DefaultEntityInstance | Value | string | number;
 }
 
 export class DefaultState extends DefaultEnumeration implements State {
@@ -24,18 +25,18 @@ export class DefaultState extends DefaultEnumeration implements State {
         metaModelVersion: string,
         aspectModelUrn: string,
         name: string,
-        values: Array<DefaultEntityInstance | string | number>,
-        private _defaultValue: DefaultEntityInstance | string | number,
+        values: Array<DefaultEntityInstance | Value | string | number>,
+        private _defaultValue: DefaultEntityInstance | Value | string | number,
         dataType?: Type
     ) {
         super(metaModelVersion, aspectModelUrn, name, values, dataType);
     }
 
-    public set defaultValue(value: DefaultEntityInstance | string | number) {
+    public set defaultValue(value: DefaultEntityInstance | Value | string | number) {
         this._defaultValue = value;
     }
 
-    public get defaultValue(): DefaultEntityInstance | string | number {
+    public get defaultValue(): DefaultEntityInstance | Value | string | number {
         return this._defaultValue;
     }
 }

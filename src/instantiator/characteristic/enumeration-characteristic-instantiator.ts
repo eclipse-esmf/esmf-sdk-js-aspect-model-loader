@@ -12,13 +12,15 @@
  */
 import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {NamedNode, Quad, Util} from 'n3';
+import {DataFactory, NamedNode, Quad, Util} from 'n3';
 import {Characteristic} from '../../aspect-meta-model';
 import {DefaultEnumeration, Enumeration} from '../../aspect-meta-model/characteristic/default-enumeration';
 import {Samm} from '../../vocabulary';
 import {EntityInstantiator} from '../entity-instantiator';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
 import {CharacteristicInstantiatorUtil, MultiLanguageText} from './characteristic-instantiator-util';
+import {Value} from '../../aspect-meta-model/default-value';
+import {ValueInstantiator} from '../value-instantiator';
 
 export class EnumerationCharacteristicInstantiator extends CharacteristicInstantiator {
     constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -49,11 +51,40 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
         return new DefaultEnumeration(null, null, null, null, null);
     }
 
-    private getEnumerationValues(quad: Quad, dataType: string): Array<string | number | DefaultEntityInstance> {
-        const quads = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
-        return quads.map(quadValue =>
-            Util.isLiteral(quadValue.object) ? CharacteristicInstantiatorUtil.resolveValues(quadValue, dataType) : this.resolveEntityInstance(quadValue)
-        );
+    private getEnumerationValues(quad: Quad, dataType: string): Array<string | number | DefaultEntityInstance | Value> {
+        const quads = this.resolveListItems(quad.object.value);
+        return quads.map(quadValue => this.resolveValue(quadValue, dataType));
+    }
+
+    /**
+     * Resolves a single value of an Enumeration or State, which can be a literal,
+     * a samm:Value (SAMM 2.2.0 and later) or an entity instance.
+     */
+    protected resolveValue(quad: Quad, dataType: string): string | number | DefaultEntityInstance | Value {
+        if (Util.isLiteral(quad.object)) {
+            return CharacteristicInstantiatorUtil.resolveValues(quad, dataType);
+        }
+        const valueInstantiator = new ValueInstantiator(this.metaModelElementInstantiator);
+        if (valueInstantiator.isValue(quad.object)) {
+            return valueInstantiator.createValue(quad.object, dataType);
+        }
+        return this.resolveEntityInstance(quad);
+    }
+
+    /**
+     * Resolves the items of an RDF list. In contrast to RdfModel.resolveBlankNodes(), anonymous
+     * samm:Value nodes are kept as list items instead of being flattened.
+     */
+    private resolveListItems(uri: string, resolvedNodes: Array<Quad> = []): Array<Quad> {
+        const valueInstantiator = new ValueInstantiator(this.metaModelElementInstantiator);
+        this.metaModelElementInstantiator.rdfModel.store.getQuads(DataFactory.blankNode(uri), null, null, null).forEach(value => {
+            if (Util.isBlankNode(value.object) && !valueInstantiator.isValue(value.object)) {
+                this.resolveListItems(value.object.value, resolvedNodes);
+            } else if (!value.object.value.startsWith(Samm.RDF_URI)) {
+                resolvedNodes.push(DataFactory.quad(value.subject, value.predicate, value.object));
+            }
+        });
+        return resolvedNodes;
     }
 
     protected resolveEntityInstance(quad: Quad): DefaultEntityInstance {
@@ -100,8 +131,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
             return CharacteristicInstantiatorUtil.solveBlankNodeValues([...resolvedBlankNodes]);
         }
 
-        if (((quad.object as any).datatypeString === Samm.RDF_LANG_STRING) ||
-            ((quad.object as any).datatypeString === Samm.XML_LANG_STRING)) {
+        if ((quad.object as any).datatypeString === Samm.RDF_LANG_STRING || (quad.object as any).datatypeString === Samm.XML_LANG_STRING) {
             return CharacteristicInstantiatorUtil.createLanguageObject(quad);
         }
 

@@ -44,6 +44,7 @@ export * from './characteristic/default-structured-value';
 export * from './characteristic/default-timeseries';
 export * from './characteristic/default-trait';
 export * from './default-unit';
+export * from './default-value';
 export * from './default-entity-instance';
 export * from './has-properties';
 export * from './is-described';

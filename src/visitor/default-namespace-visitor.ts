@@ -22,6 +22,7 @@ import {
     Property,
     QuantityKind,
     Unit,
+    Value,
 } from '../aspect-meta-model';
 import {ModelVisitor} from './model-visitor';
 
@@ -76,6 +77,10 @@ export class DefaultNamespaceVisitor implements ModelVisitor<BaseMetaModelElemen
     }
 
     visitUnit(unit: Unit, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined;
+    }
+
+    visitValue(value: Value, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
         return undefined;
     }
 }

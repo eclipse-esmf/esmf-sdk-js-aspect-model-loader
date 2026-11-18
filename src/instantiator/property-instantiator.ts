@@ -16,6 +16,7 @@ import {DefaultCharacteristic, Property} from '../aspect-meta-model';
 import {Quad, Util} from 'n3';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
 import {Samm} from '../vocabulary';
+import {ValueInstantiator} from './value-instantiator';
 
 export class PropertyInstantiator {
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
@@ -37,7 +38,10 @@ export class PropertyInstantiator {
             if (samm.isCharacteristicProperty(value.predicate.value)) {
                 propertyInstanceDefinition.characteristic = this.metaModelElementInstantiator.getCharacteristic(value);
             } else if (samm.isExampleValueProperty(value.predicate.value)) {
-                propertyInstanceDefinition.exampleValue = value.object.value;
+                const valueInstantiator = new ValueInstantiator(this.metaModelElementInstantiator);
+                propertyInstanceDefinition.exampleValue = valueInstantiator.isValue(value.object)
+                    ? valueInstantiator.createValue(value.object)
+                    : value.object.value;
             } else if (samm.isNotInPayloadProperty(value.predicate.value)) {
                 propertyInstanceDefinition.isNotInPayload = value.object.value === 'true';
             } else if (samm.isOptionalProperty(value.predicate.value)) {
@@ -76,11 +80,36 @@ export class PropertyInstantiator {
         quads.forEach(value => {
             if (this.metaModelElementInstantiator.samm.isExtends(value.predicate.value)) {
                 const quadsAbstractProperty = this.metaModelElementInstantiator.rdfModel.store.getQuads(value.object, null, null, null);
-                const extendedAbstractProperty = this.createProperty(quadsAbstractProperty[0]);
+                const extendedAbstractProperty =
+                    quadsAbstractProperty.length > 0
+                        ? this.createProperty(quadsAbstractProperty[0])
+                        : this.createPredefinedAbstractProperty(value.object.value);
+                if (!extendedAbstractProperty) {
+                    return;
+                }
                 extendedAbstractProperty.isAbstract = true;
                 property.extends = extendedAbstractProperty;
             }
         });
+    }
+
+    /**
+     * Creates an abstract property of the SAMM entity namespace (e.g. samm-e:value), which is
+     * referenced by the model but not part of the loaded RDF store.
+     */
+    private createPredefinedAbstractProperty(urn: string): Property {
+        const sammE = this.metaModelElementInstantiator.sammE;
+        if (!urn.startsWith(sammE.getNamespace())) {
+            return null;
+        }
+        const property = new DefaultProperty(
+            this.metaModelElementInstantiator.samm.version,
+            urn,
+            urn.substring(sammE.getNamespace().length),
+            null
+        );
+        property.isAbstract = true;
+        return <Property>this.metaModelElementInstantiator.cacheService.resolveInstance(property);
     }
 
     private isDefinedInline(propertyQuad: Quad) {

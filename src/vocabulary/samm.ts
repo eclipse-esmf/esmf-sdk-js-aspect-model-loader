@@ -278,6 +278,22 @@ export class Samm {
         return DataFactory.namedNode(`${this.getNamespace()}Entity`);
     }
 
+    Value(): NamedNode {
+        return DataFactory.namedNode(`${this.getNamespace()}Value`);
+    }
+
+    isValue(value: string): boolean {
+        return this.Value().value === value;
+    }
+
+    Namespace(): NamedNode {
+        return DataFactory.namedNode(`${this.getNamespace()}Namespace`);
+    }
+
+    isNamespace(value: string): boolean {
+        return this.Namespace().value === value;
+    }
+
     AbstractEntity(): NamedNode {
         return DataFactory.namedNode(`${this.getNamespace()}AbstractEntity`);
     }

@@ -14,10 +14,11 @@ SPDX-License-Identifier: MPL-2.0
 = Introduction
 
 The JavaScript SDK lets you load Aspect Models in JavaScript and TypeScript applications.
-It turns a model into typed objects that you can traverse to access the model's information, such as properties, characteristics, units, descriptions and constraints.
+It reads Aspect Models written in RDF/Turtle (SAMM 2.0.0, 2.1.0 and 2.2.0) and returns them as typed TypeScript objects.
+You can traverse these objects, or process them with a visitor, to access the model's information, such as properties, characteristics, entities, units, descriptions and constraints.
 
 This lets you build generic frontends that adapt to the underlying Aspect Model automatically.
-For example, when a new property is added to the model, the UI can show it with its value, name, description and unit without any code changes.
+For example, when a new property is added to the model, the UI can show the corresponding value together with the property's name, description and unit without any code changes.
 
 == Getting Started
 

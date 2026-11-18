@@ -34,6 +34,7 @@ export class PredefinedCharacteristicInstantiator {
         this.characteristicInstanceList[`${sammC.getNamespace()}UnitReference`] = this.createUnitReferenceCharacteristic.bind(this);
         this.characteristicInstanceList[`${sammC.getNamespace()}ResourcePath`] = this.createResourcePathCharacteristic.bind(this);
         this.characteristicInstanceList[`${sammC.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic.bind(this);
+        this.characteristicInstanceList[`${sammC.getNamespace()}Reference`] = this.createReferenceCharacteristic.bind(this);
     }
 
     createTextCharacteristic(): Characteristic {
@@ -150,6 +151,23 @@ export class PredefinedCharacteristicInstantiator {
 
         characteristic.addPreferredName('en', 'Resource Path');
         characteristic.addDescription('en', 'The path of a resource.');
+
+        return characteristic;
+    }
+
+    createReferenceCharacteristic(): Characteristic {
+        const characteristic = new DefaultCharacteristic(
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammC.getAspectModelUrn('Reference'),
+            'Reference',
+            new DefaultScalar(`${this.xsdDataTypes.getDataType('anyURI').isDefinedBy}`)
+        );
+
+        characteristic.addPreferredName('en', 'Reference');
+        characteristic.addDescription(
+            'en',
+            'Defines a unique type of Property. This reference can either be a global reference, such as a URN, or it can refer to a Property of another aspect within a different twin.'
+        );
 
         return characteristic;
     }

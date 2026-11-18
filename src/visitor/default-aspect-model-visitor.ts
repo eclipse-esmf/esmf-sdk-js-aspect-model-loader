@@ -24,6 +24,7 @@ import {
     Property,
     QuantityKind,
     Unit,
+    Value,
 } from '../aspect-meta-model';
 import {ModelVisitor} from './model-visitor';
 
@@ -101,6 +102,10 @@ export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
     }
 
     visitUnit(unit: Unit, context: U): T {
+        return undefined;
+    }
+
+    visitValue(value: Value, context: U): T {
         return undefined;
     }
 }
