@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Aspect, Characteristic, Constraint, Entity, Event, Operation, Property, QuantityKind, Unit} from '../aspect-meta-model';
+import {Aspect, Characteristic, Constraint, Entity, Event, Operation, Property, QuantityKind, Unit, Value} from '../aspect-meta-model';
 
 /**
  * Visitor interface to traverse a loaded model and apply operations to the
@@ -39,4 +39,6 @@ export interface ModelVisitor<T, U> {
     visitEntity(entity: Entity, context: U): T;
     /** Visit an Event definition */
     visitEvent(entity: Event, context: U): T;
+    /** Visit a Value definition (samm:Value, SAMM 2.2.0 and later). Optional to stay backward compatible. */
+    visitValue?(value: Value, context: U): T;
 }

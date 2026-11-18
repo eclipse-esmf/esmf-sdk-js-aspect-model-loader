@@ -13,10 +13,11 @@
 import {Type} from '../type';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {DefaultEntityInstance} from '../default-entity-instance';
+import {DefaultValue, Value} from '../default-value';
 import {DefaultEntity} from '../default-entity';
 
 export interface Enumeration extends Characteristic {
-    values: Array<DefaultEntityInstance | string | number>;
+    values: Array<DefaultEntityInstance | Value | string | number>;
 
     indexOf(value: string): number;
 }
@@ -26,17 +27,17 @@ export class DefaultEnumeration extends DefaultCharacteristic implements Enumera
         metaModelVersion: string,
         aspectModelUrn: string,
         name: string,
-        private _values: Array<DefaultEntityInstance | string | number>,
+        private _values: Array<DefaultEntityInstance | Value | string | number>,
         dataType?: Type
     ) {
         super(metaModelVersion, aspectModelUrn, name, dataType);
     }
 
-    public set values(values: Array<DefaultEntityInstance | string | number>) {
+    public set values(values: Array<DefaultEntityInstance | Value | string | number>) {
         this._values = values;
     }
 
-    public get values(): Array<DefaultEntityInstance | string | number> {
+    public get values(): Array<DefaultEntityInstance | Value | string | number> {
         return this._values;
     }
 
@@ -57,7 +58,9 @@ export class DefaultEnumeration extends DefaultCharacteristic implements Enumera
                 return valueEntry[propertyValue.name] === value;
             });
         } else {
-            return this.values.findIndex(valueEntry => valueEntry === value);
+            return this.values.findIndex(valueEntry =>
+                valueEntry instanceof DefaultValue ? `${valueEntry.value}` === `${value}` : valueEntry === value
+            );
         }
     }
 }

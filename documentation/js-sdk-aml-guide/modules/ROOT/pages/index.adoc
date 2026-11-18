@@ -13,8 +13,12 @@ SPDX-License-Identifier: MPL-2.0
 
 = Introduction
 
-The Aspect Model loader can be used to load an Aspect Model to traverse and access the different information a model provides (units, descriptions, constraints, etc.) to implement generic frontends capable to automatically adapt to the underling Aspect Model.
-For example a newly added property and the related value could be shown in the UI including all information (name, description and unit) without changing any line of code.
+The JavaScript SDK lets you load Aspect Models in JavaScript and TypeScript applications.
+It reads Aspect Models written in RDF/Turtle (SAMM 2.0.0, 2.1.0 and 2.2.0) and returns them as typed TypeScript objects.
+You can traverse these objects, or process them with a visitor, to access the model's information, such as properties, characteristics, entities, units, descriptions and constraints.
+
+This lets you build generic frontends that adapt to the underlying Aspect Model automatically.
+For example, when a new property is added to the model, the UI can show the corresponding value together with the property's name, description and unit without any code changes.
 
 == Getting Started
 

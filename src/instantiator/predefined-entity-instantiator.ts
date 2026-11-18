@@ -26,6 +26,42 @@ export class PredefinedEntityInstantiator {
         this.entityInstanceList['FileResource'] = this.createFileResourceEntity.bind(this);
         this.entityInstanceList['Point3d'] = this.create3dPointEntity.bind(this);
         this.entityInstanceList['TimeSeriesEntity'] = this.createTimeSeriesEntity.bind(this);
+        this.entityInstanceList['Quantity'] = this.createQuantityEntity.bind(this);
+    }
+
+    private createQuantityEntity(): Entity {
+        const entity = new DefaultEntity(
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('Quantity'),
+            'Quantity',
+            [],
+            true
+        );
+        entity.addPreferredName('en', 'Quantity');
+        entity.addDescription('en', 'A numeric value and the physical unit of the value.');
+
+        const value = new DefaultProperty(
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('value'),
+            'value',
+            null
+        );
+        value.isAbstract = true;
+        value.addPreferredName('en', 'Value');
+        value.addDescription('en', 'Any value.');
+
+        const unit = new DefaultProperty(
+            this.metaModelElementInstantiator.samm.version,
+            this.metaModelElementInstantiator.sammE.getAspectModelUrn('unit'),
+            'unit',
+            this.sammCInstantiator.createUnitReferenceCharacteristic()
+        );
+        unit.addPreferredName('en', 'Unit');
+        unit.addDescription('en', 'The unit of a quantity.');
+
+        entity.properties = [value, unit];
+
+        return entity;
     }
 
     private createTimeSeriesEntity(): Entity {
@@ -33,7 +69,8 @@ export class PredefinedEntityInstantiator {
             this.metaModelElementInstantiator.samm.version,
             this.metaModelElementInstantiator.sammE.getAspectModelUrn('TimeSeriesEntity'),
             'TimeSeriesEntity',
-            null
+            [],
+            true
         );
         entity.addPreferredName('en', 'Time Series Entity');
         entity.addDescription(
@@ -60,7 +97,7 @@ export class PredefinedEntityInstantiator {
         value.addPreferredName('en', 'Value');
         value.addDescription('en', 'Any value.');
 
-        entity.properties.push(timestamp, value);
+        entity.properties = [timestamp, value];
 
         return entity;
     }
@@ -70,7 +107,7 @@ export class PredefinedEntityInstantiator {
             this.metaModelElementInstantiator.samm.version,
             this.metaModelElementInstantiator.sammE.getAspectModelUrn('Point3d'),
             'ThreeDimensionalPosition',
-            null
+            []
         );
         entity.addPreferredName('en', 'Three Dimensional Position');
         entity.addDescription('en', 'Defines a position in a three dimensional space.');
@@ -105,7 +142,7 @@ export class PredefinedEntityInstantiator {
         z.addPreferredName('en', 'Z');
         z.addDescription('en', 'The position along the Z axis.');
 
-        entity.properties.push(x, y, z);
+        entity.properties = [x, y, z];
 
         return entity;
     }
@@ -115,7 +152,7 @@ export class PredefinedEntityInstantiator {
             this.metaModelElementInstantiator.samm.version,
             this.metaModelElementInstantiator.sammE.getAspectModelUrn('FileResource'),
             'FileResource',
-            null
+            []
         );
         entity.addPreferredName('en', 'File Resource');
         entity.addDescription('en', 'A file in a specific format');
@@ -138,7 +175,7 @@ export class PredefinedEntityInstantiator {
         mimeType.addPreferredName('en', 'MIME Type');
         mimeType.addDescription('en', 'A MIME type as defined in RFC 2046.');
 
-        entity.properties.push(resource, mimeType);
+        entity.properties = [resource, mimeType];
 
         return entity;
     }

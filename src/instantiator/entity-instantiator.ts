@@ -15,6 +15,8 @@ import {DataFactory, Quad} from 'n3';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
 import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity';
 import {DefaultPropertyInstanceDefinition, Property} from '../aspect-meta-model';
+import {PredefinedEntityInstantiator} from './predefined-entity-instantiator';
+import {PredefinedCharacteristicInstantiator} from './characteristic/predefined-characteristic-instantiator';
 
 export class EntityInstantiator {
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
@@ -36,6 +38,11 @@ export class EntityInstantiator {
                         abstractQuadEntity,
                         true
                     ) as DefaultEntity;
+                } else if (quad.object.value.startsWith(this.metaModelElementInstantiator.sammE.getNamespace())) {
+                    const predefinedEntity = this.createPredefinedEntity(quad.object.value);
+                    if (predefinedEntity?.isAbstract) {
+                        entity.extends = predefinedEntity;
+                    }
                 }
             }
         });
@@ -43,5 +50,13 @@ export class EntityInstantiator {
         entity.properties.forEach(property => (property as DefaultPropertyInstanceDefinition).addParent(entity));
 
         return <Entity>this.metaModelElementInstantiator.cacheService.resolveInstance(entity);
+    }
+
+    private createPredefinedEntity(urn: string): Entity {
+        const name = urn.substring(this.metaModelElementInstantiator.sammE.getNamespace().length);
+        return new PredefinedEntityInstantiator(
+            this.metaModelElementInstantiator,
+            new PredefinedCharacteristicInstantiator(this.metaModelElementInstantiator)
+        ).createEntity(name);
     }
 }

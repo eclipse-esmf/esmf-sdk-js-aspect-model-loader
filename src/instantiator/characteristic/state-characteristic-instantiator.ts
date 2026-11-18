@@ -27,9 +27,13 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
         const sammC = this.metaModelElementInstantiator.sammC;
         const stateCharacteristic = <DefaultState>super.processElement(quads);
 
+        const dataType = quads.find(quad => this.metaModelElementInstantiator.samm.isDataTypeProperty(quad.predicate.value));
+
         quads.forEach(quad => {
             if (sammC.isDefaultValueProperty(quad.predicate.value)) {
-                stateCharacteristic.defaultValue = Util.isLiteral(quad.object) ? `${quad.object.value}` : this.resolveEntityInstance(quad);
+                stateCharacteristic.defaultValue = Util.isLiteral(quad.object)
+                    ? `${quad.object.value}`
+                    : this.resolveValue(quad, dataType?.object.value);
             }
         });
 
