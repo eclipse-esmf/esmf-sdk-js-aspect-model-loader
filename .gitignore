@@ -6,3 +6,5 @@ coverage
 *.log
 *.lock
 *.ts.bak
+*.tgz
+docs/api

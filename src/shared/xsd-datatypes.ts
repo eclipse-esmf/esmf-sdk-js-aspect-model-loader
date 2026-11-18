@@ -106,15 +106,20 @@ const xsdDataTypes = {
 };
 
 export class XsdDataTypes {
+    private readonly dataTypes: Record<string, {isDefinedBy: string; description: string}>;
+
     constructor(private modelVersion: string) {
-        xsdDataTypes['curie'].isDefinedBy = (<string>xsdDataTypes['curie'].isDefinedBy).replace('MODEL_VERSION', modelVersion);
+        this.dataTypes = {
+            ...xsdDataTypes,
+            curie: {...xsdDataTypes['curie'], isDefinedBy: xsdDataTypes['curie'].isDefinedBy.replace('MODEL_VERSION', modelVersion)},
+        };
     }
 
     getDataTypes(): Record<string, {isDefinedBy: string; description: string}> {
-        return xsdDataTypes;
+        return this.dataTypes;
     }
 
     getDataType(key: string): {isDefinedBy: string; description: string} {
-        return xsdDataTypes[key as keyof typeof xsdDataTypes];
+        return this.dataTypes[key];
     }
 }

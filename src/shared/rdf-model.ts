@@ -61,6 +61,13 @@ export class RdfModel {
         return KnownVersion.fromVersionString(this.metaModelVersion) || undefined;
     }
 
+    /**
+     * Returns the meta model version as found in the model, even if it is not a supported SAMM version.
+     */
+    public getRawMetaModelVersion(): string {
+        return this.metaModelVersion ?? 'unknown';
+    }
+
     public getNamespaces(): string[] {
         return Object.values(this.prefixes);
     }

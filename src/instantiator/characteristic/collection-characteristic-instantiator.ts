@@ -40,7 +40,7 @@ export class CollectionCharacteristicInstantiator extends CharacteristicInstanti
             } else if (sammC.isOrderedProperty(quad.predicate.value)) {
                 collectionCharacteristic.isOrdered = Boolean(quad.object.value);
             } else if (sammC.isElementCharacteristicProperty(quad.predicate.value)) {
-                collectionCharacteristic.elementCharacteristic = this.create(quad);
+                collectionCharacteristic.elementCharacteristic = this.metaModelElementInstantiator.getCharacteristic(quad);
             }
         });
         return collectionCharacteristic;

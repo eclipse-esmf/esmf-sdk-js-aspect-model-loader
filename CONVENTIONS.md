@@ -1,12 +1,12 @@
 # ESMF Code Conventions
 
 The following document contains a compilation of conventions and guidelines to format, structure and
-write code for the ESMF SDK JS Aspect Model loader.
+write code for the ESMF JavaScript SDK.
 
 ## General Conventions
 
 Our code conventions are based on the [Google Typescript Style Guide](https://google.github.io/styleguide/tsguide.html)
-but detailed and adjusted for the needs of the ESMF SDK JS Aspect Model loader.
+but detailed and adjusted for the needs of the ESMF JavaScript SDK.
 
 ## Copyright header
 

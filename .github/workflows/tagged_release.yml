@@ -79,7 +79,7 @@ jobs:
           target_commitish: ${{ env.release_branch_name }}
           draft: false
           prerelease: false
-          files: esmf-aspect-model-loader-${{ env.RELEASE_VERSION }}.tgz
+          files: esmf-sdk-js-${{ env.RELEASE_VERSION }}.tgz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
@@ -93,6 +93,6 @@ jobs:
           target_commitish: ${{ env.release_branch_name }}
           draft: false
           prerelease: true
-          files: esmf-aspect-model-loader-${{ env.RELEASE_VERSION }}.tgz
+          files: esmf-sdk-js-${{ env.RELEASE_VERSION }}.tgz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}

@@ -19,3 +19,4 @@ export * from './visitor/model-visitor.js';
 export * from './visitor/default-aspect-model-visitor.js';
 export * from './visitor/default-namespace-visitor.js';
 export * from './shared/model-element-cache.service.js';
+export * from './shared/errors.js';

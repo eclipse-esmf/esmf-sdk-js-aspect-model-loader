@@ -12,6 +12,7 @@
  */
 
 export * from './base.js';
+export * from './bound-definition.js';
 export * from './default-aspect.js';
 export * from './characteristic/default-characteristic.js';
 export * from './characteristic/default-code.js';

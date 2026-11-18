@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {NotAbstractEntityError} from '../shared/errors.js';
 import {Base, BaseMetaModelElement} from './base.js';
 import {HasProperties} from './has-properties.js';
 import {Property} from './default-property.js';
@@ -122,7 +123,7 @@ export class DefaultEntity extends Base implements Entity {
 
     public set extends(entity: Entity | undefined) {
         if (!entity!.isAbstract) {
-            throw Error(`Entity ${entity!.urn} is not abstract.`);
+            throw new NotAbstractEntityError(entity!.urn);
         }
         this._extends = entity;
     }

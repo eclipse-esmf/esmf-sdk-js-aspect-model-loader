@@ -12,42 +12,50 @@
  */
 
 import {Parser, Store} from 'n3';
-import {Observable, Subject} from 'rxjs';
+import {from, Observable} from 'rxjs';
 import {RdfModel} from './rdf-model.js';
+import {RdfParseError} from './errors.js';
 
 export class RdfLoader {
     /**
-     * Loads the model based on the provided RDF content
-     * @param rdfContent array of RDF content each from a different ttl files
+     * Parses the provided RDF content into a single RDF model.
+     *
+     * @param rdfContent array of RDF content each from a different ttl file
      */
-    public loadModel(rdfContent: string[]): Observable<RdfModel> {
-        const subject = new Subject<RdfModel>();
-        const store: Store = new Store();
-        const parsedRdf = [];
+    public parse(rdfContent: string[]): Promise<RdfModel> {
+        return new Promise<RdfModel>((resolve, reject) => {
+            const store = new Store();
+            let parsedCount = 0;
 
-        rdfContent.forEach((rdf, _index) => {
-            new Parser().parse(rdf, (error, quad, prefixes) => {
-                if (error) {
-                    subject.error(error);
-                    subject.complete();
-                    return;
-                }
+            if (rdfContent.length === 0) {
+                resolve(new RdfModel(store));
+                return;
+            }
 
-                if (quad) {
-                    store.addQuad(quad);
-                } else if (prefixes) {
-                    // content is parsed at that point. push rdf to parsed array
-                    parsedRdf.push(rdf);
-                }
+            rdfContent.forEach(rdf => {
+                new Parser().parse(rdf, (error, quad, prefixes) => {
+                    if (error) {
+                        reject(new RdfParseError(error.message, {cause: error}));
+                        return;
+                    }
 
-                // complete and push result to the caller using the subject
-                if (parsedRdf.length === rdfContent.length) {
-                    subject.next(new RdfModel(store));
-                    subject.complete();
-                }
+                    if (quad) {
+                        store.addQuad(quad);
+                    } else if (prefixes && ++parsedCount === rdfContent.length) {
+                        // all contents are parsed at that point
+                        resolve(new RdfModel(store));
+                    }
+                });
             });
         });
+    }
 
-        return subject;
+    /**
+     * Loads the model based on the provided RDF content
+     *
+     * @param rdfContent array of RDF content each from a different ttl file
+     */
+    public loadModel(rdfContent: string[]): Observable<RdfModel> {
+        return from(this.parse(rdfContent));
     }
 }

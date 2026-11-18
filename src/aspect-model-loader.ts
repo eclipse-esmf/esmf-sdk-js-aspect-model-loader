@@ -11,11 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Aspect} from './aspect-meta-model/index.js';
 import {CacheStrategy, ModelElementCacheService} from './shared/model-element-cache.service.js';
 import {RdfLoader} from './shared/rdf-loader.js';
-import {RdfModel} from './shared/rdf-model.js';
 import {AspectInstantiator} from './instantiator/aspect-instantiator.js';
 import {BaseModelLoader} from './base-model-loader.js';
 import {RdfModelUtil} from './shared/rdf-model-util.js';
@@ -32,7 +31,34 @@ export class AspectModelLoader extends BaseModelLoader {
     }
 
     /**
-     * Load and instantiate an Aspect Model based on an RDF/Turtle. Related imports are not resolved.
+     * Load and instantiate an Aspect Model based on an RDF/Turtle.
+     *
+     * @param modelAspectUrn URN of the Aspect to load and instantiate. Pass an empty string to load the only Aspect
+     *                       contained in the RDF content.
+     * @param rdfContent List of all RDF/Turtle representations to load, including all referenced model imports.
+     *                   The default SAMM related definitions (prefixes "samm", "samm-c", "samm-e", "unit" and "xsd")
+     *                   are already provided.
+     * @return Promise resolving to the frozen Aspect including all information from the given RDF
+     * @throws {AspectModelError} e.g. {@link UnsupportedVersionError}, {@link AspectNotFoundError} or {@link RdfParseError}
+     */
+    public async loadAspect(modelAspectUrn: string, ...rdfContent: string[]): Promise<Aspect> {
+        this.cacheService.reset();
+        const rdfModel = await new RdfLoader().parse(rdfContent);
+        RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);
+        return Object.freeze(new AspectInstantiator(rdfModel, this.cacheService).createAspect(modelAspectUrn));
+    }
+
+    /**
+     * Load and instantiate an Aspect Model based on a single RDF/Turtle. Related imports are not resolved.
+     *
+     * @param rdfContent RDF/Turtle representation to load
+     */
+    public loadSelfContainedAspect(rdfContent: string): Promise<Aspect> {
+        return this.loadAspect('', rdfContent);
+    }
+
+    /**
+     * Observable variant of {@link loadSelfContainedAspect}.
      *
      * @param rdfContent RDF/Turtle representation to load
      */
@@ -41,37 +67,13 @@ export class AspectModelLoader extends BaseModelLoader {
     }
 
     /**
-     * Load and instantiate an Aspect Model based on an RDF/Turtle
+     * Observable variant of {@link loadAspect}.
      *
      * @param modelAspectUrn URN of the Aspect Model to load and instantiate
-     *
-     * @param rdfContent List of all RDF/Turtle representation to load, including
-     *                   all referenced models imports. The default SAMM related imports
-     *                   e.g. with prefixes "samm", "samm-c", "samm-e", "unit" and "xsd"
-     *                   are already provided. No needs to provided that(content) is not
-     *                   required.
-     *
+     * @param rdfContent List of all RDF/Turtle representations to load, including all referenced model imports.
      * @return Observable<Aspect> Aspect including all information from the given RDF
      */
     public load(modelAspectUrn: string, ...rdfContent: string[]): Observable<Aspect> {
-        this.cacheService.reset();
-        const subject = new Subject<Aspect>();
-        new RdfLoader().loadModel(rdfContent).subscribe(
-            (rdfModel: RdfModel) => {
-                try {
-                    RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);
-                    subject.next(Object.freeze(new AspectInstantiator(rdfModel, this.cacheService).createAspect(modelAspectUrn)));
-                } catch (error: unknown) {
-                    subject.error(error);
-                } finally {
-                    subject.complete();
-                }
-            },
-            error => {
-                subject.error(error);
-            }
-        );
-
-        return subject;
+        return this.toObservable(this.loadAspect(modelAspectUrn, ...rdfContent));
     }
 }

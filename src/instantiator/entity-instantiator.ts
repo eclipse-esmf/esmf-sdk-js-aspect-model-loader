@@ -27,6 +27,14 @@ export class EntityInstantiator {
 
         this.metaModelElementInstantiator.initBaseProperties(quads, entity, this.metaModelElementInstantiator.rdfModel);
 
+        // Register the entity before resolving its properties so that recursive structures
+        // (an entity property referencing the entity again) resolve to this instance instead of looping.
+        const cachedEntity = this.metaModelElementInstantiator.cacheService.get(entity.aspectModelUrn);
+        if (cachedEntity) {
+            return <Entity>cachedEntity;
+        }
+        this.metaModelElementInstantiator.cacheService.resolveInstance(entity);
+
         quads.forEach(quad => {
             if (samm.isPropertiesProperty(quad.predicate.value)) {
                 entity.properties = this.metaModelElementInstantiator.getProperties(DataFactory.namedNode(quad.subject.value));

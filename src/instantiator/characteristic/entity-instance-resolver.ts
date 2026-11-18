@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {EntityInstanceResolutionError} from '../../shared/errors.js';
 import {Literal, Quad, Util} from 'n3';
 import {Samm} from '../../vocabulary/index.js';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance.js';
@@ -32,7 +33,7 @@ export class EntityInstanceResolver {
         );
 
         if (!entityTypeQuad) {
-            throw new Error(`Could not resolve Entity instance ${quad.object.value}`);
+            throw new EntityInstanceResolutionError(quad.object.value);
         }
 
         const entity = new EntityInstantiator(this.metaModelElementInstantiator).createEntity(

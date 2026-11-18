@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {UnsupportedVersionError} from './errors.js';
 import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity.js';
 import {RdfModel} from './rdf-model.js';
 import {Samm} from '../vocabulary/samm.js';
@@ -104,9 +105,7 @@ export class RdfModelUtil {
 
     static throwErrorIfUnsupportedVersion(rdfModel: RdfModel): void {
         if (rdfModel && KnownVersion.isVersionSupported(rdfModel.getMetaModelVersion()!) === false) {
-            throw Error(
-                `SAMM ${rdfModel.getMetaModelVersion()} is not supported. Supported versions are: ${KnownVersion.getSupportedVersions().join()}`
-            );
+            throw new UnsupportedVersionError(rdfModel.getRawMetaModelVersion(), KnownVersion.getSupportedVersions());
         }
     }
 }

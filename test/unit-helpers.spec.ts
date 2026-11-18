@@ -34,6 +34,8 @@ import {RdfModel} from '../src/shared/rdf-model';
 import {RdfModelUtil} from '../src/shared/rdf-model-util';
 import {XsdDataTypes} from '../src/shared/xsd-datatypes';
 import {Units} from '../src/shared/units';
+import {PredefinedUnitInstantiator} from '../src/instantiator/predefined-unit-instantiator';
+import type {MetaModelElementInstantiator} from '../src/instantiator/meta-model-element-instantiator';
 
 const VERSION = '2.2.0';
 const NS = 'urn:samm:org.eclipse.esmf.test:1.0.0#';
@@ -158,7 +160,7 @@ describe('RdfModelUtil', (): void => {
     test('throws on unsupported versions only', (): void => {
         expect(() => RdfModelUtil.throwErrorIfUnsupportedVersion(new RdfModel(new Store(), VERSION))).not.toThrow();
         expect(() => RdfModelUtil.throwErrorIfUnsupportedVersion(new RdfModel(new Store()))).toThrow(
-            'SAMM undefined is not supported. Supported versions are: 2.0.0,2.1.0,2.2.0'
+            'SAMM unknown is not supported. Supported versions are: 2.0.0,2.1.0,2.2.0'
         );
     });
 });
@@ -185,6 +187,11 @@ describe('XsdDataTypes and Units', (): void => {
         expect(xsd.getDataType('curie').isDefinedBy).not.toContain('MODEL_VERSION');
     });
 
+    test('resolves the curie data type per instance', (): void => {
+        expect(new XsdDataTypes('2.1.0').getDataType('curie').isDefinedBy).toContain('2.1.0');
+        expect(new XsdDataTypes('2.2.0').getDataType('curie').isDefinedBy).toContain('2.2.0');
+    });
+
     test('provides predefined units and quantity kinds', (): void => {
         const units = new Units(new SammU(new Samm(VERSION)));
         expect(units.getUnit('metre')?.symbol).toBe('m');
@@ -192,6 +199,26 @@ describe('XsdDataTypes and Units', (): void => {
         expect(units.getQuantityKind('length')?.label).toBe('length');
         expect(units.getSupportedUnitNames()).toContain('kilogram');
         expect(units.getSupportedQuantityKindsNames()).toContain('mass');
+        expect(units.getSupportedUnitNames()).toHaveLength(1714);
+        expect(units.getSupportedQuantityKindsNames()).toHaveLength(627);
+        expect(units.getUnit('unknownUnit')).toBeUndefined();
+    });
+
+    test('resolves reference units lazily from the compact unit table', (): void => {
+        const units = new Units(new SammU(new Samm(VERSION)));
+        const kilometre = units.getUnit('kilometre');
+        expect(kilometre?.code).toBe('KMT');
+        expect(kilometre?.conversionFactor).toBe('10³ m');
+        expect(kilometre?.referenceUnit?.()).toBe(units.getUnit('metre'));
+        expect(units.getUnit('metre')?.referenceUnit).toBeNull();
+        expect(units.getUnit('metre')?.quantityKinds).toContain('length');
+    });
+
+    test('PredefinedUnitInstantiator lists supported names instead of array indices', (): void => {
+        const samm = new Samm(VERSION);
+        const instantiator = new PredefinedUnitInstantiator({samm, sammU: new SammU(samm)} as unknown as MetaModelElementInstantiator);
+        expect(instantiator.getSupportedUnitNames()).toContain('kilogram');
+        expect(instantiator.getSupportedQuantityKindsNames()).toContain('mass');
     });
 });
 

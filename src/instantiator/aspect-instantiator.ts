@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {AspectNotFoundError, MultipleAspectsFoundError} from '../shared/errors.js';
 import {
     Aspect,
     BaseMetaModelElement,
@@ -70,14 +71,14 @@ export class AspectInstantiator {
         const aspectQuad = rdfModel.store
             .getQuads(null, rdfModel.samm.RdfType(), rdfModel.samm.Aspect(), null)
             .find((quad, index, foundQuads) => {
-                if (foundQuads.length > 1 && aspectModelUrn == undefined) {
-                    throw new Error('More than one aspect found. Please provide the aspectModelUrn to load the desired one.');
+                if (foundQuads.length > 1 && !aspectModelUrn) {
+                    throw new MultipleAspectsFoundError();
                 }
                 return foundQuads.length == 1 || (aspectModelUrn && quad.subject.value === aspectModelUrn);
             });
 
         if (!aspectQuad) {
-            throw new Error('No aspect found. Please verify if the aspectModelUrn is correct and the ttl includes an aspect definition.');
+            throw new AspectNotFoundError();
         }
 
         return aspectQuad;

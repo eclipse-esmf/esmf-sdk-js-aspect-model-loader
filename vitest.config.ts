@@ -23,7 +23,7 @@ export default defineConfig({
             provider: 'v8',
             include: ['src/**/*.ts'],
             // generated unit catalogue, pure data
-            exclude: ['src/shared/units.ts'],
+            exclude: ['src/shared/units-data.ts'],
             reportsDirectory: 'coverage',
             thresholds: {
                 statements: 91,

@@ -40,7 +40,7 @@ export class PredefinedUnitInstantiator {
             if (quantityKind) {
                 return new DefaultQuantityKind(
                     this.samm.version,
-                    `${this.metaModelElementInstantiator.sammU.getDefaultQuantityKindsUri()}${quantityKind.name}`,
+                    `${this.sammU.getNamespace()}${quantityKind.name}`,
                     quantityKind.name,
                     quantityKind.label
                 );
@@ -63,7 +63,7 @@ export class PredefinedUnitInstantiator {
                 defaultUnit.code = unit.code!;
                 defaultUnit.referenceUnit = unit.referenceUnit ? unit.referenceUnit().name : null!;
                 defaultUnit.conversionFactor = unit.conversionFactor!;
-                defaultUnit.quantityKinds = unit.quantityKinds as unknown as Array<QuantityKind>;
+                quantityKindNames.push(...new Set(unit.quantityKinds));
             } else {
                 const unitPropertyQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(
                     DataFactory.namedNode(name),
@@ -106,10 +106,10 @@ export class PredefinedUnitInstantiator {
     }
 
     getSupportedQuantityKindsNames(): Array<string> {
-        return Object.keys(this.units.getSupportedQuantityKindsNames());
+        return this.units.getSupportedQuantityKindsNames();
     }
 
     getSupportedUnitNames(): Array<string> {
-        return Object.keys(this.units.getSupportedUnitNames());
+        return this.units.getSupportedUnitNames();
     }
 }

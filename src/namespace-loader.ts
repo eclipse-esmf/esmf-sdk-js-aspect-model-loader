@@ -11,11 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {BaseMetaModelElement} from './aspect-meta-model/index.js';
 import {CacheStrategy, ModelElementCacheService} from './shared/model-element-cache.service.js';
 import {RdfLoader} from './shared/rdf-loader.js';
-import {RdfModel} from './shared/rdf-model.js';
 import {NamespaceInstantiator} from './instantiator/namespace-instantiator.js';
 import {BaseModelLoader} from './base-model-loader.js';
 import {RdfModelUtil} from './shared/rdf-model-util.js';
@@ -32,30 +31,26 @@ export class NamespaceLoader extends BaseModelLoader {
     }
 
     /**
-     * Loads RDF content and returns an Observable that emits a map of namespaces as keys and an array of corresponding BaseMetaModelElement objects.
+     * Loads RDF content and resolves to a map of namespaces as keys and the corresponding model elements as values.
      *
-     * @param {string[]} rdfContent The RDF content to load.
-     * @return {Observable<Map<string, Array<BaseMetaModelElement>>>} An Observable that emits a map of namespace keys to arrays of BaseMetaModelElement objects.
+     * @param rdfContent The RDF/Turtle content to load.
+     * @return Promise resolving to a frozen map of namespace keys to arrays of BaseMetaModelElement objects.
+     * @throws {AspectModelError} e.g. {@link UnsupportedVersionError} or {@link RdfParseError}
+     */
+    public async loadNamespaces(...rdfContent: string[]): Promise<Map<string, Array<BaseMetaModelElement>>> {
+        this.cacheService.reset();
+        const rdfModel = await new RdfLoader().parse(rdfContent);
+        RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);
+        return Object.freeze(new NamespaceInstantiator(rdfModel, this.cacheService).createNamespaces());
+    }
+
+    /**
+     * Observable variant of {@link loadNamespaces}.
+     *
+     * @param rdfContent The RDF/Turtle content to load.
+     * @return An Observable that emits a map of namespace keys to arrays of BaseMetaModelElement objects.
      */
     public load(...rdfContent: string[]): Observable<Map<string, Array<BaseMetaModelElement>>> {
-        this.cacheService.reset();
-        const subject = new Subject<Map<string, Array<BaseMetaModelElement>>>();
-        new RdfLoader().loadModel(rdfContent).subscribe(
-            (rdfModel: RdfModel) => {
-                try {
-                    RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);
-                    subject.next(Object.freeze(new NamespaceInstantiator(rdfModel, this.cacheService).createNamespaces()));
-                } catch (error: unknown) {
-                    subject.error(error);
-                } finally {
-                    subject.complete();
-                }
-            },
-            error => {
-                subject.error(error);
-            }
-        );
-
-        return subject;
+        return this.toObservable(this.loadNamespaces(...rdfContent));
     }
 }

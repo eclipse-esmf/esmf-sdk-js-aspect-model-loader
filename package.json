@@ -1,7 +1,7 @@
 {
-  "name": "@esmf/aspect-model-loader",
-  "version": "3.0.0",
-  "description": "Instantiate and traverse defined Aspect Models natively in your TypeScript applications",
+  "name": "@esmf/sdk-js",
+  "version": "4.0.0",
+  "description": "ESMF JavaScript SDK: load, instantiate and traverse SAMM Aspect Models natively in JavaScript and TypeScript",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -22,7 +22,9 @@
     "test": "vitest run",
     "test:prettier": "prettier --config .prettierrc --check \"./{src,test}/**/*.ts\"",
     "test:coverage": "vitest run --coverage",
-    "all": "pnpm run build && pnpm run prettier && pnpm run lint && pnpm run typecheck && pnpm run test:coverage"
+    "docs:api": "typedoc",
+    "check:package": "publint && attw --pack . --profile esm-only",
+    "all": "pnpm run build && pnpm run prettier && pnpm run lint && pnpm run typecheck && pnpm run test:coverage && pnpm run check:package"
   },
   "files": [
     "dist/**",
@@ -34,32 +36,43 @@
     "Twin",
     "Digital Twin",
     "Aspect Meta Model",
-    "SAMM"
+    "SAMM",
+    "ESMF",
+    "Aspect Model",
+    "SDK"
   ],
-  "author": "",
+  "homepage": "https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/issues"
+  },
+  "author": "Eclipse Semantic Modeling Framework",
   "license": "mpl-2.0",
   "engines": {
     "node": ">=24"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@eslint/js": "^10.0.1",
     "@types/n3": "^1.26.6",
     "@types/node": "^24.19.2",
     "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^10.15.0",
     "prettier": "^3.10.1",
+    "publint": "^0.3.25",
     "rimraf": "^6.1.4",
+    "typedoc": "^0.28.20",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.73.0",
     "vitest": "^5.1.0"
   },
   "dependencies": {
-    "buffer": "^6.0.3",
     "locale-codes": "^2.0.0",
     "n3": "^2.13.12",
-    "rxjs": "^7.8.2",
-    "tslib": "^2.9.1",
-    "util": "^0.12.5"
+    "rxjs": "^7.8.2"
   },
   "packageManager": "pnpm@12.21.0"
 }

@@ -21,7 +21,7 @@ export interface Unit extends BaseMetaModelElement {
     name: string;
     referenceUnit?: string;
     conversionFactor?: string;
-    quantityKinds?: Array<QuantityKind | string>;
+    quantityKinds?: Array<QuantityKind>;
 }
 
 export class DefaultUnit extends Base implements Unit {

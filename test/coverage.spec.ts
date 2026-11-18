@@ -108,7 +108,10 @@ describe('Coverage model tests', (): void => {
         expect(unit.symbol).toEqual('s');
         expect(unit.code).toEqual('SEC');
         expect(unit.aspectModelUrn).toEqual('urn:samm:org.eclipse.esmf.samm:unit:2.2.0#secondUnitOfTime');
-        expect(unit.quantityKinds).toContain('time');
+        const time = unit.quantityKinds!.find(quantityKind => quantityKind.name === 'time')!;
+        expect(time).toBeInstanceOf(DefaultQuantityKind);
+        expect(time.aspectModelUrn).toEqual('urn:samm:org.eclipse.esmf.samm:unit:2.2.0#time');
+        expect(new Set(unit.quantityKinds!.map(quantityKind => quantityKind.name)).size).toEqual(unit.quantityKinds!.length);
     });
 
     test('should load a Quantifiable with a custom unit', (): void => {
@@ -141,7 +144,7 @@ describe('Coverage model tests', (): void => {
         expect(unit.code).toEqual('MTR');
         expect(unit.aspectModelUrn).toEqual('urn:samm:org.eclipse.esmf.samm:unit:2.2.0#metre');
         expect(unit.getPreferredName('en')).toEqual('metre');
-        expect(unit.quantityKinds).toEqual(expect.arrayContaining(['length', 'distance']));
+        expect(unit.quantityKinds!.map(quantityKind => quantityKind.name)).toEqual(expect.arrayContaining(['length', 'distance']));
     });
 
     test('should load an Either with left and right characteristic', (): void => {
