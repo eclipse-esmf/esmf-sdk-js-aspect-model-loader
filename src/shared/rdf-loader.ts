@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,7 +13,7 @@
 
 import {Parser, Store} from 'n3';
 import {Observable, Subject} from 'rxjs';
-import {RdfModel} from './rdf-model';
+import {RdfModel} from './rdf-model.js';
 
 export class RdfLoader {
     /**
@@ -25,7 +25,7 @@ export class RdfLoader {
         const store: Store = new Store();
         const parsedRdf = [];
 
-        rdfContent.forEach((rdf, index) => {
+        rdfContent.forEach((rdf, _index) => {
             new Parser().parse(rdf, (error, quad, prefixes) => {
                 if (error) {
                     subject.error(error);

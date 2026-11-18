@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,10 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Entity} from './default-entity';
-import {IsInstance} from './is-instance';
+import {Entity} from './default-entity.js';
+import {IsInstance} from './is-instance.js';
 
 export class DefaultEntityInstance implements IsInstance<Entity> {
+    /** Property values of the instance, keyed by the property name. */
+    [propertyName: string]: unknown;
+
     private _metaModelType: Entity;
     private _name: string;
     private _descriptions: Map<string, string>;
@@ -36,15 +39,15 @@ export class DefaultEntityInstance implements IsInstance<Entity> {
     public get descriptionKey(): string | undefined {
         return this._metaModelType.properties.find(
             property => property.name.toLowerCase().includes('description') && property.isNotInPayload === true
-        ).name;
+        )!.name;
     }
 
     public get valuePayloadKey(): string {
-        return this._metaModelType.properties.find(property => property.isNotInPayload === false).name;
+        return this._metaModelType.properties.find(property => property.isNotInPayload === false)!.name;
     }
 
     public get value(): string | number | boolean {
-        return this[this.valuePayloadKey];
+        return this[this.valuePayloadKey] as string | number | boolean;
     }
 
     public getDescription(locale = 'en'): string | undefined {

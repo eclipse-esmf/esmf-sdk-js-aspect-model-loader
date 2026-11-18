@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Characteristic} from './default-characteristic';
-import {Type} from '../type';
-import {DefaultSortedSet} from './default-sorted-set';
+import {Characteristic} from './default-characteristic.js';
+import {Type} from '../type.js';
+import {DefaultSortedSet} from './default-sorted-set.js';
 
 export class DefaultTimeSeries extends DefaultSortedSet {
     constructor(metaModelVersion: string, aspectModelUrn: string, name: string, elementCharacteristic?: Characteristic, dataType?: Type) {

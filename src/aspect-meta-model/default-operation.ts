@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Property} from './default-property';
-import {Base, BaseMetaModelElement} from './base';
-import {ModelVisitor} from '../visitor/model-visitor';
+import {Property} from './default-property.js';
+import {Base, BaseMetaModelElement} from './base.js';
+import {ModelVisitor} from '../visitor/model-visitor.js';
 
 export interface Operation extends BaseMetaModelElement {
     input: Array<Property>;
@@ -25,7 +25,7 @@ export interface Operation extends BaseMetaModelElement {
      * @param name Name of the property
      * @return Property or undefined if no property with the name exists
      */
-    getInputProperty(name: string): Property;
+    getInputProperty(name: string): Property | undefined;
 }
 
 export class DefaultOperation extends Base implements Operation {
@@ -39,7 +39,7 @@ export class DefaultOperation extends Base implements Operation {
         super(metaModelVersion, aspectModelUrn, name);
     }
 
-    public getInputProperty(name: string): Property {
+    public getInputProperty(name: string): Property | undefined {
         if (!this._input) {
             return undefined;
         }

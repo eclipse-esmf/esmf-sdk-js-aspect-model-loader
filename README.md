@@ -37,6 +37,9 @@ Are you having trouble with ESMF JS? We want to help!
 npm install @esmf/aspect-model-loader
 ```
 
+The package is published as an ES module only and requires Node.js 24 or newer. CommonJS consumers can load it via
+`require()`.
+
 ## Usage
 
 Instantiating an Aspect the following two methods for loading ttl files(string value of the .ttl files) are provided.
@@ -92,7 +95,8 @@ let specificElement = loader.findByName(options.selectedModelName)
 ### Create bundle
 
 ```
-npm run build
+pnpm install
+pnpm run build
 ```
 
 to build and to create the library

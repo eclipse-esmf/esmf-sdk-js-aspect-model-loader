@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Quad, Quad_Object, Term, Util} from 'n3';
-import {DefaultValue, Value} from '../aspect-meta-model/default-value';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {CharacteristicInstantiatorUtil} from './characteristic/characteristic-instantiator-util';
+import {Literal, Quad, Quad_Object, Term, Util} from 'n3';
+import {DefaultValue, Value} from '../aspect-meta-model/default-value.js';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
+import {CharacteristicInstantiatorUtil} from './characteristic/characteristic-instantiator-util.js';
 
 /**
  * Instantiates samm:Value nodes (SAMM 2.2.0 and later), either referenced by URN or defined inline as blank node.
@@ -44,7 +44,7 @@ export class ValueInstantiator {
         const rdfModel = this.metaModelElementInstantiator.rdfModel;
         const quads = rdfModel.store.getQuads(node, null, null, null);
         const isAnonymous = Util.isBlankNode(node);
-        const value = new DefaultValue(null, null, null, null, isAnonymous);
+        const value = new DefaultValue(null!, null!, null!, null!, isAnonymous);
 
         this.metaModelElementInstantiator.initBaseProperties(quads, value, rdfModel);
 
@@ -57,7 +57,7 @@ export class ValueInstantiator {
     }
 
     private resolveLiteral(quad: Quad, dataType?: string): string | number | boolean {
-        const effectiveDataType = dataType || (quad.object as any).datatypeString;
+        const effectiveDataType = dataType || (quad.object as Literal).datatypeString;
         if (effectiveDataType && effectiveDataType.endsWith('#boolean')) {
             return quad.object.value === 'true';
         }

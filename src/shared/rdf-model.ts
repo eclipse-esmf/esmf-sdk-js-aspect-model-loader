@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,19 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DataFactory, NamedNode, Quad, Store, Util} from 'n3';
-import {RdfModelUtil} from './rdf-model-util';
+import {DataFactory, Literal, NamedNode, Quad, Store, Util} from 'n3';
+import {RdfModelUtil} from './rdf-model-util.js';
 import * as locale from 'locale-codes';
-import {Samm} from '../vocabulary/samm';
-import {SammC} from '../vocabulary/samm-c';
-import {SammE} from '../vocabulary/samm-e';
-import {SammU} from '../vocabulary/samm-u';
-import {XsdDataTypes} from './xsd-datatypes';
-import {KnownVersion, SammVersion} from './known-version';
+import {Samm} from '../vocabulary/samm.js';
+import {SammC} from '../vocabulary/samm-c.js';
+import {SammE} from '../vocabulary/samm-e.js';
+import {SammU} from '../vocabulary/samm-u.js';
+import {XsdDataTypes} from './xsd-datatypes.js';
+import {KnownVersion, SammVersion} from './known-version.js';
 
 export class RdfModel {
-    private prefixes = Array<string>();
-    private metaModelVersion: string;
+    private prefixes: Record<string, string> = {};
+    private metaModelVersion!: string;
 
     public readonly samm: Samm;
     public readonly sammC: SammC;
@@ -31,7 +31,11 @@ export class RdfModel {
     public readonly sammU: SammU;
     public xsdDataTypes: XsdDataTypes;
 
-    constructor(public store: Store, metaModelVersion?: string, aspectModelUrn?: string) {
+    constructor(
+        public store: Store,
+        metaModelVersion?: string,
+        aspectModelUrn?: string
+    ) {
         if (metaModelVersion) {
             this.metaModelVersion = metaModelVersion;
         } else {
@@ -58,10 +62,10 @@ export class RdfModel {
     }
 
     public getNamespaces(): string[] {
-        return Object.keys(this.prefixes).map(key => this.prefixes[key]);
+        return Object.values(this.prefixes);
     }
 
-    public getPrefixes(): string[] {
+    public getPrefixes(): Record<string, string> {
         return this.prefixes;
     }
 
@@ -74,8 +78,8 @@ export class RdfModel {
     }
 
     public getLocale(quad: Quad) {
-        if (quad && quad.object['language']) {
-            return locale.getByTag(quad.object['language']).tag;
+        if (quad && (quad.object as Literal).language) {
+            return locale.getByTag((quad.object as Literal).language)!.tag;
         }
         return null;
     }

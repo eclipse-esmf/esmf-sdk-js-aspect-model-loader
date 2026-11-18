@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,16 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from './base';
-import {Property} from './default-property';
-import {ModelVisitor} from '../visitor/model-visitor';
+import {Base, BaseMetaModelElement} from './base.js';
+import {Property} from './default-property.js';
+import {ModelVisitor} from '../visitor/model-visitor.js';
 
 export interface Event extends BaseMetaModelElement {
     parameters: Array<Property>;
 }
 
 export class DefaultEvent extends Base implements Event {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _parameters: Array<Property> = []) {
+    constructor(
+        metaModelVersion: string,
+        aspectModelUrn: string,
+        name: string,
+        private _parameters: Array<Property> = []
+    ) {
         super(metaModelVersion, aspectModelUrn, name);
     }
 

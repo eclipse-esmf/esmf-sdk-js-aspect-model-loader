@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,42 +11,35 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {CollectionCharacteristicInstantiator} from './collection-characteristic-instantiator';
-import {DefaultSortedSet} from '../../aspect-meta-model/characteristic/default-sorted-set';
+import {CollectionCharacteristicInstantiator} from './collection-characteristic-instantiator.js';
+import {DefaultSortedSet} from '../../aspect-meta-model/characteristic/default-sorted-set.js';
 
 import {NamedNode, Quad, Util} from 'n3';
-import {Characteristic} from '../../aspect-meta-model';
-import {Samm} from '../../vocabulary';
-import {EntityInstantiator} from '../entity-instantiator';
-import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
-import {CharacteristicInstantiatorUtil, MultiLanguageText} from './characteristic-instantiator-util';
+import {Characteristic} from '../../aspect-meta-model/index.js';
+import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance.js';
+import {CharacteristicInstantiatorUtil} from './characteristic-instantiator-util.js';
+import {EntityInstanceResolver} from './entity-instance-resolver.js';
 
 export class SortedSetCharacteristicInstantiator extends CollectionCharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     protected processElement(quads: Array<Quad>): Characteristic {
         const samm = this.metaModelElementInstantiator.samm;
         const sammC = this.metaModelElementInstantiator.sammC;
-        const sortedSet = this.creatCollectionObject();
+        const sortedSet = this.createCollectionObject();
 
         const dataType = quads.find(quad => this.samm.isDataTypeProperty(quad.predicate.value));
 
         quads.forEach(quad => {
             if (samm.isValueProperty(quad.predicate.value) || sammC.isValuesProperty(quad.predicate.value)) {
                 if (Util.isBlankNode(quad.object)) {
-                    sortedSet.values = this.getEnumerationValues(quad, dataType?.object.value);
+                    sortedSet.values = this.getEnumerationValues(quad, dataType?.object.value as string);
                 }
             }
         });
         return sortedSet;
     }
 
-    protected creatCollectionObject(): any {
-        return new DefaultSortedSet(null, null, null, null);
+    protected createCollectionObject(): DefaultSortedSet {
+        return new DefaultSortedSet(null!, null!, null!, null!);
     }
 
     shouldProcess(nameNode: NamedNode): boolean {
@@ -54,62 +47,15 @@ export class SortedSetCharacteristicInstantiator extends CollectionCharacteristi
     }
 
     protected resolveEntityInstance(quad: Quad): DefaultEntityInstance {
-        const entityInstanceQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(quad.object, null, null, null);
-        const entityTypeQuad = entityInstanceQuads.find(
-            entityInstanceQuad => entityInstanceQuad.predicate.value === `${Samm.RDF_URI}#type`
-        );
-
-        if (entityTypeQuad) {
-            const entity = new EntityInstantiator(this.metaModelElementInstantiator).createEntity(
-                this.metaModelElementInstantiator.rdfModel.store.getQuads(entityTypeQuad.object, null, null, null)
-            );
-
-            // determine the description of the value/instance if defined
-            const descriptionQuad = entityInstanceQuads.find(
-                quad =>
-                    quad.predicate.id.toLowerCase().includes('description') &&
-                    entity.properties.find(property => property.isNotInPayload === false && quad.predicate.id)
-            );
-            const descriptions = new Map<string, string>();
-            if (descriptionQuad) {
-                entityInstanceQuads
-                    .filter(quad => quad.predicate.id === descriptionQuad.predicate.id)
-                    .forEach(quad =>
-                        descriptions.set(this.metaModelElementInstantiator.rdfModel.getLocale(quad) || 'en', quad.object.value)
-                    );
-            }
-
-            // create the related instance and attach the metamodel element to it
-            const entityInstance = new DefaultEntityInstance(quad.object.value.split('#')[1], entity, descriptions);
-            entityInstanceQuads.forEach(quad => {
-                const predicateKey = CharacteristicInstantiatorUtil.getPredicateKey(quad);
-                entityInstance[predicateKey] = this.resolveQuadObject(quad);
-            });
-
-            return entityInstance;
-        }
-        throw new Error(`Could resolve Entity instance ${entityTypeQuad.subject.value}`);
-    }
-
-    private resolveQuadObject(quad: Quad): MultiLanguageText | Array<MultiLanguageText> | string {
-        if (Util.isBlankNode(quad.object)) {
-            const resolvedBlankNodes = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
-            return CharacteristicInstantiatorUtil.solveBlankNodeValues([...resolvedBlankNodes]);
-        }
-
-        if (((quad.object as any).datatypeString === Samm.RDF_LANG_STRING) ||
-            ((quad.object as any).datatypeString === Samm.XML_LANG_STRING)) {
-            return CharacteristicInstantiatorUtil.createLanguageObject(quad);
-        }
-
-        return quad.object.value;
+        return new EntityInstanceResolver(this.metaModelElementInstantiator).resolve(quad);
     }
 
     private getEnumerationValues(quad: Quad, dataType: string): Array<string | number | DefaultEntityInstance> {
         const quads = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
         return quads.map(quadValue =>
-            Util.isLiteral(quadValue.object) ? CharacteristicInstantiatorUtil.resolveValues(quadValue, dataType) : this.resolveEntityInstance(quadValue)
+            Util.isLiteral(quadValue.object)
+                ? CharacteristicInstantiatorUtil.resolveValues(quadValue, dataType)
+                : this.resolveEntityInstance(quadValue)
         );
     }
-
 }

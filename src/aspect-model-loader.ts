@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,13 +12,13 @@
  */
 
 import {Observable, Subject} from 'rxjs';
-import {Aspect} from './aspect-meta-model';
-import {CacheStrategy, ModelElementCacheService} from './shared/model-element-cache.service';
-import {RdfLoader} from './shared/rdf-loader';
-import {RdfModel} from './shared/rdf-model';
-import {AspectInstantiator} from './instantiator/aspect-instantiator';
-import {BaseModelLoader} from './base-model-loader';
-import {RdfModelUtil} from './shared/rdf-model-util';
+import {Aspect} from './aspect-meta-model/index.js';
+import {CacheStrategy, ModelElementCacheService} from './shared/model-element-cache.service.js';
+import {RdfLoader} from './shared/rdf-loader.js';
+import {RdfModel} from './shared/rdf-model.js';
+import {AspectInstantiator} from './instantiator/aspect-instantiator.js';
+import {BaseModelLoader} from './base-model-loader.js';
+import {RdfModelUtil} from './shared/rdf-model-util.js';
 
 export class AspectModelLoader extends BaseModelLoader {
     /**
@@ -61,7 +61,7 @@ export class AspectModelLoader extends BaseModelLoader {
                 try {
                     RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);
                     subject.next(Object.freeze(new AspectInstantiator(rdfModel, this.cacheService).createAspect(modelAspectUrn)));
-                } catch (error: any) {
+                } catch (error: unknown) {
                     subject.error(error);
                 } finally {
                     subject.complete();

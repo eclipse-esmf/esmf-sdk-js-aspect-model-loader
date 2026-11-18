@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,20 +14,22 @@
 import {AspectModelLoader, DefaultAspect, Trait} from '../src';
 import {traitAspectModel} from './models/trait-model';
 import {Subscription} from 'rxjs';
-import DoneCallback = jest.DoneCallback;
 
 describe('Traits tests', (): void => {
     let loader: AspectModelLoader;
     let aspect: DefaultAspect;
     let subscription: Subscription;
 
-    beforeEach((done: DoneCallback): void => {
-        loader = new AspectModelLoader();
-        subscription = loader.loadSelfContainedModel(traitAspectModel).subscribe(_aspect => {
-            aspect = <DefaultAspect>_aspect;
-            done();
-        });
-    });
+    beforeEach(
+        (): Promise<void> =>
+            new Promise<void>(done => {
+                loader = new AspectModelLoader();
+                subscription = loader.loadSelfContainedModel(traitAspectModel).subscribe(_aspect => {
+                    aspect = <DefaultAspect>_aspect;
+                    done();
+                });
+            })
+    );
 
     test('should read a trait property', (): void => {
         const trait = aspect.properties[0].characteristic as unknown as Trait;
@@ -36,16 +38,16 @@ describe('Traits tests', (): void => {
 
     test('should read a constraint property', (): void => {
         const trait = aspect.properties[0].characteristic as unknown as Trait;
-        expect(trait.constraints[0].name).toEqual('Constraint1');
+        expect(trait.constraints![0].name).toEqual('Constraint1');
     });
 
     test('should check for the length of the constraints array', (): void => {
         const trait = aspect.properties[0].characteristic as unknown as Trait;
-        expect(trait.constraints.length).toBe(2);
+        expect(trait.constraints!.length).toBe(2);
     });
 
     test('should check the effective data type', (): void => {
-        expect(aspect.properties[1].effectiveDataType.urn).toContain('string');
+        expect(aspect.properties[1].effectiveDataType!.urn).toContain('string');
     });
 
     afterEach((): void => {

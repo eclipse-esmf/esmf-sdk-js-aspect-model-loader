@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Samm} from './samm';
+import {Samm} from './samm.js';
 import {DataFactory, NamedNode} from 'n3';
-import {BoundDefinition} from '../aspect-meta-model/bound-definition';
+import {BoundDefinition} from '../aspect-meta-model/bound-definition.js';
 
 export class SammC {
     private alias = 'samm-c';
@@ -220,14 +220,14 @@ export class SammC {
         return this.LowerBoundDefinitionProperty().value === value;
     }
 
-    getUpperBoundDefinitionList(): Array<any> {
+    getUpperBoundDefinitionList(): Array<{value: string; isDefinedBy: string}> {
         return [
             {value: BoundDefinition.AT_MOST, isDefinedBy: `${this.getNamespace()}${BoundDefinition.AT_MOST}`},
             {value: BoundDefinition.LESS_THAN, isDefinedBy: `${this.getNamespace()}${BoundDefinition.LESS_THAN}`},
         ];
     }
 
-    getLowerBoundDefinitionList(): Array<any> {
+    getLowerBoundDefinitionList(): Array<{value: string; isDefinedBy: string}> {
         return [
             {value: BoundDefinition.AT_LEAST, isDefinedBy: `${this.getNamespace()}${BoundDefinition.AT_LEAST}`},
             {value: BoundDefinition.GREATER_THAN, isDefinedBy: `${this.getNamespace()}${BoundDefinition.GREATER_THAN}`},

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,16 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Type} from '../type';
-import {Base, BaseMetaModelElement} from '../base';
-import {ModelVisitor} from '../../visitor/model-visitor';
+import {Type} from '../type.js';
+import {Base, BaseMetaModelElement} from '../base.js';
+import {ModelVisitor} from '../../visitor/model-visitor.js';
 
 export interface Characteristic extends BaseMetaModelElement {
     dataType?: Type;
 }
 
 export class DefaultCharacteristic extends Base implements Characteristic {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _dataType?: Type) {
+    constructor(
+        metaModelVersion: string,
+        aspectModelUrn: string,
+        name: string,
+        private _dataType?: Type
+    ) {
         super(metaModelVersion, aspectModelUrn, name);
     }
 
@@ -40,16 +45,17 @@ export class DefaultCharacteristic extends Base implements Characteristic {
      * Get the effective type defined by possible nested characteristic definitions.
      */
     public static getEffectiveDataType(characteristic: Characteristic): Type | undefined {
-        const characteristicAny: any = characteristic;
-        if (characteristicAny.constructor.name === 'DefaultTrait') {
-            return characteristicAny?.baseCharacteristic?.dataType;
+        if (characteristic instanceof DefaultCharacteristic) {
+            return characteristic.resolveEffectiveDataType();
         }
-        if (characteristicAny.constructor.name === 'DefaultCollection' && characteristicAny.elementCharacteristic) {
-            if (characteristicAny.elementCharacteristic.constructor.name === 'DefaultTrait') {
-                return characteristicAny.elementCharacteristic.baseCharacteristic?.dataType;
-            }
-            return characteristicAny.elementCharacteristic.dataType || null;
-        }
-        return characteristicAny ? characteristicAny.dataType : null;
+        return characteristic ? characteristic.dataType : null!;
+    }
+
+    /**
+     * Resolves the effective data type of this characteristic. Overridden by characteristics
+     * which wrap other characteristics, e.g. Trait or Collection.
+     */
+    protected resolveEffectiveDataType(): Type | undefined {
+        return this.dataType;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,21 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from './characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {CharacteristicInstantiator} from './characteristic-instantiator.js';
 import {NamedNode, Quad, Util} from 'n3';
-import {Characteristic} from '../../aspect-meta-model';
-import {DefaultStructuredValue} from '../../aspect-meta-model/characteristic/default-structured-value';
-import {PropertyInstantiator} from '../property-instantiator';
+import {Characteristic} from '../../aspect-meta-model/index.js';
+import {DefaultStructuredValue} from '../../aspect-meta-model/characteristic/default-structured-value.js';
+import {PropertyInstantiator} from '../property-instantiator.js';
 
 export class StructuredValueCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     protected processElement(quads: Array<Quad>): Characteristic {
         const sammC = this.metaModelElementInstantiator.sammC;
-        const structuredValueCharacteristic = new DefaultStructuredValue(null, null, null, null, null, null);
+        const structuredValueCharacteristic = new DefaultStructuredValue(null!, null!, null!, null!, null!, null!);
         const property = new PropertyInstantiator(this.metaModelElementInstantiator);
         quads.forEach(quad => {
             if (sammC.isDeconstructionRuleProperty(quad.predicate.value)) {

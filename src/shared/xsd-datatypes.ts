@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -110,11 +110,11 @@ export class XsdDataTypes {
         xsdDataTypes['curie'].isDefinedBy = (<string>xsdDataTypes['curie'].isDefinedBy).replace('MODEL_VERSION', modelVersion);
     }
 
-    getDataTypes(): any {
+    getDataTypes(): Record<string, {isDefinedBy: string; description: string}> {
         return xsdDataTypes;
     }
 
-    getDataType(key: string): any {
-        return xsdDataTypes[key];
+    getDataType(key: string): {isDefinedBy: string; description: string} {
+        return xsdDataTypes[key as keyof typeof xsdDataTypes];
     }
 }

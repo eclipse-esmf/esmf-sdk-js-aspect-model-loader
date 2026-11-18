@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity';
-import {RdfModel} from './rdf-model';
-import {Samm} from '../vocabulary/samm';
-import {SammC} from '../vocabulary/samm-c';
-import {SammE} from '../vocabulary/samm-e';
-import {SammU} from '../vocabulary/samm-u';
-import {KnownVersion} from './known-version';
+import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity.js';
+import {RdfModel} from './rdf-model.js';
+import {Samm} from '../vocabulary/samm.js';
+import {SammC} from '../vocabulary/samm-c.js';
+import {SammE} from '../vocabulary/samm-e.js';
+import {SammU} from '../vocabulary/samm-u.js';
+import {KnownVersion} from './known-version.js';
 
 export class RdfModelUtil {
     static readonly defaultAspectModelAlias = '';
@@ -60,32 +60,32 @@ export class RdfModelUtil {
     }
 
     static isSammDefinition(urn: string, samm: Samm): boolean {
-        return urn && urn.includes(samm.getNamespace());
+        return !!urn && urn.includes(samm.getNamespace());
     }
 
     static isSammCDefinition(urn: string, sammC: SammC): boolean {
-        return urn && urn.includes(sammC.getNamespace());
+        return !!urn && urn.includes(sammC.getNamespace());
     }
 
     static isSammUDefinition(urn: string, sammU: SammU): boolean {
-        return urn && urn.includes(sammU.getNamespace());
+        return !!urn && urn.includes(sammU.getNamespace());
     }
 
     static isCharacteristicInstance(urn: string, sammC: SammC): boolean {
-        return urn && urn.includes(sammC.getNamespace());
+        return !!urn && urn.includes(sammC.getNamespace());
     }
 
     static isUnitInstance(urn: string, sammU: SammU): boolean {
-        return urn && urn.includes(sammU.getNamespace());
+        return !!urn && urn.includes(sammU.getNamespace());
     }
 
-    static isAspectModelDefinition(urn: string, rdfModel: RdfModel) {
-        return urn && urn.includes(rdfModel.getAspectModelUrn());
+    static isAspectModelDefinition(urn: string, rdfModel: RdfModel): boolean {
+        return !!urn && urn.includes(rdfModel.getAspectModelUrn());
     }
 
-    static getValueWithoutUrnDefinition(value: any): string {
+    static getValueWithoutUrnDefinition(value: unknown): string {
         if (value && (`${value}`.startsWith('urn:samm') || `${value}`.startsWith(Samm.XSD_URI) || `${value}`.startsWith(Samm.RDF_URI))) {
-            return `${value}`.split('#').pop();
+            return `${value}`.split('#').pop()!;
         }
         return value === null ? '' : `${value}`;
     }
@@ -103,7 +103,7 @@ export class RdfModelUtil {
     }
 
     static throwErrorIfUnsupportedVersion(rdfModel: RdfModel): void {
-        if (rdfModel && KnownVersion.isVersionSupported(rdfModel.getMetaModelVersion()) === false) {
+        if (rdfModel && KnownVersion.isVersionSupported(rdfModel.getMetaModelVersion()!) === false) {
             throw Error(
                 `SAMM ${rdfModel.getMetaModelVersion()} is not supported. Supported versions are: ${KnownVersion.getSupportedVersions().join()}`
             );

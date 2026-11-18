@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {RdfModel} from './rdf-model';
-import {Aspect} from '../aspect-meta-model';
+import {RdfModel} from './rdf-model.js';
+import {Aspect} from '../aspect-meta-model/index.js';
 
 export interface LoadedAspectModel {
     rdfModel: RdfModel;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,44 +11,44 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './base';
-export * from './default-aspect';
-export * from './characteristic/default-characteristic';
-export * from './characteristic/default-code';
-export * from './characteristic/default-collection';
-export * from './constraint/default-constraint';
-export * from './characteristic/default-duration';
-export * from './characteristic/default-either';
-export * from './constraint/default-encoding-constraint';
-export * from './default-entity';
-export * from './characteristic/default-enumeration';
-export * from './constraint/default-fixed-point-constraint';
-export * from './constraint/default-language-constraint';
-export * from './constraint/default-length-constraint';
-export * from './characteristic/default-list';
-export * from './constraint/default-locale-constraint';
-export * from './characteristic/default-measurement';
-export * from './default-operation';
-export * from './default-property';
-export * from './default-event';
-export * from './characteristic/default-quantifiable';
-export * from './default-quantity-kind';
-export * from './constraint/default-range-constraint';
-export * from './constraint/default-regular-expression-constraint';
-export * from './characteristic/default-scalar';
-export * from './characteristic/default-set';
-export * from './characteristic/default-single-entity';
-export * from './characteristic/default-sorted-set';
-export * from './characteristic/default-state';
-export * from './characteristic/default-structured-value';
-export * from './characteristic/default-timeseries';
-export * from './characteristic/default-trait';
-export * from './default-unit';
-export * from './default-value';
-export * from './default-entity-instance';
-export * from './has-properties';
-export * from './is-described';
-export * from './is-instance';
-export * from './is-named';
-export * from './is-versioned';
-export * from './type';
+export * from './base.js';
+export * from './default-aspect.js';
+export * from './characteristic/default-characteristic.js';
+export * from './characteristic/default-code.js';
+export * from './characteristic/default-collection.js';
+export * from './constraint/default-constraint.js';
+export * from './characteristic/default-duration.js';
+export * from './characteristic/default-either.js';
+export * from './constraint/default-encoding-constraint.js';
+export * from './default-entity.js';
+export * from './characteristic/default-enumeration.js';
+export * from './constraint/default-fixed-point-constraint.js';
+export * from './constraint/default-language-constraint.js';
+export * from './constraint/default-length-constraint.js';
+export * from './characteristic/default-list.js';
+export * from './constraint/default-locale-constraint.js';
+export * from './characteristic/default-measurement.js';
+export * from './default-operation.js';
+export * from './default-property.js';
+export * from './default-event.js';
+export * from './characteristic/default-quantifiable.js';
+export * from './default-quantity-kind.js';
+export * from './constraint/default-range-constraint.js';
+export * from './constraint/default-regular-expression-constraint.js';
+export * from './characteristic/default-scalar.js';
+export * from './characteristic/default-set.js';
+export * from './characteristic/default-single-entity.js';
+export * from './characteristic/default-sorted-set.js';
+export * from './characteristic/default-state.js';
+export * from './characteristic/default-structured-value.js';
+export * from './characteristic/default-timeseries.js';
+export * from './characteristic/default-trait.js';
+export * from './default-unit.js';
+export * from './default-value.js';
+export * from './default-entity-instance.js';
+export * from './has-properties.js';
+export * from './is-described.js';
+export * from './is-instance.js';
+export * from './is-named.js';
+export * from './is-versioned.js';
+export * from './type.js';

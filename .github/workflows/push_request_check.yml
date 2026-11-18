@@ -12,34 +12,29 @@ permissions: {}
 
 jobs:
   build:
-    name: Check if passes all requirements
+    name: Check if passes all requirements (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [ '24', '26' ]
 
     steps:
       - name: Checkout project
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 #v6.0.1
 
-      - name: Cache node modules
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb #v5.0.1
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
       - name: Setup NodeJs
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # 6.1.0
         with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build, Lint, Format and test
-        run: npm run all
+        run: pnpm run all

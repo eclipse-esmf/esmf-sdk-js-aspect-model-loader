@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement, DefaultPropertyInstanceDefinition} from './aspect-meta-model';
-import {CacheStrategy, FilterPredicate} from './shared/model-element-cache.service';
+import {Base, BaseMetaModelElement, DefaultPropertyInstanceDefinition} from './aspect-meta-model/index.js';
+import {CacheStrategy, FilterPredicate} from './shared/model-element-cache.service.js';
 
 export abstract class BaseModelLoader {
     /**
@@ -28,7 +28,7 @@ export abstract class BaseModelLoader {
      *
      * @param modelElementUrn urn of the model element
      */
-    public findByUrn(modelElementUrn: string): BaseMetaModelElement {
+    public findByUrn(modelElementUrn: string): BaseMetaModelElement | undefined {
         return this.cacheService.get(modelElementUrn);
     }
 

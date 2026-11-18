@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Type} from '../type';
+import {Type} from '../type.js';
 
 export class DefaultScalar implements Type {
     constructor(private _urn: string) {}
@@ -29,7 +29,7 @@ export class DefaultScalar implements Type {
     }
 
     public get shortUrn(): string {
-        return this.urn.split('#').pop();
+        return this.urn.split('#').pop()!;
     }
 
     public get isAbstract(): boolean {

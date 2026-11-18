@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Type} from '../type';
-import {DefaultEnumeration, Enumeration} from './default-enumeration';
-import {DefaultEntityInstance} from '../default-entity-instance';
-import {Value} from '../default-value';
+import {Type} from '../type.js';
+import {DefaultEnumeration, Enumeration} from './default-enumeration.js';
+import {DefaultEntityInstance} from '../default-entity-instance.js';
+import {Value} from '../default-value.js';
 
 export interface State extends Enumeration {
     defaultValue: DefaultEntityInstance | Value | string | number;

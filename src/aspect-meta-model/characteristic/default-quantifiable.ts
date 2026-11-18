@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,16 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Unit} from '../default-unit';
-import {Characteristic, DefaultCharacteristic} from './default-characteristic';
-import {Type} from '../type';
+import {Unit} from '../default-unit.js';
+import {Characteristic, DefaultCharacteristic} from './default-characteristic.js';
+import {Type} from '../type.js';
 
 export interface Quantifiable extends Characteristic {
     unit?: Unit;
 }
 
 export class DefaultQuantifiable extends DefaultCharacteristic implements Quantifiable {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, dataType?: Type, public unit?: Unit) {
+    constructor(
+        metaModelVersion: string,
+        aspectModelUrn: string,
+        name: string,
+        dataType?: Type,
+        public unit?: Unit
+    ) {
         super(metaModelVersion, aspectModelUrn, name, dataType);
     }
 }

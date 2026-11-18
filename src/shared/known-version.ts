@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,11 +14,13 @@
 /**
  * List of all known versions
  */
-export enum SammVersion {
-    SAMM_2_0_0 = '2.0.0',
-    SAMM_2_1_0 = '2.1.0',
-    SAMM_2_2_0 = '2.2.0',
-}
+export const SammVersion = {
+    SAMM_2_0_0: '2.0.0',
+    SAMM_2_1_0: '2.1.0',
+    SAMM_2_2_0: '2.2.0',
+} as const;
+
+export type SammVersion = (typeof SammVersion)[keyof typeof SammVersion];
 
 export class KnownVersion {
     /**
@@ -28,15 +30,7 @@ export class KnownVersion {
      * @return Version or undefined if version string can be mapped
      */
     public static fromVersionString(version: string): SammVersion | undefined {
-        if (SammVersion.SAMM_2_0_0 === version) {
-            return SammVersion.SAMM_2_0_0;
-        } else if (SammVersion.SAMM_2_1_0 === version) {
-            return SammVersion.SAMM_2_1_0;
-        } else if (SammVersion.SAMM_2_2_0 === version) {
-            return SammVersion.SAMM_2_2_0;
-        } else {
-            return undefined;
-        }
+        return this.getSupportedVersions().find(supportedVersion => supportedVersion === version);
     }
 
     /**
@@ -46,7 +40,7 @@ export class KnownVersion {
      * @return true if the version is supported or false if not
      */
     public static isVersionSupported(version: SammVersion): boolean {
-        return this.getSupportedVersions().find(supportedVersion => supportedVersion === version) !== undefined;
+        return this.getSupportedVersions().includes(version);
     }
 
     /**
@@ -55,6 +49,6 @@ export class KnownVersion {
      * @return Array of supported versions
      */
     public static getSupportedVersions(): Array<SammVersion> {
-        return [SammVersion.SAMM_2_0_0, SammVersion.SAMM_2_1_0, SammVersion.SAMM_2_2_0];
+        return Object.values(SammVersion);
     }
 }

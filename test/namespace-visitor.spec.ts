@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,25 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import { BaseMetaModelElement, DefaultAspect, DefaultCharacteristic, DefaultProperty, NamespaceLoader } from '../src';
-import { Subscription } from 'rxjs';
-import { characteristicDifferentNamespace } from './models/characteristics';
-import { movementAspectModelWithExternalReference } from './models/movement-model';
-import { DefaultNamespaceVisitor } from '../src/visitor/default-namespace-visitor';
-import DoneCallback = jest.DoneCallback;
+import {BaseMetaModelElement, DefaultAspect, DefaultCharacteristic, DefaultProperty, NamespaceLoader} from '../src';
+import {Subscription} from 'rxjs';
+import {characteristicDifferentNamespace} from './models/characteristics';
+import {movementAspectModelWithExternalReference} from './models/movement-model';
+import {DefaultNamespaceVisitor} from '../src/visitor/default-namespace-visitor';
 
 describe('Namespace visitor tests', (): void => {
     let loader: NamespaceLoader;
     let subscription: Subscription;
     let namespaces: Map<string, Array<BaseMetaModelElement>>;
 
-    beforeEach((done: DoneCallback): void => {
-        loader = new NamespaceLoader();
-        subscription = loader.load(characteristicDifferentNamespace, movementAspectModelWithExternalReference).subscribe(_namespaces => {
-            namespaces = _namespaces;
-            done();
-        });
-    });
+    beforeEach(
+        (): Promise<void> =>
+            new Promise<void>(done => {
+                loader = new NamespaceLoader();
+                subscription = loader
+                    .load(characteristicDifferentNamespace, movementAspectModelWithExternalReference)
+                    .subscribe(_namespaces => {
+                        namespaces = _namespaces;
+                        done();
+                    });
+            })
+    );
 
     test('should visit the namespaces successfully', (): void => {
         const visitor = new CountElementVisitor();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,9 +12,9 @@
  */
 
 import {NamedNode, Quad, Util} from 'n3';
-import {BaseMetaModelElement, DefaultConstraint} from '../aspect-meta-model';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {Samm, SammC} from '../vocabulary';
+import {BaseMetaModelElement, DefaultConstraint} from '../aspect-meta-model/index.js';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
+import {Samm, SammC} from '../vocabulary/index.js';
 
 export class BaseConstraintCharacteristicInstantiator {
     public samm: Samm;
@@ -35,8 +35,8 @@ export class BaseConstraintCharacteristicInstantiator {
             ? this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value).shift()
             : propertyQuads.shift();
 
-        if (!this.shouldProcess(<NamedNode>elementQuad.object)) {
-            return this.nextProcessor !== null ? this.nextProcessor.create(quad) : null;
+        if (!this.shouldProcess(<NamedNode>elementQuad!.object)) {
+            return this.nextProcessor ? this.nextProcessor.create(quad) : null!;
         }
 
         // post init all common properties of the metamodel element
@@ -53,15 +53,15 @@ export class BaseConstraintCharacteristicInstantiator {
      * This method must be overridden from the respective constraint or characteristic instantiator implementation
      * in order to initialize the specific properties.
      */
-    protected processElement(quads: Array<Quad>): BaseMetaModelElement {
-        return null;
+    protected processElement(_quads: Array<Quad>): BaseMetaModelElement {
+        return null!;
     }
 
     /**
      * This method must be overridden from the respective constraint or characteristic instantiator implementation
      * in order to get called.
      */
-    shouldProcess(namedNode: NamedNode): boolean {
+    shouldProcess(_namedNode: NamedNode): boolean {
         return true;
     }
 }

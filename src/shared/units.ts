@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammU} from '../vocabulary';
+import {SammU} from '../vocabulary/index.js';
 
 export class Units {
     constructor(private sammU: SammU) {}
 
     getUnit(name: string) {
-        return units.units[name.replace(this.sammU.getNamespace(), '')];
+        return units.units[name.replace(this.sammU.getNamespace(), '') as keyof typeof units.units];
     }
 
     getQuantityKind(name: string) {
-        return units.quantityKinds[name.replace(this.sammU.getNamespace(), '')];
+        return units.quantityKinds[name.replace(this.sammU.getNamespace(), '') as keyof typeof units.quantityKinds];
     }
 
     getSupportedQuantityKindsNames(): Array<string> {

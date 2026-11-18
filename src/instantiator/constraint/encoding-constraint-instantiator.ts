@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,19 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultEncodingConstraint} from '../../aspect-meta-model';
-import {ConstraintInstantiator} from './constraint-instantiator';
+import {Characteristic, DefaultEncodingConstraint} from '../../aspect-meta-model/index.js';
+import {ConstraintInstantiator} from './constraint-instantiator.js';
 
 export class EncodingConstraintInstantiator extends ConstraintInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     protected processElement(quads: Array<Quad>): Characteristic {
         const samm = this.metaModelElementInstantiator.samm;
-        const encodingConstraint = new DefaultEncodingConstraint(null, null, null, null);
+        const encodingConstraint = new DefaultEncodingConstraint(null!, null!, null!, null!);
 
         quads.forEach(quad => {
             if (samm.isValueProperty(quad.predicate.value)) {

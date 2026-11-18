@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultCharacteristic} from './default-characteristic';
-import {Type} from '../type';
+import {DefaultCharacteristic} from './default-characteristic.js';
+import {Type} from '../type.js';
 
 export class DefaultCode extends DefaultCharacteristic {
     constructor(metaModelVersion: string, aspectModelUrn: string, name: string, dataType?: Type) {

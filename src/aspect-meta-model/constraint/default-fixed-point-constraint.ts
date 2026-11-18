@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Constraint, DefaultConstraint} from './default-constraint';
+import {Constraint, DefaultConstraint} from './default-constraint.js';
 
 export interface FixedPointConstraint extends Constraint {
     scale: number;
@@ -19,7 +19,13 @@ export interface FixedPointConstraint extends Constraint {
 }
 
 export class DefaultFixedPointConstraint extends DefaultConstraint implements FixedPointConstraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _scale: number, private _integer: number) {
+    constructor(
+        metaModelVersion: string,
+        aspectModelUrn: string,
+        name: string,
+        private _scale: number,
+        private _integer: number
+    ) {
         super(metaModelVersion, aspectModelUrn, name);
     }
 

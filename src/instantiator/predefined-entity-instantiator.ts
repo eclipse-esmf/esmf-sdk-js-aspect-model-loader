@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity';
-import {DefaultProperty} from '../aspect-meta-model/default-property';
-import {PredefinedCharacteristicInstantiator} from './characteristic/predefined-characteristic-instantiator';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
+import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity.js';
+import {DefaultProperty} from '../aspect-meta-model/default-property.js';
+import {PredefinedCharacteristicInstantiator} from './characteristic/predefined-characteristic-instantiator.js';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
 
 export class PredefinedEntityInstantiator {
-    private entityInstanceList = [];
+    private entityInstanceList: Record<string, () => Entity> = {};
 
     constructor(
         private metaModelElementInstantiator: MetaModelElementInstantiator,
@@ -44,7 +44,7 @@ export class PredefinedEntityInstantiator {
             this.metaModelElementInstantiator.samm.version,
             this.metaModelElementInstantiator.sammE.getAspectModelUrn('value'),
             'value',
-            null
+            null!
         );
         value.isAbstract = true;
         value.addPreferredName('en', 'Value');
@@ -91,7 +91,7 @@ export class PredefinedEntityInstantiator {
             this.metaModelElementInstantiator.samm.version,
             this.metaModelElementInstantiator.sammE.getAspectModelUrn('value'),
             'value',
-            null
+            null!
         );
         value.isAbstract = true;
         value.addPreferredName('en', 'Value');
@@ -116,7 +116,7 @@ export class PredefinedEntityInstantiator {
             this.metaModelElementInstantiator.samm.version,
             this.metaModelElementInstantiator.sammE.getAspectModelUrn('x'),
             'x',
-            null
+            null!
         );
         x.isAbstract = true;
         x.addPreferredName('en', 'X');
@@ -126,7 +126,7 @@ export class PredefinedEntityInstantiator {
             this.metaModelElementInstantiator.samm.version,
             this.metaModelElementInstantiator.sammE.getAspectModelUrn('y'),
             'y',
-            null
+            null!
         );
         y.isAbstract = true;
         y.addPreferredName('en', 'Y');
@@ -136,7 +136,7 @@ export class PredefinedEntityInstantiator {
             this.metaModelElementInstantiator.samm.version,
             this.metaModelElementInstantiator.sammE.getAspectModelUrn('z'),
             'z',
-            null
+            null!
         );
         z.isAbstract = true;
         z.addPreferredName('en', 'Z');
@@ -186,7 +186,7 @@ export class PredefinedEntityInstantiator {
             const entity = createFunction();
             return <Entity>this.metaModelElementInstantiator.cacheService.resolveInstance(entity);
         }
-        return null;
+        return null!;
     }
 
     getSupportedEntityNames(): Array<string> {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Aspect, Characteristic, Constraint, Entity, Event, Operation, Property, QuantityKind, Unit, Value} from '../aspect-meta-model';
+import {
+    Aspect,
+    Characteristic,
+    Constraint,
+    Entity,
+    Event,
+    Operation,
+    Property,
+    QuantityKind,
+    Unit,
+    Value,
+} from '../aspect-meta-model/index.js';
 
 /**
  * Visitor interface to traverse a loaded model and apply operations to the

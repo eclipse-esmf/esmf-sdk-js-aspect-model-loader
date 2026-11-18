@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from './base';
-import {HasProperties} from './has-properties';
-import {Property} from './default-property';
-import {Type} from './type';
-import {ModelVisitor} from '../visitor/model-visitor';
+import {Base, BaseMetaModelElement} from './base.js';
+import {HasProperties} from './has-properties.js';
+import {Property} from './default-property.js';
+import {Type} from './type.js';
+import {ModelVisitor} from '../visitor/model-visitor.js';
 
 export interface Entity extends BaseMetaModelElement, HasProperties, Type {
     /**
@@ -36,7 +36,7 @@ export class DefaultEntity extends Base implements Entity {
         super(metaModelVersion, aspectModelUrn, name);
     }
 
-    public getProperty(name: string): Property {
+    public getProperty(name: string): Property | undefined {
         if (!this._properties) {
             return undefined;
         }
@@ -52,7 +52,7 @@ export class DefaultEntity extends Base implements Entity {
     }
 
     public get properties(): Array<Property> {
-        const propertyUrns = [];
+        const propertyUrns: string[] = [];
         return [...this._properties, ...this.resolveAllExtendedProperties(this, [])].filter(property => {
             if (!propertyUrns.includes(property.aspectModelUrn)) {
                 propertyUrns.push(property.aspectModelUrn);
@@ -63,9 +63,10 @@ export class DefaultEntity extends Base implements Entity {
     }
 
     private resolveAllExtendedProperties(entity: Entity, properties: Array<Property>): Array<Property> {
-        if (entity && (entity as DefaultEntity).extends) {
-            properties.push(...((entity as DefaultEntity).extends.properties || []));
-            this.resolveAllExtendedProperties((entity as DefaultEntity).extends, properties);
+        const extendedEntity = entity ? (entity as DefaultEntity).extends : undefined;
+        if (extendedEntity) {
+            properties.push(...(extendedEntity.properties || []));
+            this.resolveAllExtendedProperties(extendedEntity, properties);
         }
 
         return properties;
@@ -112,7 +113,7 @@ export class DefaultEntity extends Base implements Entity {
     }
 
     public get shortUrn(): string {
-        return this.urn.split('#').pop();
+        return this.urn.split('#').pop()!;
     }
 
     public get extends(): Entity | undefined {
@@ -120,8 +121,8 @@ export class DefaultEntity extends Base implements Entity {
     }
 
     public set extends(entity: Entity | undefined) {
-        if (!entity.isAbstract) {
-            throw Error(`Entity ${entity.urn} is not abstract.`);
+        if (!entity!.isAbstract) {
+            throw Error(`Entity ${entity!.urn} is not abstract.`);
         }
         this._extends = entity;
     }

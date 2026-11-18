@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,19 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Characteristic, DefaultCharacteristic} from './characteristic/default-characteristic';
-import {Base, BaseMetaModelElement} from './base';
-import {Type} from './type';
-import {ModelVisitor} from '../visitor/model-visitor';
-import {DefaultTrait} from './characteristic/default-trait';
-import {Constraint} from './constraint/default-constraint';
+import {Characteristic, DefaultCharacteristic} from './characteristic/default-characteristic.js';
+import {Base, BaseMetaModelElement} from './base.js';
+import {Type} from './type.js';
+import {ModelVisitor} from '../visitor/model-visitor.js';
+import {DefaultTrait} from './characteristic/default-trait.js';
+import {Constraint} from './constraint/default-constraint.js';
+import type {Value} from './default-value.js';
 
 export interface Property extends BaseMetaModelElement {
     characteristic: Characteristic;
     isAbstract: boolean;
     isNotInPayload: boolean;
     isOptional: boolean;
-    exampleValue?: any;
+    exampleValue?: Value | string;
     payloadName?: string;
     effectiveDataType: Type | undefined;
     extends?: Property | undefined;
@@ -38,7 +39,7 @@ export class DefaultProperty extends Base implements Property {
         private _characteristic: Characteristic,
         private _isNotInPayload: boolean = false,
         private _isOptional: boolean = false,
-        private _exampleValue?: any,
+        private _exampleValue?: Value | string,
         private _payloadName?: string,
         private _isAbstract: boolean = false,
         private _extends?: Property
@@ -46,11 +47,11 @@ export class DefaultProperty extends Base implements Property {
         super(metaModelVersion, aspectModelUrn, name);
     }
 
-    get extends(): Property {
+    get extends(): Property | undefined {
         return this._extends;
     }
 
-    set extends(value: Property) {
+    set extends(value: Property | undefined) {
         this._extends = value;
     }
 
@@ -86,11 +87,11 @@ export class DefaultProperty extends Base implements Property {
         return this._isOptional;
     }
 
-    public set exampleValue(value: any) {
+    public set exampleValue(value: Value | string | undefined) {
         this._exampleValue = value;
     }
 
-    public get exampleValue(): any {
+    public get exampleValue(): Value | string | undefined {
         return this._exampleValue;
     }
 
@@ -112,7 +113,7 @@ export class DefaultProperty extends Base implements Property {
 
     public get constraints(): Array<Constraint> {
         if (this.characteristic && this.characteristic instanceof DefaultTrait) {
-            return this.characteristic.constraints;
+            return this.characteristic.constraints!;
         }
         return [];
     }
@@ -140,7 +141,7 @@ export class DefaultPropertyInstanceDefinition implements Property {
         private _extends?: Property
     ) {}
 
-    get extends(): Property {
+    get extends(): Property | undefined {
         return this._extends;
     }
 
@@ -151,7 +152,7 @@ export class DefaultPropertyInstanceDefinition implements Property {
         return this._wrappedProperty.aspectModelUrn.split('#')[0] + '#';
     }
 
-    set extends(value: Property) {
+    set extends(value: Property | undefined) {
         this._extends = value;
     }
 
@@ -181,7 +182,7 @@ export class DefaultPropertyInstanceDefinition implements Property {
 
     public get characteristic(): Characteristic {
         if (this.extends && this.extends.isAbstract) {
-            return this._characteristic;
+            return this._characteristic!;
         }
         return this._wrappedProperty.characteristic;
     }
@@ -202,11 +203,11 @@ export class DefaultPropertyInstanceDefinition implements Property {
         return this._isOptional || this._wrappedProperty.isOptional;
     }
 
-    public set exampleValue(value: any) {
+    public set exampleValue(value: Value | string | undefined) {
         this._wrappedProperty.exampleValue = value;
     }
 
-    public get exampleValue(): any {
+    public get exampleValue(): Value | string | undefined {
         return this._wrappedProperty.exampleValue;
     }
 

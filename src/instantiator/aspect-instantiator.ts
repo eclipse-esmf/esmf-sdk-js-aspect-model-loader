@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,21 +14,25 @@
 import {
     Aspect,
     BaseMetaModelElement,
+    Characteristic,
     DefaultEvent,
     DefaultOperation,
     DefaultPropertyInstanceDefinition,
     Property,
-} from '../aspect-meta-model';
-import {DefaultAspect} from '../aspect-meta-model/default-aspect';
-import {RdfModel} from '../shared/rdf-model';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
+} from '../aspect-meta-model/index.js';
+import {DefaultAspect} from '../aspect-meta-model/default-aspect.js';
+import {RdfModel} from '../shared/rdf-model.js';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
 import {NamedNode, Quad} from 'n3';
-import {CacheStrategy} from '../shared/model-element-cache.service';
+import {CacheStrategy} from '../shared/model-element-cache.service.js';
 
 export class AspectInstantiator {
     private readonly recursiveModelElements: Map<string, Array<BaseMetaModelElement>>;
 
-    constructor(private rdfModel: RdfModel, private cacheService: CacheStrategy) {
+    constructor(
+        private rdfModel: RdfModel,
+        private cacheService: CacheStrategy
+    ) {
         this.recursiveModelElements = new Map<string, Array<BaseMetaModelElement>>();
     }
 
@@ -43,7 +47,7 @@ export class AspectInstantiator {
         const properties = metaModelElementInstantiator.getProperties(aspectNode);
         const operations = metaModelElementInstantiator.getOperations(aspectNode);
         const events = metaModelElementInstantiator.getEvents(aspectNode);
-        const aspect = new DefaultAspect(null, null, null, properties, operations, events);
+        const aspect = new DefaultAspect(null!, null!, null!, properties, operations, events);
 
         properties.forEach(property => (property as DefaultPropertyInstanceDefinition).addParent(aspect));
         operations.forEach(operation => (operation as DefaultOperation).addParent(aspect));
@@ -51,10 +55,10 @@ export class AspectInstantiator {
 
         metaModelElementInstantiator.initBaseProperties(this.rdfModel.findAnyProperty(aspectNode), aspect, this.rdfModel);
 
-        this.recursiveModelElements.forEach((recursiveProperties: Array<Property>, key: string) => {
-            recursiveProperties.forEach((property: Property) => {
+        this.recursiveModelElements.forEach((recursiveProperties: Array<BaseMetaModelElement>, key: string) => {
+            recursiveProperties.forEach(property => {
                 if (property) {
-                    property.characteristic = this.cacheService.get(key);
+                    (property as Property).characteristic = this.cacheService.get(key) as Characteristic;
                 }
             });
         });

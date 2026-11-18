@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -10,11 +10,11 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Type} from '../type';
-import {Characteristic, DefaultCharacteristic} from './default-characteristic';
-import {DefaultEntityInstance} from '../default-entity-instance';
-import {DefaultValue, Value} from '../default-value';
-import {DefaultEntity} from '../default-entity';
+import {Type} from '../type.js';
+import {Characteristic, DefaultCharacteristic} from './default-characteristic.js';
+import {DefaultEntityInstance} from '../default-entity-instance.js';
+import {DefaultValue, Value} from '../default-value.js';
+import {DefaultEntity} from '../default-entity.js';
 
 export interface Enumeration extends Characteristic {
     values: Array<DefaultEntityInstance | Value | string | number>;
@@ -54,8 +54,8 @@ export class DefaultEnumeration extends DefaultCharacteristic implements Enumera
         if (this.dataType && this.dataType.isComplex) {
             const propertyValue = (<DefaultEntity>this.dataType).properties.find(property => property.isNotInPayload === false);
 
-            return this.values.findIndex((valueEntry: DefaultEntityInstance) => {
-                return valueEntry[propertyValue.name] === value;
+            return this.values.findIndex(valueEntry => {
+                return (valueEntry as DefaultEntityInstance)[propertyValue!.name] === value;
             });
         } else {
             return this.values.findIndex(valueEntry =>

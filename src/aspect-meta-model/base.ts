@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IsNamed} from './is-named';
-import {IsVersioned} from './is-versioned';
-import {IsDescribed} from './is-described';
-import {ModelVisitor} from '../visitor/model-visitor';
+import {IsNamed} from './is-named.js';
+import {IsVersioned} from './is-versioned.js';
+import {IsDescribed} from './is-described.js';
+import {ModelVisitor} from '../visitor/model-visitor.js';
 
 export interface BaseMetaModelElement extends IsNamed, IsVersioned, IsDescribed {
     accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T;
@@ -23,8 +23,8 @@ export interface BaseMetaModelElement extends IsNamed, IsVersioned, IsDescribed 
 }
 
 export abstract class Base implements BaseMetaModelElement {
-    private _preferredNames: Map<string, string> = new Map();
-    private _descriptions: Map<string, string> = new Map();
+    private _preferredNames: Map<string, string | undefined> = new Map();
+    private _descriptions: Map<string, string | undefined> = new Map();
     private _see: Array<string> = [];
 
     private _parents: Array<BaseMetaModelElement> = [];
@@ -66,7 +66,7 @@ export abstract class Base implements BaseMetaModelElement {
         if (value) {
             this.name = value.split('#')[1];
         } else {
-            this.name = null;
+            this.name = null!;
         }
         this._aspectModelUrn = value;
     }

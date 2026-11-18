@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,20 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator.js';
 import {NamedNode, Quad} from 'n3';
-import {Characteristic} from '../../aspect-meta-model';
-import {DefaultSingleEntity} from '../../aspect-meta-model/characteristic/default-single-entity';
+import {Characteristic} from '../../aspect-meta-model/index.js';
+import {DefaultSingleEntity} from '../../aspect-meta-model/characteristic/default-single-entity.js';
 
 export class SingleEntityInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     protected processElement(quads: Array<Quad>): Characteristic {
         const samm = this.metaModelElementInstantiator.samm;
-        const defaultSingleEntity = new DefaultSingleEntity(null, null, null, null);
+        const defaultSingleEntity = new DefaultSingleEntity(null!, null!, null!, null!);
 
         this.metaModelElementInstantiator.initBaseProperties(quads, defaultSingleEntity, this.metaModelElementInstantiator.rdfModel);
 
