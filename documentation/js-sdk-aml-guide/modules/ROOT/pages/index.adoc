@@ -71,42 +71,106 @@ Errors are reported as typed error classes (for example `UnsupportedVersionError
 
 If you are using external .ttl files you may need to parse the contents of these files to strings, to be passed to the methods params.
 
+=== Load namespaces
+
+To load all model elements of one or more namespaces without selecting a specific aspect, use the `NamespaceLoader`:
+
+[source,typescript]
+----
+import {NamespaceLoader} from '@esmf/sdk-js';
+
+const namespaces = await new NamespaceLoader().loadNamespaces(ttl1, ttl2);
+----
+
+== Error handling
+
+All errors thrown or emitted by the loaders derive from `AspectModelError`:
+
+[cols="1,2"]
+|===
+|Error |Cause
+
+|`UnsupportedVersionError` |The model uses a SAMM version that is not supported.
+|`AspectNotFoundError` |No aspect with the requested URN was found.
+|`MultipleAspectsFoundError` |A self-contained model contains more than one aspect.
+|`EntityInstanceResolutionError` |An entity instance could not be resolved.
+|`NotAbstractEntityError` |An entity that must be abstract is not abstract.
+|`RdfParseError` |The Turtle input could not be parsed.
+|===
+
+[source,typescript]
+----
+import {AspectModelError, AspectNotFoundError} from '@esmf/sdk-js';
+
+try {
+  await loader.loadAspect(urn, ttl);
+} catch (error) {
+  if (error instanceof AspectNotFoundError) {
+    // handle missing aspect
+  } else if (error instanceof AspectModelError) {
+    // handle any other loader error
+  }
+}
+----
+
 == Helpful functions
 
-This module exposes some helper functions that can be used to find items inside the loaded ttl object.
+After loading, the loader exposes helper functions to find model elements.
 
-Find a specific model element, and returns it or undefined.
+Find a model element by its URN (returns the element or `undefined`):
 
-[source,javascript]
+[source,typescript]
 ----
-let specificElement = loader.findByUrn(options.urnSelectedModelElement)
+const element = loader.findByUrn('urn:samm:org.example:1.0.0#myProperty');
 ----
 
-Find a specific model element by name, and returns the found elements.
+Find model elements by name (returns all matching elements):
 
-[source,javascript]
+[source,typescript]
 ----
-let specificElement = loader.findByName(options.selectedModelName)
+const elements = loader.findByName('myProperty');
+----
+
+Filter all loaded model elements with a predicate:
+
+[source,typescript]
+----
+import {DefaultProperty} from '@esmf/sdk-js';
+
+const properties = loader.filterElements(element => element instanceof DefaultProperty);
+----
+
+== Visitor
+
+To process a loaded model, extend `DefaultAspectModelVisitor` and override the methods for the element types you need:
+
+[source,typescript]
+----
+import {DefaultAspectModelVisitor, DefaultProperty} from '@esmf/sdk-js';
+
+class PropertyCounter extends DefaultAspectModelVisitor<void, unknown> {
+  count = 0;
+
+  visitProperty(property: DefaultProperty, context: unknown): void {
+    this.count++;
+    return super.visitProperty(property, context);
+  }
+}
+
+const counter = new PropertyCounter();
+counter.visit(aspect, {});
 ----
 
 == Development
 
-=== Create bundle
+Requirements: Node.js 24 or newer and pnpm.
 
 [source,bash]
 ----
 pnpm install
-pnpm run build
+pnpm run build   # build the library into dist/
+pnpm test        # run the tests
+pnpm run all     # build, format, lint, type check, tests with coverage and package checks
 ----
 
-to build and to create the library
-
-==== Update indexes
-
-[source,bash]
-----
-ctix create ./src
-----
-
-to update all index files under `src`.
-For more information see the project https://github.com/imjuni/create-ts-index.
+See the https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/blob/main/CONTRIBUTING.md[contribution guideline] and the https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/blob/main/CHANGELOG.md[changelog] for details.

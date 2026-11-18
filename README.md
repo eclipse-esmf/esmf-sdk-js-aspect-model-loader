@@ -192,7 +192,6 @@ history.
 ## Documentation
 
 - [JavaScript SDK guide](https://eclipse-esmf.github.io/js-sdk-guide/index.html)
-- [API documentation](https://eclipse-esmf.github.io/esmf-sdk-js-aspect-model-loader/) (generated with TypeDoc)
 - [ESMF developer documentation](https://eclipse-esmf.github.io)
 
 ## Getting help

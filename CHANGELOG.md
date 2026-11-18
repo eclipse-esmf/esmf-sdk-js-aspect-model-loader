@@ -37,7 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   `MultipleAspectsFoundError`, `EntityInstanceResolutionError`, `NotAbstractEntityError` and `RdfParseError`.
 - Export of `BoundDefinition`.
 - Conformance test suite with the 188 valid test Aspect Models of the ESMF SDK (`test/tck.spec.ts`).
-- API documentation generated with TypeDoc (`pnpm run docs:api`) and published via GitHub Pages.
+- API documentation generated with TypeDoc (`pnpm run docs:api`) into `docs/api`.
 - Package validation with publint and Are the Types Wrong (`pnpm run check:package`).
 - SAMM 2.2.0 support including `samm:Value`.
 
