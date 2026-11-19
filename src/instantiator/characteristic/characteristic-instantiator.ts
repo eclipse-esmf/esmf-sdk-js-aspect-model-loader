@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,23 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {MetaModelElementInstantiator} from '../meta-model-element-instantiator.js';
 import {NamedNode, Quad, Util} from 'n3';
-import {Characteristic, DefaultCharacteristic, DefaultEntity, DefaultScalar, Entity, Type} from '../../aspect-meta-model';
-import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
-import {EntityInstantiator} from '../entity-instantiator';
-import {BaseConstraintCharacteristicInstantiator} from '../base-constraint-characteristic-instantiator';
+import {Characteristic, DefaultCharacteristic, DefaultEntity, DefaultScalar, Entity, Type} from '../../aspect-meta-model/index.js';
+import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator.js';
+import {EntityInstantiator} from '../entity-instantiator.js';
+import {BaseConstraintCharacteristicInstantiator} from '../base-constraint-characteristic-instantiator.js';
 
 export class CharacteristicInstantiator extends BaseConstraintCharacteristicInstantiator {
     private standardCharacteristicInstantiator: PredefinedCharacteristicInstantiator;
 
-    constructor(protected metaModelElementInstantiator: MetaModelElementInstantiator, public nextProcessor?: CharacteristicInstantiator) {
+    constructor(
+        protected metaModelElementInstantiator: MetaModelElementInstantiator,
+        public nextProcessor?: CharacteristicInstantiator
+    ) {
         super(metaModelElementInstantiator, nextProcessor);
         this.standardCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(metaModelElementInstantiator);
     }
 
     create(quad: Quad): Characteristic {
-        let characteristic: Characteristic = this.determineDefaultCharacteristic(quad);
+        let characteristic: Characteristic | undefined = this.determineDefaultCharacteristic(quad);
         if (characteristic) {
             return characteristic;
         }
@@ -48,7 +51,7 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
             const initialName: string = characteristic.name;
 
             // assign a unique random name
-            characteristic.name = characteristic.name ? characteristic.name : 'characteristic_' + Math.random().toString(36).substr(2, 9);
+            characteristic.name = characteristic.name ? characteristic.name : 'characteristic_' + Math.random().toString(36).slice(2, 11);
             characteristic.aspectModelUrn = `${this.metaModelElementInstantiator.rdfModel.getAspectModelUrn()}${characteristic.name}`;
             this.metaModelElementInstantiator.cacheService.addElement(initialName, characteristic);
         }
@@ -64,8 +67,8 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
 
         // check if the found quad target a default SAMM characteristic e.g. Text or Code in this case
         // return the exiting default characteristic
-        if (elementQuad.object.value.startsWith(this.metaModelElementInstantiator.sammC.getNamespace())) {
-            const standardCharacteristic = this.standardCharacteristicInstantiator.createCharacteristic(<NamedNode>elementQuad.object);
+        if (elementQuad!.object.value.startsWith(this.metaModelElementInstantiator.sammC.getNamespace())) {
+            const standardCharacteristic = this.standardCharacteristicInstantiator.createCharacteristic(<NamedNode>elementQuad!.object);
             if (standardCharacteristic) {
                 return standardCharacteristic;
             }
@@ -74,14 +77,14 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
         return undefined;
     }
 
-    protected processElement(quads: Array<Quad>): Characteristic {
-        return new DefaultCharacteristic(null, null, null);
+    protected processElement(_quads: Array<Quad>): Characteristic {
+        return new DefaultCharacteristic(null!, null!, null!);
     }
 
     /**
      * This method must be override from the respective constraint or characteristic instantiator implementation in order to get called.
      */
-    shouldProcess(namedNode: NamedNode): boolean {
+    shouldProcess(_namedNode: NamedNode): boolean {
         return true;
     }
 
@@ -97,11 +100,11 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
         return !!propertyFound;
     }
 
-    protected getDataType(quad: Quad): Type {
+    protected getDataType(quad: Quad | undefined): Type {
         // Not every characteristic has a dataType e.g. the Either characteristic.
         // Thus, null is a valid value and needs to be considered.
         if (!quad) {
-            return null;
+            return null!;
         }
 
         if (Util.isBlankNode(quad.object)) {
@@ -111,7 +114,7 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
         const typeQuad = quad ? this.getEffectiveType(quad) : null;
 
         if (!typeQuad) {
-            return null;
+            return null!;
         }
 
         const quadEntity = this.metaModelElementInstantiator.rdfModel.store.getQuads(typeQuad.object, null, null, null);
@@ -128,7 +131,10 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
         return new DefaultScalar(typeQuad.object.value);
     }
 
-    private getEffectiveType(quad: Quad): Quad {
+    private getEffectiveType(quad: Quad | undefined): Quad | undefined {
+        if (!quad) {
+            return quad;
+        }
         if (Util.isBlankNode(quad.subject)) {
             let resolvedQuad: Array<Quad>;
             if (this.samm.isDataTypeProperty(quad.predicate.value)) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,20 +12,28 @@
  */
 
 import {DataFactory, Quad} from 'n3';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity';
-import {DefaultPropertyInstanceDefinition, Property} from '../aspect-meta-model';
-import {PredefinedEntityInstantiator} from './predefined-entity-instantiator';
-import {PredefinedCharacteristicInstantiator} from './characteristic/predefined-characteristic-instantiator';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
+import {DefaultEntity, Entity} from '../aspect-meta-model/default-entity.js';
+import {DefaultPropertyInstanceDefinition, Property} from '../aspect-meta-model/index.js';
+import {PredefinedEntityInstantiator} from './predefined-entity-instantiator.js';
+import {PredefinedCharacteristicInstantiator} from './characteristic/predefined-characteristic-instantiator.js';
 
 export class EntityInstantiator {
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
     createEntity(quads: Array<Quad>, isAbstract = false): Entity {
         const samm = this.metaModelElementInstantiator.samm;
-        const entity = new DefaultEntity(null, null, null, new Array<Property>(), isAbstract);
+        const entity = new DefaultEntity(null!, null!, null!, new Array<Property>(), isAbstract);
 
         this.metaModelElementInstantiator.initBaseProperties(quads, entity, this.metaModelElementInstantiator.rdfModel);
+
+        // Register the entity before resolving its properties so that recursive structures
+        // (an entity property referencing the entity again) resolve to this instance instead of looping.
+        const cachedEntity = this.metaModelElementInstantiator.cacheService.get(entity.aspectModelUrn);
+        if (cachedEntity) {
+            return <Entity>cachedEntity;
+        }
+        this.metaModelElementInstantiator.cacheService.resolveInstance(entity);
 
         quads.forEach(quad => {
             if (samm.isPropertiesProperty(quad.predicate.value)) {

@@ -1,120 +1,208 @@
-# ESMF JS SDK :: Aspect Model Loader 🚀
+# ESMF JavaScript SDK
 
-## Table of Contents
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](LICENSE)
 
-- [Introduction](#introduction)
-- [Getting help](#getting-help)
-- [Getting started](#getting-started)
-    - [Install from the public npm](#install-from-the-public-npm)
-    - [Usage](#usage)
-    - [Helpful functions](#helpful-functions)
-    - [Development](#development)
-        - [Create bundle](#create-bundle)
-        - [Update indexes](#update-indexes)
+`@esmf/sdk-js` loads [SAMM](https://eclipse-esmf.github.io/samm-specification/snapshot/index.html) Aspect Models written
+in [RDF/Turtle](<https://en.wikipedia.org/wiki/Turtle_(syntax)>) and turns them into typed, native JavaScript/TypeScript
+objects that can be inspected, searched and traversed.
+
+## Table of contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Load an Aspect](#load-an-aspect)
+    - [Load namespaces](#load-namespaces)
+    - [Find model elements](#find-model-elements)
+    - [Traverse a model with a visitor](#traverse-a-model-with-a-visitor)
+    - [Error handling](#error-handling)
+- [Development](#development)
 - [Documentation](#documentation)
+- [Getting help](#getting-help)
 - [License](#license)
 
-## Introduction
+## Features
 
-This project enables developers to effortlessly load and parse one or more [.ttl files](<https://en.wikipedia.org/wiki/Turtle_(syntax)>) 
-and instantiate native TypeScript objects of the pared [SAMM](<https://projects.eclipse.org/projects/dt.esmf>) semantic concepts.
+- Supports SAMM 2.0.0, 2.1.0 and 2.2.0; the SAMM, characteristic, entity and unit catalogs are built in.
+- Promise and RxJS Observable APIs.
+- Resolves imports across multiple Turtle files and groups elements by namespace.
+- Typed errors for unsupported versions, missing Aspects or invalid RDF.
+- Verified against the official [ESMF SDK test Aspect Models](test/tck/README.md).
+- ES module with bundled type definitions.
 
-## Getting help
+## Requirements
 
-Are you having trouble with ESMF JS? We want to help!
+- Node.js 24 or newer (or a bundler targeting modern browsers)
+- An ES module environment. CommonJS consumers need `require(esm)` support (Node.js ≥ 22.12) or a dynamic `import()`.
 
-- Check the [developer documentation](https://eclipse-esmf.github.io)
-- Having issues with the ESMF JS? Open
-  a [GitHub issue](https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/issues).
+## Installation
 
-## Getting started
+The package is attached as `esmf-sdk-js-<version>.tgz` to every
+[GitHub release](https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/releases):
 
-### Install from the public npm:
-
-<!-- TODO: Replace this with esmf -->
-
+```bash
+pnpm add https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/releases/download/v4.0.0/esmf-sdk-js-4.0.0.tgz
+# or
+npm install https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/releases/download/v4.0.0/esmf-sdk-js-4.0.0.tgz
 ```
-npm install @esmf/aspect-model-loader
-```
+
+Upgrading from `@esmf/aspect-model-loader`? See the [migration guide](CHANGELOG.md#migration-guide).
 
 ## Usage
 
-Instantiating an Aspect the following two methods for loading ttl files(string value of the .ttl files) are provided.
+All public classes and types are exported from the package root:
 
-Load an aspect model which is self-contained (includes no imports to other ttl file):
-
+```ts
+import {AspectModelLoader, NamespaceLoader} from '@esmf/sdk-js';
 ```
-new AspectModelLoader().loadSelfContainedModel(ttl).subscribe((aspect: Aspect) => {
-...
+
+The loaders expect the **content** of the Turtle files as strings. All files must use the same SAMM version.
+
+### Load an Aspect
+
+A self-contained model (no imports of other files):
+
+```ts
+import {readFile} from 'node:fs/promises';
+import {AspectModelLoader} from '@esmf/sdk-js';
+
+const ttl = await readFile('Movement.ttl', 'utf8');
+const aspect = await new AspectModelLoader().loadSelfContainedAspect(ttl);
+
+console.log(aspect.name, aspect.properties.map(property => property.name));
+```
+
+A model spread over several files – pass the URN of the Aspect and the content of all required files:
+
+```ts
+const aspect = await new AspectModelLoader().loadAspect('urn:samm:org.eclipse.examples:1.0.0#Movement', movementTtl, sharedTtl);
+```
+
+Pass an empty string as URN if the content contains exactly one Aspect.
+
+Prefer RxJS? Every Promise method has an Observable counterpart (`loadSelfContainedModel`, `load`). The Observables
+replay their result to late subscribers:
+
+```ts
+new AspectModelLoader().load('urn:samm:org.eclipse.examples:1.0.0#Movement', movementTtl, sharedTtl).subscribe(aspect => {
+    // ...
 });
 ```
 
-or if the model contains imports to further ttl files:
+The returned Aspect is frozen.
 
-```
-new AspectModelLoader().load('<aspect-model-urn>', ttl-1, ttl-2, ttl-3, ...).subscribe((aspect: Aspect) => {
-...
-});
-```
+### Load namespaces
 
-Besides loading an aspect the project also supports to load and group the SAMM definitions by namespace.
+Load all model elements – not only Aspects – grouped by namespace:
 
-Load all namespace and related SAMM semantic concepts:
+```ts
+const namespaces = await new NamespaceLoader().loadNamespaces(ttl1, ttl2);
 
-```
-new NamespaceLoader().load(ttl-1, ttl-2, ttl-3, ...).subscribe((namespaces: Observable<Map<string, Array<BaseMetaModelElement>>>) => {
-...
-});
+for (const [namespace, elements] of namespaces) {
+    console.log(namespace, elements.map(element => element.name));
+}
 ```
 
-If you are using external .ttl files you may need to parse the contents of these files to strings, to be passed to the
-methods params. Further all .ttl files must use the same SAMM version. Loading SAMM semantic concepts from different .ttl files
-having different SAMM versions is not supported yet.
+`new NamespaceLoader().load(...)` is the Observable variant.
 
-## Helpful functions
+### Find model elements
 
-This module exposes some helper functions that can be used to find items inside the loaded ttl object.
+After loading, the loader instance can be used to look up elements:
 
-Find a specific model element, and returns it or undefined.
+```ts
+const loader = new AspectModelLoader();
+await loader.loadSelfContainedAspect(ttl);
 
+loader.findByUrn('urn:samm:org.eclipse.examples:1.0.0#speed'); // element or undefined
+loader.findByName('speed'); // all elements with that name
+loader.filterElements(element => element.name.startsWith('is')); // custom predicate
 ```
-let specificElement = loader.findByUrn(options.urnSelectedModelElement)
+
+### Traverse a model with a visitor
+
+Extend `DefaultAspectModelVisitor` and override the `visit*` methods you are interested in:
+
+```ts
+import {DefaultAspectModelVisitor, DefaultProperty} from '@esmf/sdk-js';
+
+class PropertyCounter extends DefaultAspectModelVisitor<void, unknown> {
+    count = 0;
+
+    visitProperty(property: DefaultProperty, context: unknown): void {
+        this.count++;
+        return super.visitProperty(property, context);
+    }
+}
+
+const counter = new PropertyCounter();
+counter.visit(aspect, {});
 ```
 
-Find a specific model element by name, and returns the found elements.
+### Error handling
 
-```
-let specificElement = loader.findByName(options.selectedModelName)
+All errors raised while loading extend `AspectModelError`:
+
+| Error                           | Reason                                                       |
+| ------------------------------- | ------------------------------------------------------------ |
+| `RdfParseError`                 | The Turtle content cannot be parsed                          |
+| `UnsupportedVersionError`       | The SAMM version is missing or not supported                 |
+| `AspectNotFoundError`           | No Aspect with the given URN exists                          |
+| `MultipleAspectsFoundError`     | No URN was given, but the content contains several Aspects   |
+| `EntityInstanceResolutionError` | An entity instance cannot be resolved                        |
+| `NotAbstractEntityError`        | An entity is extended that is not an abstract entity         |
+
+```ts
+import {AspectModelError, UnsupportedVersionError} from '@esmf/sdk-js';
+
+try {
+    await loader.loadSelfContainedAspect(ttl);
+} catch (error) {
+    if (error instanceof UnsupportedVersionError) {
+        // ...
+    } else if (error instanceof AspectModelError) {
+        // ...
+    }
+}
 ```
 
 ## Development
 
-### Create bundle
+The project uses [pnpm](https://pnpm.io) and Node.js 24 or newer.
 
-```
-npm run build
-```
-
-to build and to create the library
-
-#### Update indexes
-
-```
-ctix create ./src
+```bash
+pnpm install
+pnpm run all   # build, format, lint, typecheck, tests with coverage and package checks
 ```
 
-to update all index files under `src`. For more information see the project https://github.com/imjuni/create-ts-index.
+| Script                   | Description                                                            |
+| ------------------------ | ---------------------------------------------------------------------- |
+| `pnpm run build`         | Compile `src` to `dist`                                                |
+| `pnpm test`              | Run all tests with Vitest, including the ESMF test Aspect Models       |
+| `pnpm run test:coverage` | Run the tests with coverage thresholds                                 |
+| `pnpm run lint`          | Lint with ESLint (`lint:fix` to fix automatically)                     |
+| `pnpm run typecheck`     | Typecheck sources and tests                                            |
+| `pnpm run prettier`      | Format sources and tests (`test:prettier` to check only)               |
+| `pnpm run docs:api`      | Generate the API documentation into `docs/api`                         |
+| `pnpm run check:package` | Validate the published package with publint and Are the Types Wrong   |
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution process and [CHANGELOG.md](CHANGELOG.md) for the release
+history.
 
 ## Documentation
 
-Further documentation and HowTos are provided in the
-official [JS SDK User Documentation](https://eclipse-esmf.github.io/js-sdk-guide/index.html)
+- [JavaScript SDK guide](https://eclipse-esmf.github.io/js-sdk-guide/index.html)
+- [ESMF developer documentation](https://eclipse-esmf.github.io)
+
+## Getting help
+
+- Read the [documentation](#documentation).
+- Report bugs or request features via [GitHub issues](https://github.com/eclipse-esmf/esmf-sdk-js-aspect-model-loader/issues).
+- Discuss development topics on the [ESMF developer mailing list](https://accounts.eclipse.org/mailing-list/esmf-dev).
 
 ## License
 
 SPDX-License-Identifier: MPL-2.0
 
 This program and the accompanying materials are made available under the terms of the
-[Mozilla Public License, v. 2.0](LICENSE).
-
-The [Notice file](NOTICE.md) details contained third party materials.
+[Mozilla Public License, v. 2.0](LICENSE). The [notice file](NOTICE.md) details contained third-party materials.

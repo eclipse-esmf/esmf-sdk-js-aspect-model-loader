@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,16 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IsNamed} from './is-named';
-import {Base} from './base';
-import {ModelVisitor} from '../visitor/model-visitor';
+import {IsNamed} from './is-named.js';
+import {Base} from './base.js';
+import {ModelVisitor} from '../visitor/model-visitor.js';
 
 export interface QuantityKind extends IsNamed {
     label: string;
 }
 
 export class DefaultQuantityKind extends Base implements QuantityKind {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _label: string) {
+    constructor(
+        metaModelVersion: string,
+        aspectModelUrn: string,
+        name: string,
+        private _label: string
+    ) {
         super(metaModelVersion, aspectModelUrn, name);
     }
 

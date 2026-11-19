@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Constraint, DefaultConstraint} from './default-constraint';
+import {Constraint, DefaultConstraint} from './default-constraint.js';
 
 export interface LengthConstraint extends Constraint {
     minValue?: number;
@@ -19,7 +19,13 @@ export interface LengthConstraint extends Constraint {
 }
 
 export class DefaultLengthConstraint extends DefaultConstraint implements LengthConstraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _minValue?: number, private _maxValue?: number) {
+    constructor(
+        metaModelVersion: string,
+        aspectModelUrn: string,
+        name: string,
+        private _minValue?: number,
+        private _maxValue?: number
+    ) {
         super(metaModelVersion, aspectModelUrn, name);
     }
 

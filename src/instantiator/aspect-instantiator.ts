@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,24 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {AspectNotFoundError, MultipleAspectsFoundError} from '../shared/errors.js';
 import {
     Aspect,
     BaseMetaModelElement,
+    Characteristic,
     DefaultEvent,
     DefaultOperation,
     DefaultPropertyInstanceDefinition,
     Property,
-} from '../aspect-meta-model';
-import {DefaultAspect} from '../aspect-meta-model/default-aspect';
-import {RdfModel} from '../shared/rdf-model';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
+} from '../aspect-meta-model/index.js';
+import {DefaultAspect} from '../aspect-meta-model/default-aspect.js';
+import {RdfModel} from '../shared/rdf-model.js';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
 import {NamedNode, Quad} from 'n3';
-import {CacheStrategy} from '../shared/model-element-cache.service';
+import {CacheStrategy} from '../shared/model-element-cache.service.js';
 
 export class AspectInstantiator {
     private readonly recursiveModelElements: Map<string, Array<BaseMetaModelElement>>;
 
-    constructor(private rdfModel: RdfModel, private cacheService: CacheStrategy) {
+    constructor(
+        private rdfModel: RdfModel,
+        private cacheService: CacheStrategy
+    ) {
         this.recursiveModelElements = new Map<string, Array<BaseMetaModelElement>>();
     }
 
@@ -43,7 +48,7 @@ export class AspectInstantiator {
         const properties = metaModelElementInstantiator.getProperties(aspectNode);
         const operations = metaModelElementInstantiator.getOperations(aspectNode);
         const events = metaModelElementInstantiator.getEvents(aspectNode);
-        const aspect = new DefaultAspect(null, null, null, properties, operations, events);
+        const aspect = new DefaultAspect(null!, null!, null!, properties, operations, events);
 
         properties.forEach(property => (property as DefaultPropertyInstanceDefinition).addParent(aspect));
         operations.forEach(operation => (operation as DefaultOperation).addParent(aspect));
@@ -51,10 +56,10 @@ export class AspectInstantiator {
 
         metaModelElementInstantiator.initBaseProperties(this.rdfModel.findAnyProperty(aspectNode), aspect, this.rdfModel);
 
-        this.recursiveModelElements.forEach((recursiveProperties: Array<Property>, key: string) => {
-            recursiveProperties.forEach((property: Property) => {
+        this.recursiveModelElements.forEach((recursiveProperties: Array<BaseMetaModelElement>, key: string) => {
+            recursiveProperties.forEach(property => {
                 if (property) {
-                    property.characteristic = this.cacheService.get(key);
+                    (property as Property).characteristic = this.cacheService.get(key) as Characteristic;
                 }
             });
         });
@@ -66,14 +71,14 @@ export class AspectInstantiator {
         const aspectQuad = rdfModel.store
             .getQuads(null, rdfModel.samm.RdfType(), rdfModel.samm.Aspect(), null)
             .find((quad, index, foundQuads) => {
-                if (foundQuads.length > 1 && aspectModelUrn == undefined) {
-                    throw new Error('More than one aspect found. Please provide the aspectModelUrn to load the desired one.');
+                if (foundQuads.length > 1 && !aspectModelUrn) {
+                    throw new MultipleAspectsFoundError();
                 }
                 return foundQuads.length == 1 || (aspectModelUrn && quad.subject.value === aspectModelUrn);
             });
 
         if (!aspectQuad) {
-            throw new Error('No aspect found. Please verify if the aspectModelUrn is correct and the ttl includes an aspect definition.');
+            throw new AspectNotFoundError();
         }
 
         return aspectQuad;

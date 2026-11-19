@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,22 +15,28 @@ import {AspectModelLoader, DefaultAspect, DefaultProperty} from '../src';
 import {movementAspectModelWithExternalReference} from './models/movement-model';
 import {testAspectModel} from './models/test-model';
 import {Subscription} from 'rxjs';
-import DoneCallback = jest.DoneCallback;
 
 describe('Import model tests', (): void => {
     let loader: AspectModelLoader;
     let aspect: DefaultAspect;
     let subscription: Subscription;
 
-    beforeEach((done: DoneCallback): void => {
-        loader = new AspectModelLoader();
-        subscription = loader
-            .load('urn:samm:org.eclipse.esmf.test:1.0.0#MovementWithImports', testAspectModel, movementAspectModelWithExternalReference)
-            .subscribe((_aspect: DefaultAspect): void => {
-                aspect = _aspect;
-                done();
-            });
-    });
+    beforeEach(
+        (): Promise<void> =>
+            new Promise<void>(done => {
+                loader = new AspectModelLoader();
+                subscription = loader
+                    .load(
+                        'urn:samm:org.eclipse.esmf.test:1.0.0#MovementWithImports',
+                        testAspectModel,
+                        movementAspectModelWithExternalReference
+                    )
+                    .subscribe((_aspect): void => {
+                        aspect = _aspect as DefaultAspect;
+                        done();
+                    });
+            })
+    );
 
     test('should have shared testProperty', (): void => {
         expect((<DefaultProperty>aspect.properties[0]).name).toEqual('testProperty');

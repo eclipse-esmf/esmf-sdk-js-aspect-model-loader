@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,14 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Constraint, DefaultConstraint} from './default-constraint';
+import {Constraint, DefaultConstraint} from './default-constraint.js';
 
 export interface LocaleConstraint extends Constraint {
     localeCode: string;
 }
 
 export class DefaultLocaleConstraint extends DefaultConstraint implements LocaleConstraint {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _localeCode: string) {
+    constructor(
+        metaModelVersion: string,
+        aspectModelUrn: string,
+        name: string,
+        private _localeCode: string
+    ) {
         super(metaModelVersion, aspectModelUrn, name);
     }
 

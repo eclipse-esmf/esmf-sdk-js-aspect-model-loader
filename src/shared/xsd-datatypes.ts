@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -106,15 +106,20 @@ const xsdDataTypes = {
 };
 
 export class XsdDataTypes {
+    private readonly dataTypes: Record<string, {isDefinedBy: string; description: string}>;
+
     constructor(private modelVersion: string) {
-        xsdDataTypes['curie'].isDefinedBy = (<string>xsdDataTypes['curie'].isDefinedBy).replace('MODEL_VERSION', modelVersion);
+        this.dataTypes = {
+            ...xsdDataTypes,
+            curie: {...xsdDataTypes['curie'], isDefinedBy: xsdDataTypes['curie'].isDefinedBy.replace('MODEL_VERSION', modelVersion)},
+        };
     }
 
-    getDataTypes(): any {
-        return xsdDataTypes;
+    getDataTypes(): Record<string, {isDefinedBy: string; description: string}> {
+        return this.dataTypes;
     }
 
-    getDataType(key: string): any {
-        return xsdDataTypes[key];
+    getDataType(key: string): {isDefinedBy: string; description: string} {
+        return this.dataTypes[key];
     }
 }

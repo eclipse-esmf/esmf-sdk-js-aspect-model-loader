@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Type} from '../type';
-import {Characteristic, DefaultCharacteristic} from './default-characteristic';
+import {Type} from '../type.js';
+import {Characteristic, DefaultCharacteristic} from './default-characteristic.js';
+import {DefaultTrait} from './default-trait.js';
 
 export interface Collection extends Characteristic {
     isAllowDuplicates: boolean;
@@ -55,5 +56,15 @@ export class DefaultCollection extends DefaultCharacteristic implements Collecti
 
     public get elementCharacteristic(): Characteristic | undefined {
         return this._elementCharacteristic;
+    }
+
+    protected resolveEffectiveDataType(): Type | undefined {
+        if (!this._elementCharacteristic) {
+            return this.dataType;
+        }
+        if (this._elementCharacteristic instanceof DefaultTrait) {
+            return this._elementCharacteristic.baseCharacteristic?.dataType;
+        }
+        return this._elementCharacteristic.dataType || null!;
     }
 }

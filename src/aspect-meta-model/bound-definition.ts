@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,10 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export enum BoundDefinition {
-    OPEN = 'OPEN',
-    AT_LEAST = 'AT_LEAST',
-    GREATER_THAN = 'GREATER_THAN',
-    LESS_THAN = 'LESS_THAN',
-    AT_MOST = 'AT_MOST',
-}
+export const BoundDefinition = {
+    OPEN: 'OPEN',
+    AT_LEAST: 'AT_LEAST',
+    GREATER_THAN: 'GREATER_THAN',
+    LESS_THAN: 'LESS_THAN',
+    AT_MOST: 'AT_MOST',
+} as const;
+
+export type BoundDefinition = (typeof BoundDefinition)[keyof typeof BoundDefinition];

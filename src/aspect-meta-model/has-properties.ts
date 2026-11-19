@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Property} from './default-property';
+import {Property} from './default-property.js';
 
 export interface HasProperties {
     properties: Array<Property>;
@@ -21,5 +21,5 @@ export interface HasProperties {
      * @param name name of the property
      * @return Property or undefined if no property with the name exists
      */
-    getProperty(name: string): Property;
+    getProperty(name: string): Property | undefined;
 }

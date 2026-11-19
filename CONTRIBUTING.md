@@ -1,6 +1,6 @@
-# Contribution Guideline ESMF SDK JS Aspect Model loader
+# Contribution Guideline ESMF JavaScript SDK
 
-Thank you for your interest in contributing to the ESMF SDK SDK JS Aspect Model loader. Use this repository to
+Thank you for your interest in contributing to the ESMF JavaScript SDK. Use this repository to
 contribute to
 the SDK as easy and transparent as possible, whether it is:
 
@@ -85,6 +85,9 @@ When opening a `PR` please consider the following topics:
   feature, then create one `PR` per work item. You may need to create new more specific `Issues` to reference if you
   split up the work into multiple `feature branches`.
 * Commit changes often. A `PR` may contain one or more commits.
+* Run `pnpm run all` (Node.js 24 or newer) before opening a `PR`. It builds the project and runs formatting, linting,
+  type checks, tests with coverage thresholds and package checks.
+* Add tests for your changes and describe user-visible changes in the [CHANGELOG](CHANGELOG.md).
 
 ## Eclipse Development Process
 
@@ -154,12 +157,12 @@ E.g. software licensed under GPL, AGPL or, a similar strong copy-left license ca
 
 # Code Conventions
 
-The ESMF SDK SDK JS Aspect Model loader is written in Typescript. Please have a look into our [Code
+The ESMF JavaScript SDK is written in Typescript. Please have a look into our [Code
 Conventions](CONVENTIONS.md).
 
 ## Versioning
 
-We use Semantic Versioning to identify released versions of the ESMF SDK SDK JS Aspect Model loader. Semantic Versioning
+We use Semantic Versioning to identify released versions of the ESMF JavaScript SDK. Semantic Versioning
 is
 documented [here](https://semver.org). It proposes to have a versioning number with the following
 elements:

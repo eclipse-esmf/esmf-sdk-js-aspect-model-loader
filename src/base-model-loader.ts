@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement, DefaultPropertyInstanceDefinition} from './aspect-meta-model';
-import {CacheStrategy, FilterPredicate} from './shared/model-element-cache.service';
+import {Base, BaseMetaModelElement, DefaultPropertyInstanceDefinition} from './aspect-meta-model/index.js';
+import {CacheStrategy, FilterPredicate} from './shared/model-element-cache.service.js';
+import {Observable, ReplaySubject} from 'rxjs';
 
 export abstract class BaseModelLoader {
     /**
@@ -24,11 +25,27 @@ export abstract class BaseModelLoader {
     protected constructor(protected cacheService: CacheStrategy) {}
 
     /**
+     * Converts a promise into an Observable which replays the result to late subscribers.
+     * Rejections are forwarded as Observable errors and never surface as unhandled promise rejections.
+     */
+    protected toObservable<T>(promise: Promise<T>): Observable<T> {
+        const subject = new ReplaySubject<T>(1);
+        promise.then(
+            value => {
+                subject.next(value);
+                subject.complete();
+            },
+            (error: unknown) => subject.error(error)
+        );
+        return subject.asObservable();
+    }
+
+    /**
      * Find a specific model element, and returns it or undefined.
      *
      * @param modelElementUrn urn of the model element
      */
-    public findByUrn(modelElementUrn: string): BaseMetaModelElement {
+    public findByUrn(modelElementUrn: string): BaseMetaModelElement | undefined {
         return this.cacheService.get(modelElementUrn);
     }
 

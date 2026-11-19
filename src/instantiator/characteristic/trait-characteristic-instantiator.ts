@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,18 +12,13 @@
  */
 
 import {NamedNode, Quad} from 'n3';
-import {CharacteristicInstantiator} from './characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {Characteristic, Constraint, DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '../../aspect-meta-model';
+import {CharacteristicInstantiator} from './characteristic-instantiator.js';
+import {Characteristic, Constraint, DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '../../aspect-meta-model/index.js';
 
 export class TraitCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     protected processElement(quads: Array<Quad>): Characteristic {
         const sammC = this.metaModelElementInstantiator.sammC;
-        const trait = new DefaultTrait(null, null, null, null, new Array<Constraint>());
+        const trait = new DefaultTrait(null!, null!, null!, null!, new Array<Constraint>());
 
         quads.forEach(quad => {
             if (sammC.isBaseCharacteristicProperty(quad.predicate.value)) {
@@ -32,7 +27,7 @@ export class TraitCharacteristicInstantiator extends CharacteristicInstantiator 
             } else if (sammC.isConstraintProperty(quad.predicate.value)) {
                 const constraint = this.metaModelElementInstantiator.getConstraint(quad);
                 (constraint as DefaultConstraint).addParent(trait);
-                trait.constraints.push(constraint);
+                trait.constraints!.push(constraint);
             }
         });
 

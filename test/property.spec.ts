@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -28,7 +28,6 @@ import {
 } from './models/movement-model';
 import {Subscription} from 'rxjs';
 import {property} from './models/property';
-import DoneCallback = jest.DoneCallback;
 
 describe('Property tests', (): void => {
     let loader: AspectModelLoader;
@@ -36,13 +35,16 @@ describe('Property tests', (): void => {
     let subscription: Subscription;
 
     describe('Basic property tests', (): void => {
-        beforeAll((done: DoneCallback): void => {
-            loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(property).subscribe((_aspect: DefaultAspect): void => {
-                aspect = _aspect;
-                done();
-            });
-        });
+        beforeAll(
+            (): Promise<void> =>
+                new Promise<void>(done => {
+                    loader = new AspectModelLoader();
+                    subscription = loader.loadSelfContainedModel(property).subscribe((_aspect): void => {
+                        aspect = _aspect as DefaultAspect;
+                        done();
+                    });
+                })
+        );
 
         it('should have marked as none collection aspect', (): void => {
             expect(aspect.isCollectionAspect).toBe(false);
@@ -70,7 +72,7 @@ describe('Property tests', (): void => {
 
         test('should resolve to 2 paths found for y', () => {
             const loader = new AspectModelLoader();
-            loader.loadSelfContainedModel(movementAspectModelWithCollectionsAndReusedEntity).subscribe(a => {
+            loader.loadSelfContainedModel(movementAspectModelWithCollectionsAndReusedEntity).subscribe(() => {
                 const paths = loader.determineAccessPath(loader.findByName('y')[0]);
                 expect(paths.length).toEqual(2);
                 expect(paths[0]).toEqual(['items', 'position', 'y']);
@@ -100,7 +102,7 @@ describe('Property tests', (): void => {
         });
 
         test('should find property optionalProperty by name', (): void => {
-            expect(aspect.getProperty('optionalProperty').name).toBeDefined();
+            expect(aspect.getProperty('optionalProperty')!.name).toBeDefined();
         });
 
         test('should not find property prodAndStepIdent by name', (): void => {
@@ -132,15 +134,21 @@ describe('Property tests', (): void => {
         });
 
         test('should get number values', (): void => {
-            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[0])).toBeTruthy();
-            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[1])).toBeTruthy();
-            expect(Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as any).values[2])).toBeTruthy();
+            expect(
+                Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as DefaultEnumeration).values[0])
+            ).toBeTruthy();
+            expect(
+                Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as DefaultEnumeration).values[1])
+            ).toBeTruthy();
+            expect(
+                Number.isInteger((loader.findByName('EnumerationNumbersCharacteristic')[0] as DefaultEnumeration).values[2])
+            ).toBeTruthy();
         });
 
         test('should get string values', (): void => {
-            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[0]).toBe('string');
-            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[1]).toBe('string');
-            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as any).values[2]).toBe('string');
+            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as DefaultEnumeration).values[0]).toBe('string');
+            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as DefaultEnumeration).values[1]).toBe('string');
+            expect(typeof (loader.findByName('EnumerationCharacteristic')[0] as DefaultEnumeration).values[2]).toBe('string');
         });
 
         test('should check for optional properties', (): void => {
@@ -171,15 +179,18 @@ describe('Property tests', (): void => {
     });
 
     describe('Collection model test', (): void => {
-        beforeAll((done: DoneCallback): void => {
-            loader = new AspectModelLoader();
-            subscription = loader
-                .loadSelfContainedModel(movementAspectModelWithCollectionsAndReusedEntity)
-                .subscribe((_aspect: DefaultAspect): void => {
-                    aspect = _aspect;
-                    done();
-                });
-        });
+        beforeAll(
+            (): Promise<void> =>
+                new Promise<void>(done => {
+                    loader = new AspectModelLoader();
+                    subscription = loader
+                        .loadSelfContainedModel(movementAspectModelWithCollectionsAndReusedEntity)
+                        .subscribe((_aspect): void => {
+                            aspect = _aspect as DefaultAspect;
+                            done();
+                        });
+                })
+        );
 
         it('should have marked as collection aspect', (): void => {
             expect(aspect.isCollectionAspect).toBe(true);
@@ -190,13 +201,13 @@ describe('Property tests', (): void => {
         });
 
         it('should have one properties items entries', (): void => {
-            const property = aspect.getProperty('items');
-            expect(property.effectiveDataType.isComplex).toBe(true);
+            const property = aspect.getProperty('items')!;
+            expect(property.effectiveDataType!.isComplex).toBe(true);
             expect((property.effectiveDataType as DefaultEntity).name).toBe('Movement');
         });
 
         it('should have one property position', (): void => {
-            const property = aspect.getProperty('items');
+            const property = aspect.getProperty('items')!;
             expect((property.effectiveDataType as DefaultEntity).getProperty('position')).toBeDefined();
         });
 
@@ -208,13 +219,16 @@ describe('Property tests', (): void => {
     });
 
     describe('Operations test', (): void => {
-        beforeAll((done: DoneCallback): void => {
-            loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(movementAspectModelWithOperations).subscribe((_aspect: DefaultAspect): void => {
-                aspect = _aspect;
-                done();
-            });
-        });
+        beforeAll(
+            (): Promise<void> =>
+                new Promise<void>(done => {
+                    loader = new AspectModelLoader();
+                    subscription = loader.loadSelfContainedModel(movementAspectModelWithOperations).subscribe((_aspect): void => {
+                        aspect = _aspect as DefaultAspect;
+                        done();
+                    });
+                })
+        );
 
         it('should have one operations defined', (): void => {
             expect(aspect.operations.length).toEqual(1);
@@ -222,18 +236,18 @@ describe('Property tests', (): void => {
 
         it('should have one operations with an input defined', (): void => {
             expect(aspect.operations[0].input.length).toEqual(1);
-            expect(aspect.operations[0].input[0].effectiveDataType.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
-            expect(aspect.operations[0].input[0].effectiveDataType.shortUrn).toEqual('string');
+            expect(aspect.operations[0].input[0].effectiveDataType!.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
+            expect(aspect.operations[0].input[0].effectiveDataType!.shortUrn).toEqual('string');
             expect(aspect.operations[0].input[0].characteristic.name).toEqual('ToggleValues');
             expect((aspect.operations[0].input[0].characteristic as DefaultEnumeration).values).toEqual(['on', 'off']);
         });
 
         it('should have one operations with a output defined', (): void => {
             expect(aspect.operations[0].output).toBeDefined();
-            expect(aspect.operations[0].output.effectiveDataType.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
-            expect(aspect.operations[0].output.effectiveDataType.shortUrn).toEqual('string');
-            expect(aspect.operations[0].output.characteristic.name).toEqual('ToggleState');
-            expect((aspect.operations[0].output.characteristic as DefaultEnumeration).values).toEqual(['ok', 'denied', 'unknown']);
+            expect(aspect.operations[0].output!.effectiveDataType!.urn).toEqual('http://www.w3.org/2001/XMLSchema#string');
+            expect(aspect.operations[0].output!.effectiveDataType!.shortUrn).toEqual('string');
+            expect(aspect.operations[0].output!.characteristic.name).toEqual('ToggleState');
+            expect((aspect.operations[0].output!.characteristic as DefaultEnumeration).values).toEqual(['ok', 'denied', 'unknown']);
         });
 
         afterAll((): void => {

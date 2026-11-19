@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,18 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad, Util} from 'n3';
-import {Characteristic, Enumeration} from '../../aspect-meta-model';
-import {DefaultState} from '../../aspect-meta-model/characteristic/default-state';
-import {EnumerationCharacteristicInstantiator} from './enumeration-characteristic-instantiator';
+import {Characteristic, Enumeration} from '../../aspect-meta-model/index.js';
+import {DefaultState} from '../../aspect-meta-model/characteristic/default-state.js';
+import {EnumerationCharacteristicInstantiator} from './enumeration-characteristic-instantiator.js';
 
 export class StateCharacteristicInstantiator extends EnumerationCharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     protected processElement(quads: Array<Quad>): Characteristic {
         const sammC = this.metaModelElementInstantiator.sammC;
         const stateCharacteristic = <DefaultState>super.processElement(quads);
@@ -33,15 +27,15 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
             if (sammC.isDefaultValueProperty(quad.predicate.value)) {
                 stateCharacteristic.defaultValue = Util.isLiteral(quad.object)
                     ? `${quad.object.value}`
-                    : this.resolveValue(quad, dataType?.object.value);
+                    : this.resolveValue(quad, dataType?.object.value as string);
             }
         });
 
         return stateCharacteristic;
     }
 
-    protected creatEnumerationObject(): Enumeration {
-        return new DefaultState(null, null, null, null, null);
+    protected createEnumerationObject(): Enumeration {
+        return new DefaultState(null!, null!, null!, null!, null!);
     }
 
     shouldProcess(nameNode: NamedNode): boolean {

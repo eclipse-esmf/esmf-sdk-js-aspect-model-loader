@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -25,8 +25,8 @@ import {
     QuantityKind,
     Unit,
     Value,
-} from '../aspect-meta-model';
-import {ModelVisitor} from './model-visitor';
+} from '../aspect-meta-model/index.js';
+import {ModelVisitor} from './model-visitor.js';
 
 export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
     skipProperties: Array<string> = ['_wrappedProperty', '_parents'];
@@ -39,9 +39,9 @@ export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
      * @return {T} result of visiting the element.
      */
     visit(element: BaseMetaModelElement, context: U): T {
-        const item: U = element.accept(<any>this, context);
+        const item: U = element.accept(this as unknown as ModelVisitor<U, U>, context);
         this.getObjectKeys(element).forEach(attributeKey => {
-            const attributeValue: any = this.getValue(attributeKey, element);
+            const attributeValue = this.getValue(attributeKey, element);
             if (this.skipProperties.find(prop => attributeKey === prop) == undefined) {
                 if (this.isPropertyInstanceDefinition(attributeValue)) {
                     return this.visit(attributeValue, item);
@@ -54,58 +54,60 @@ export class DefaultAspectModelVisitor<T, U> implements ModelVisitor<T, U> {
                 }
             }
         });
-        return null;
+        return null!;
     }
 
     private getObjectKeys(element: BaseMetaModelElement): Array<string> {
         return Object.keys(element instanceof DefaultPropertyInstanceDefinition ? element.wrappedProperty : element);
     }
 
-    private getValue(key: string, element: BaseMetaModelElement): any {
-        return element instanceof DefaultPropertyInstanceDefinition ? element.wrappedProperty[key] : element[key];
+    private getValue(key: string, element: BaseMetaModelElement): unknown {
+        return element instanceof DefaultPropertyInstanceDefinition
+            ? (element.wrappedProperty as unknown as Record<string, unknown>)[key]
+            : (element as unknown as Record<string, unknown>)[key];
     }
 
-    private isPropertyInstanceDefinition(attributeValue: any): boolean {
+    private isPropertyInstanceDefinition(attributeValue: unknown): attributeValue is BaseMetaModelElement {
         return attributeValue instanceof Base || attributeValue instanceof DefaultPropertyInstanceDefinition;
     }
 
-    visitAspect(aspect: Aspect, context: U): T {
-        return undefined;
+    visitAspect(_aspect: Aspect, _context: U): T {
+        return undefined!;
     }
 
-    visitCharacteristic(characteristic: Characteristic, context: U): T {
-        return undefined;
+    visitCharacteristic(_characteristic: Characteristic, _context: U): T {
+        return undefined!;
     }
 
-    visitConstraint(constraint: Constraint, context: U): T {
-        return undefined;
+    visitConstraint(_constraint: Constraint, _context: U): T {
+        return undefined!;
     }
 
-    visitEntity(entity: Entity, context: U): T {
-        return undefined;
+    visitEntity(_entity: Entity, _context: U): T {
+        return undefined!;
     }
 
-    visitOperation(operation: Operation, context: U): T {
-        return undefined;
+    visitOperation(_operation: Operation, _context: U): T {
+        return undefined!;
     }
 
-    visitEvent(unit: Event, context: U): T {
-        return undefined;
+    visitEvent(_unit: Event, _context: U): T {
+        return undefined!;
     }
 
-    visitProperty(property: Property, context: U): T {
-        return undefined;
+    visitProperty(_property: Property, _context: U): T {
+        return undefined!;
     }
 
-    visitQuantityKind(quantityKind: QuantityKind, context: U): T {
-        return undefined;
+    visitQuantityKind(_quantityKind: QuantityKind, _context: U): T {
+        return undefined!;
     }
 
-    visitUnit(unit: Unit, context: U): T {
-        return undefined;
+    visitUnit(_unit: Unit, _context: U): T {
+        return undefined!;
     }
 
-    visitValue(value: Value, context: U): T {
-        return undefined;
+    visitValue(_value: Value, _context: U): T {
+        return undefined!;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -212,8 +212,8 @@ export const rangeConstraint = `
     samm:name "RangeConstraint";
     samm:preferredName "Rangeconstraint"@en;
     samm:description "Test range constraint"@en;
-    samm-c:maxValue "6";
-    samm-c:minValue "4";
+    samm-c:maxValue "6"^^<http://www.w3.org/2001/XMLSchema#int>;
+    samm-c:minValue "4"^^<http://www.w3.org/2001/XMLSchema#int>;
     samm-c:lowerBoundDefinition samm-c:GREATER_THAN;
     samm-c:upperBoundDefinition samm-c:AT_MOST.
 `;

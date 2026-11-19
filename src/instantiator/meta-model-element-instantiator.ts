@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,38 +12,38 @@
  */
 
 import {NamedNode, Quad, Util} from 'n3';
-import {Base, Characteristic, Event, Operation, Property} from '../aspect-meta-model';
-import {PropertyInstantiator} from './property-instantiator';
-import {CharacteristicInstantiator} from './characteristic/characteristic-instantiator';
-import {Samm, SammC, SammE, SammU} from '../vocabulary';
-import {EncodingConstraintInstantiator} from './constraint/encoding-constraint-instantiator';
-import {DurationCharacteristicInstantiator} from './characteristic/duration-characteristic-instantiator';
-import {RegularExpressionConstraintInstantiator} from './constraint/regular-expression-constraint-instantiator';
-import {LanguageConstraintInstantiator} from './constraint/language-constraint-instantiator';
-import {BaseMetaModelElement} from '../aspect-meta-model/base';
-import {RangeConstraintInstantiator} from './constraint/range-constraint-instantiator';
-import {SingleEntityInstantiator} from './characteristic/single-entity-instantiator';
-import {EnumerationCharacteristicInstantiator} from './characteristic/enumeration-characteristic-instantiator';
-import {MeasurementCharacteristicInstantiator} from './characteristic/measurement-characteristic-instantiator';
-import {CollectionCharacteristicInstantiator} from './characteristic/collection-characteristic-instantiator';
-import {LengthConstraintInstantiator} from './constraint/length-constraint-instantiator';
-import {FixedPointConstraintInstantiator} from './constraint/fixed-point-constraint-instantiator';
-import {LocaleConstraintInstantiator} from './constraint/locale-constraint-instantiator';
-import {EitherCharacteristicInstantiator} from './characteristic/either-characteristic-instantiator';
-import {StructuredValueCharacteristicInstantiator} from './characteristic/structured-value-instantiator';
-import {ListCharacteristicInstantiator} from './characteristic/list-characteristic-instantiator';
-import {StateCharacteristicInstantiator} from './characteristic/state-characteristic-instantiator';
-import {SortedSetCharacteristicInstantiator} from './characteristic/sorted-set-characteristic-instantiator';
-import {SetCharacteristicInstantiator} from './characteristic/set-characteristic-instantiator';
-import {CodeCharacteristicInstantiator} from './characteristic/code-characteristic-instantiator';
-import {OperationInstantiator} from './operation-instantiator';
-import {TimeSeriesCharacteristicInstantiator} from './characteristic/timeseries-characteristic-instantiator';
-import {CacheStrategy} from '../shared/model-element-cache.service';
-import {ConstraintInstantiator} from './constraint/constraint-instantiator';
-import {QuantifiableCharacteristicInstantiator} from './characteristic/quantifiable-characteristic-instantiator';
-import {RdfModel} from '../shared/rdf-model';
-import {TraitCharacteristicInstantiator} from './characteristic/trait-characteristic-instantiator';
-import {EventInstantiator} from './event-instantiator';
+import {Base, Characteristic, Event, Operation, Property} from '../aspect-meta-model/index.js';
+import {PropertyInstantiator} from './property-instantiator.js';
+import {CharacteristicInstantiator} from './characteristic/characteristic-instantiator.js';
+import {Samm, SammC, SammE, SammU} from '../vocabulary/index.js';
+import {EncodingConstraintInstantiator} from './constraint/encoding-constraint-instantiator.js';
+import {DurationCharacteristicInstantiator} from './characteristic/duration-characteristic-instantiator.js';
+import {RegularExpressionConstraintInstantiator} from './constraint/regular-expression-constraint-instantiator.js';
+import {LanguageConstraintInstantiator} from './constraint/language-constraint-instantiator.js';
+import {BaseMetaModelElement} from '../aspect-meta-model/base.js';
+import {RangeConstraintInstantiator} from './constraint/range-constraint-instantiator.js';
+import {SingleEntityInstantiator} from './characteristic/single-entity-instantiator.js';
+import {EnumerationCharacteristicInstantiator} from './characteristic/enumeration-characteristic-instantiator.js';
+import {MeasurementCharacteristicInstantiator} from './characteristic/measurement-characteristic-instantiator.js';
+import {CollectionCharacteristicInstantiator} from './characteristic/collection-characteristic-instantiator.js';
+import {LengthConstraintInstantiator} from './constraint/length-constraint-instantiator.js';
+import {FixedPointConstraintInstantiator} from './constraint/fixed-point-constraint-instantiator.js';
+import {LocaleConstraintInstantiator} from './constraint/locale-constraint-instantiator.js';
+import {EitherCharacteristicInstantiator} from './characteristic/either-characteristic-instantiator.js';
+import {StructuredValueCharacteristicInstantiator} from './characteristic/structured-value-instantiator.js';
+import {ListCharacteristicInstantiator} from './characteristic/list-characteristic-instantiator.js';
+import {StateCharacteristicInstantiator} from './characteristic/state-characteristic-instantiator.js';
+import {SortedSetCharacteristicInstantiator} from './characteristic/sorted-set-characteristic-instantiator.js';
+import {SetCharacteristicInstantiator} from './characteristic/set-characteristic-instantiator.js';
+import {CodeCharacteristicInstantiator} from './characteristic/code-characteristic-instantiator.js';
+import {OperationInstantiator} from './operation-instantiator.js';
+import {TimeSeriesCharacteristicInstantiator} from './characteristic/timeseries-characteristic-instantiator.js';
+import {CacheStrategy} from '../shared/model-element-cache.service.js';
+import {ConstraintInstantiator} from './constraint/constraint-instantiator.js';
+import {QuantifiableCharacteristicInstantiator} from './characteristic/quantifiable-characteristic-instantiator.js';
+import {RdfModel} from '../shared/rdf-model.js';
+import {TraitCharacteristicInstantiator} from './characteristic/trait-characteristic-instantiator.js';
+import {EventInstantiator} from './event-instantiator.js';
 
 export class MetaModelElementInstantiator {
     private characteristicInstantiator: CharacteristicInstantiator;
@@ -87,7 +87,7 @@ export class MetaModelElementInstantiator {
     }
 
     private setupConstraintInstantiatorProcessChain(): ConstraintInstantiator {
-        const constraintInstantiator = new ConstraintInstantiator(this, null);
+        const constraintInstantiator = new ConstraintInstantiator(this, null!);
         const rangeConstraintInstantiator = new RangeConstraintInstantiator(this, constraintInstantiator);
         const regularExpressionConstraintInstantiator = new RegularExpressionConstraintInstantiator(this, rangeConstraintInstantiator);
         const languageConstraintInstantiator = new LanguageConstraintInstantiator(this, regularExpressionConstraintInstantiator);
@@ -153,7 +153,7 @@ export class MetaModelElementInstantiator {
     }
 
     initBaseProperties(quads: Array<Quad>, metaModelElement: BaseMetaModelElement, rdfModel: RdfModel) {
-        let typeQuad: Quad;
+        let typeQuad: Quad | undefined;
 
         quads.forEach(quad => {
             if (this.samm.isDescriptionProperty(quad.predicate.value)) {
@@ -174,7 +174,7 @@ export class MetaModelElementInstantiator {
         }
     }
 
-    private initAspectModelUrn(typeQuad: Quad, quads: Array<Quad>, metaModelElement: Base) {
+    private initAspectModelUrn(typeQuad: Quad | undefined, quads: Array<Quad>, metaModelElement: Base) {
         if (typeQuad && !Util.isBlankNode(typeQuad.subject)) {
             metaModelElement.aspectModelUrn = `${typeQuad.subject.value}`;
         } else if (quads && quads.length > 0) {
@@ -191,7 +191,7 @@ export class MetaModelElementInstantiator {
 
     private addDescription(quad: Quad, metaModelElement: BaseMetaModelElement) {
         if (this.rdfModel.getLocale(quad)) {
-            metaModelElement.addDescription(this.rdfModel.getLocale(quad), quad.object.value);
+            metaModelElement.addDescription(this.rdfModel.getLocale(quad)!, quad.object.value);
         } else {
             metaModelElement.addDescription('en', quad.object.value);
         }
@@ -199,7 +199,7 @@ export class MetaModelElementInstantiator {
 
     private addPreferredName(quad: Quad, metaModelElement: BaseMetaModelElement) {
         if (this.rdfModel.getLocale(quad)) {
-            metaModelElement.addPreferredName(this.rdfModel.getLocale(quad), quad.object.value);
+            metaModelElement.addPreferredName(this.rdfModel.getLocale(quad)!, quad.object.value);
         } else {
             metaModelElement.addPreferredName('en', quad.object.value);
         }

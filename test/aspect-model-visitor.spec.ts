@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -21,23 +21,25 @@ import {
 } from '../src';
 import {traitAspectModel} from './models/trait-model';
 import {Subscription} from 'rxjs';
-import DoneCallback = jest.DoneCallback;
 
 describe('Aspect model visitor tests', (): void => {
     let loader: AspectModelLoader;
     let aspect: DefaultAspect;
     let subscription: Subscription;
 
-    beforeEach((done: DoneCallback): void => {
-        loader = new AspectModelLoader();
-        subscription = loader.loadSelfContainedModel(traitAspectModel).subscribe(_aspect => {
-            aspect = <DefaultAspect>_aspect;
-            done();
-        });
-    });
+    beforeEach(
+        (): Promise<void> =>
+            new Promise<void>(done => {
+                loader = new AspectModelLoader();
+                subscription = loader.loadSelfContainedModel(traitAspectModel).subscribe(_aspect => {
+                    aspect = <DefaultAspect>_aspect;
+                    done();
+                });
+            })
+    );
 
     test('should visit the aspect successfully', (): void => {
-        const visitor = new CountElementVisitor<any, any>();
+        const visitor = new CountElementVisitor<unknown, unknown>();
         visitor.visit(aspect, {});
         expect(visitor.countCharacteristics).toEqual(4);
         expect(visitor.countOperations).toEqual(0);

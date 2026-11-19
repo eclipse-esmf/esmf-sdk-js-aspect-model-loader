@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from './base';
-import {QuantityKind} from './default-quantity-kind';
-import {ModelVisitor} from '../visitor/model-visitor';
+import {Base, BaseMetaModelElement} from './base.js';
+import {QuantityKind} from './default-quantity-kind.js';
+import {ModelVisitor} from '../visitor/model-visitor.js';
 
 export interface Unit extends BaseMetaModelElement {
     symbol?: string;
@@ -21,7 +21,7 @@ export interface Unit extends BaseMetaModelElement {
     name: string;
     referenceUnit?: string;
     conversionFactor?: string;
-    quantityKinds?: Array<any>;
+    quantityKinds?: Array<QuantityKind>;
 }
 
 export class DefaultUnit extends Base implements Unit {

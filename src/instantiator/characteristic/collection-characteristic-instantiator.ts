@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,27 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {CharacteristicInstantiator} from '../characteristic/characteristic-instantiator.js';
 import {NamedNode, Quad} from 'n3';
-import {Characteristic, Collection} from '../../aspect-meta-model';
-import {DefaultCollection} from '../../aspect-meta-model/characteristic/default-collection';
+import {Characteristic, Collection} from '../../aspect-meta-model/index.js';
+import {DefaultCollection} from '../../aspect-meta-model/characteristic/default-collection.js';
 
 export class CollectionCharacteristicInstantiator extends CharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     protected processElement(quads: Array<Quad>): Characteristic {
-        return this.initProperties(this.creatCollectionObject(), quads);
+        return this.initProperties(this.createCollectionObject(), quads);
     }
 
     /**
      * Override the method in the corresponding specific collection class to create the correct type of
      * collection e.g. see ListCharacteristicInstantiator.
      */
-    protected creatCollectionObject(): Collection {
-        return new DefaultCollection(null, null, null, true, false, null);
+    protected createCollectionObject(): Collection {
+        return new DefaultCollection(null!, null!, null!, true, false, null!);
     }
 
     private initProperties(collectionCharacteristic: Collection, quads: Array<Quad>): Collection {
@@ -45,7 +40,7 @@ export class CollectionCharacteristicInstantiator extends CharacteristicInstanti
             } else if (sammC.isOrderedProperty(quad.predicate.value)) {
                 collectionCharacteristic.isOrdered = Boolean(quad.object.value);
             } else if (sammC.isElementCharacteristicProperty(quad.predicate.value)) {
-                collectionCharacteristic.elementCharacteristic = this.create(quad);
+                collectionCharacteristic.elementCharacteristic = this.metaModelElementInstantiator.getCharacteristic(quad);
             }
         });
         return collectionCharacteristic;

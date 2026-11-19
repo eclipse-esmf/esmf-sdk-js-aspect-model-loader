@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Characteristic} from '../../aspect-meta-model';
-import {DefaultCharacteristic} from '../../aspect-meta-model/characteristic/default-characteristic';
-import {DefaultScalar} from '../../aspect-meta-model/characteristic/default-scalar';
+import {Characteristic} from '../../aspect-meta-model/index.js';
+import {DefaultCharacteristic} from '../../aspect-meta-model/characteristic/default-characteristic.js';
+import {DefaultScalar} from '../../aspect-meta-model/characteristic/default-scalar.js';
 import {NamedNode} from 'n3';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {XsdDataTypes} from '../../shared/xsd-datatypes';
+import {MetaModelElementInstantiator} from '../meta-model-element-instantiator.js';
+import {XsdDataTypes} from '../../shared/xsd-datatypes.js';
 
 export class PredefinedCharacteristicInstantiator {
-    private characteristicInstanceList = [];
+    private characteristicInstanceList: Record<string, () => Characteristic> = {};
     private readonly xsdDataTypes: XsdDataTypes;
 
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
@@ -191,7 +191,7 @@ export class PredefinedCharacteristicInstantiator {
         if (createFunction) {
             return createFunction();
         } else {
-            return null;
+            return null!;
         }
     }
 

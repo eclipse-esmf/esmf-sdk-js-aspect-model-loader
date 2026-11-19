@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from '../aspect-meta-model';
+import {Base, BaseMetaModelElement} from '../aspect-meta-model/index.js';
 
 export interface CacheStrategy {
     /**
@@ -54,7 +54,7 @@ export interface CacheStrategy {
      * @param modelElement element instance to resolve
      * @param overwrite force to overwrite it if an element with the name already exists
      */
-    addElement(name: string, modelElement: BaseMetaModelElement, overwrite?: boolean);
+    addElement(name: string, modelElement: BaseMetaModelElement, overwrite?: boolean): void;
 }
 
 /**
@@ -103,7 +103,7 @@ export class ModelElementCacheService implements CacheStrategy {
         return instance;
     }
 
-    public addElement(name: string, modelElement: BaseMetaModelElement, overwrite = false) {
+    public addElement(name: string, modelElement: BaseMetaModelElement, overwrite = false): void {
         const cachedElement = this.instanceCache.get(name);
         if (!overwrite && cachedElement) {
             return;

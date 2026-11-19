@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultProperty, DefaultPropertyInstanceDefinition} from '../aspect-meta-model/default-property';
-import {DefaultCharacteristic, Property} from '../aspect-meta-model';
+import {DefaultProperty, DefaultPropertyInstanceDefinition} from '../aspect-meta-model/default-property.js';
+import {DefaultCharacteristic, Property} from '../aspect-meta-model/index.js';
 import {Quad, Util} from 'n3';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {Samm} from '../vocabulary';
-import {ValueInstantiator} from './value-instantiator';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
+import {Samm} from '../vocabulary/index.js';
+import {ValueInstantiator} from './value-instantiator.js';
 
 export class PropertyInstantiator {
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
@@ -24,8 +24,8 @@ export class PropertyInstantiator {
     createProperty(quad: Quad): Property {
         const samm = this.metaModelElementInstantiator.samm;
         const rdfModel = this.metaModelElementInstantiator.rdfModel;
-        const property = new DefaultProperty(null, null, null, null);
-        const propertyInstanceDefinition = new DefaultPropertyInstanceDefinition(property, null, null, null, null);
+        const property = new DefaultProperty(null!, null!, null!, null!);
+        const propertyInstanceDefinition = new DefaultPropertyInstanceDefinition(property, null!, null!, null!, null!);
         property.isAnonymousNode = this.isDefinedInline(quad);
 
         const quads = this.resolvePropertyQuads(property, quad);
@@ -100,13 +100,13 @@ export class PropertyInstantiator {
     private createPredefinedAbstractProperty(urn: string): Property {
         const sammE = this.metaModelElementInstantiator.sammE;
         if (!urn.startsWith(sammE.getNamespace())) {
-            return null;
+            return null!;
         }
         const property = new DefaultProperty(
             this.metaModelElementInstantiator.samm.version,
             urn,
             urn.substring(sammE.getNamespace().length),
-            null
+            null!
         );
         property.isAbstract = true;
         return <Property>this.metaModelElementInstantiator.cacheService.resolveInstance(property);

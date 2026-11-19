@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -31,9 +31,8 @@ import {
     collectionCharacteristicClassString,
     eitherCharacteristicClass,
     enumerationCharacteristicClassEntity,
-    enumerationCharacteristicWithEntityInstanceClass
+    enumerationCharacteristicWithEntityInstanceClass,
 } from './models/characteristics';
-import DoneCallback = jest.DoneCallback;
 
 describe('Characteristics tests', (): void => {
     let loader: AspectModelLoader;
@@ -43,15 +42,18 @@ describe('Characteristics tests', (): void => {
     let subscription: Subscription;
     const currentLocale = 'en';
     describe('Characteristic class with string datatype', (): void => {
-        beforeAll((done: DoneCallback): void => {
-            loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(characteristicClassString).subscribe((_aspect: DefaultAspect): void => {
-                aspect = _aspect;
-                testProperty = aspect.properties[0];
-                testCharacteristic = testProperty.characteristic;
-                done();
-            });
-        });
+        beforeAll(
+            (): Promise<void> =>
+                new Promise<void>(done => {
+                    loader = new AspectModelLoader();
+                    subscription = loader.loadSelfContainedModel(characteristicClassString).subscribe((_aspect): void => {
+                        aspect = _aspect as DefaultAspect;
+                        testProperty = aspect.properties[0];
+                        testCharacteristic = testProperty.characteristic;
+                        done();
+                    });
+                })
+        );
 
         it('should include Constraint name in the URN code', (): void => {
             expect(testCharacteristic.aspectModelUrn.indexOf('CharacteristicTest')).toBeGreaterThan(-1);
@@ -75,15 +77,21 @@ describe('Characteristics tests', (): void => {
     });
 
     describe('Collection class with string datatype', (): void => {
-        beforeAll((done: DoneCallback): void => {
-            loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(collectionCharacteristicClassString).subscribe((_aspect: DefaultAspect): void => {
-                aspect = _aspect;
-                testProperty = aspect.properties[0];
-                testCharacteristic = testProperty.characteristic;
-                done();
-            }, error => console.error(error));
-        });
+        beforeAll(
+            (): Promise<void> =>
+                new Promise<void>(done => {
+                    loader = new AspectModelLoader();
+                    subscription = loader.loadSelfContainedModel(collectionCharacteristicClassString).subscribe(
+                        (_aspect): void => {
+                            aspect = _aspect as DefaultAspect;
+                            testProperty = aspect.properties[0];
+                            testCharacteristic = testProperty.characteristic;
+                            done();
+                        },
+                        error => console.error(error)
+                    );
+                })
+        );
 
         it('should have set datatype string', (): void => {
             expect((testProperty.effectiveDataType as DefaultScalar).shortUrn).toEqual('string');
@@ -111,8 +119,8 @@ describe('Characteristics tests', (): void => {
         it('should have element characteristic with correct fields', (): void => {
             const elementCharacteristic = (testCharacteristic as DefaultCollection).elementCharacteristic;
             expect(elementCharacteristic instanceof DefaultCharacteristic).toBe(true);
-            expect(elementCharacteristic.aspectModelUrn.indexOf('Characteristic1')).toBeGreaterThan(-1);
-            expect(elementCharacteristic.getDescription(currentLocale)).toBe('This is an element Characteristic!');
+            expect(elementCharacteristic!.aspectModelUrn.indexOf('Characteristic1')).toBeGreaterThan(-1);
+            expect(elementCharacteristic!.getDescription(currentLocale)).toBe('This is an element Characteristic!');
         });
 
         afterAll((): void => {
@@ -123,22 +131,26 @@ describe('Characteristics tests', (): void => {
     });
 
     describe('Enumeration class with Entity datatype', (): void => {
-        beforeAll((done: DoneCallback): void => {
-            loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(enumerationCharacteristicClassEntity).subscribe((_aspect: DefaultAspect): void => {
-                aspect = _aspect;
-                testProperty = aspect.properties[0];
-                done();
-            });
-        });
+        beforeAll(
+            (): Promise<void> =>
+                new Promise<void>(done => {
+                    loader = new AspectModelLoader();
+                    subscription = loader.loadSelfContainedModel(enumerationCharacteristicClassEntity).subscribe((_aspect): void => {
+                        aspect = _aspect as DefaultAspect;
+                        testProperty = aspect.properties[0];
+                        done();
+                    });
+                })
+        );
 
         it('should have enumeration type', (): void => {
             expect(testProperty.characteristic instanceof DefaultEnumeration).toBe(true);
         });
 
         it('should have correct model urn', (): void => {
-            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn)
-                .toEqual('urn:samm:org.eclipse.esmf.test:1.0.0#resultStateAttributeDescription');
+            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn).toEqual(
+                'urn:samm:org.eclipse.esmf.test:1.0.0#resultStateAttributeDescription'
+            );
         });
 
         it('should have no description and loads successfully', (): void => {
@@ -170,22 +182,28 @@ describe('Characteristics tests', (): void => {
     });
 
     describe('Enumeration class with Entity Instance', (): void => {
-        beforeAll((done: DoneCallback): void => {
-            loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(enumerationCharacteristicWithEntityInstanceClass).subscribe((_aspect: TestAspect): void => {
-                aspect = _aspect;
-                testProperty = aspect.properties[0];
-                done();
-            });
-        });
+        beforeAll(
+            (): Promise<void> =>
+                new Promise<void>(done => {
+                    loader = new AspectModelLoader();
+                    subscription = loader
+                        .loadSelfContainedModel(enumerationCharacteristicWithEntityInstanceClass)
+                        .subscribe((_aspect): void => {
+                            aspect = _aspect as DefaultAspect;
+                            testProperty = aspect.properties[0];
+                            done();
+                        });
+                })
+        );
 
         it('should have enumeration type', (): void => {
             expect(testProperty.characteristic instanceof DefaultEnumeration).toBe(true);
         });
 
         it('should have correct model urn', (): void => {
-            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn)
-                .toEqual('urn:samm:org.eclipse.esmf.test:1.0.0#resultTypeDescription');
+            expect((testProperty.characteristic.dataType as DefaultEntity).properties[1].aspectModelUrn).toEqual(
+                'urn:samm:org.eclipse.esmf.test:1.0.0#resultTypeDescription'
+            );
         });
 
         it('should have two entries', (): void => {
@@ -206,35 +224,38 @@ describe('Characteristics tests', (): void => {
     });
 
     describe('Either class with list and simple characteristic', (): void => {
-        beforeAll((done: DoneCallback): void => {
-            loader = new AspectModelLoader();
-            subscription = loader.loadSelfContainedModel(eitherCharacteristicClass).subscribe((_aspect: DefaultAspect): void => {
-                aspect = _aspect;
-                testProperty = aspect.properties[0];
-                done();
-            });
-        });
+        beforeAll(
+            (): Promise<void> =>
+                new Promise<void>(done => {
+                    loader = new AspectModelLoader();
+                    subscription = loader.loadSelfContainedModel(eitherCharacteristicClass).subscribe((_aspect): void => {
+                        aspect = _aspect as DefaultAspect;
+                        testProperty = aspect.properties[0];
+                        done();
+                    });
+                })
+        );
 
         it('should property1 has left type float', (): void => {
             expect(testProperty.characteristic instanceof DefaultEither).toBeTruthy();
-            expect((testProperty.characteristic as DefaultEither).effectiveLeftDataType.urn).toContain('string');
+            expect((testProperty.characteristic as DefaultEither).effectiveLeftDataType!.urn).toContain('string');
         });
 
         it('should property1 has right type float', (): void => {
             expect(testProperty.characteristic instanceof DefaultEither).toBeTruthy();
             expect((testProperty.characteristic as DefaultEither).right).toBeInstanceOf(DefaultList);
-            expect((testProperty.characteristic as DefaultEither).effectiveRightDataType.urn).toContain('float');
+            expect((testProperty.characteristic as DefaultEither).effectiveRightDataType!.urn).toContain('float');
         });
 
         it('should property2 has left type SpatialPosition', (): void => {
-            expect((aspect.properties[1].characteristic as DefaultEither).effectiveLeftDataType.urn).toContain('SpatialPosition');
-            expect((aspect.properties[1].characteristic as DefaultEither).effectiveLeftDataType.constructor.name).toBe('DefaultEntity');
+            expect((aspect.properties[1].characteristic as DefaultEither).effectiveLeftDataType!.urn).toContain('SpatialPosition');
+            expect((aspect.properties[1].characteristic as DefaultEither).effectiveLeftDataType!.constructor.name).toBe('DefaultEntity');
         });
 
         it('should property2 has right type string', (): void => {
             expect(aspect.properties[1].characteristic instanceof DefaultEither).toBeTruthy();
             expect((aspect.properties[1].characteristic as DefaultEither).right).toBeInstanceOf(DefaultList);
-            expect((aspect.properties[1].characteristic as DefaultEither).effectiveRightDataType.urn).toContain('string');
+            expect((aspect.properties[1].characteristic as DefaultEither).effectiveRightDataType!.urn).toContain('string');
         });
 
         afterAll((): void => {

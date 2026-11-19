@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,9 +12,9 @@
  */
 
 import {Quad} from 'n3';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {PropertyInstantiator} from './property-instantiator';
-import {DefaultEvent, DefaultPropertyInstanceDefinition, Event} from '../aspect-meta-model';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
+import {PropertyInstantiator} from './property-instantiator.js';
+import {DefaultEvent, DefaultPropertyInstanceDefinition, Event} from '../aspect-meta-model/index.js';
 
 export class EventInstantiator {
     constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
@@ -22,7 +22,7 @@ export class EventInstantiator {
     createEvent(quad: Quad): Event {
         const samm = this.metaModelElementInstantiator.samm;
         const rdfModel = this.metaModelElementInstantiator.rdfModel;
-        const event = new DefaultEvent(null, null, null);
+        const event = new DefaultEvent(null!, null!, null!);
         const quads = rdfModel.findAnyProperty(quad);
         const propertyInstantiator = new PropertyInstantiator(this.metaModelElementInstantiator);
 

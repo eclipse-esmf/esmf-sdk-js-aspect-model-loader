@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -23,8 +23,8 @@ import {
     QuantityKind,
     Unit,
     Value,
-} from '../aspect-meta-model';
-import {ModelVisitor} from './model-visitor';
+} from '../aspect-meta-model/index.js';
+import {ModelVisitor} from './model-visitor.js';
 
 /**
  * Default visitor to traverse alle concepts defined within the different namespaces.
@@ -37,50 +37,50 @@ export class DefaultNamespaceVisitor implements ModelVisitor<BaseMetaModelElemen
      */
     public visit(map: Map<string, Array<BaseMetaModelElement>>): void {
         for (const mapKey of map.keys()) {
-            const modelElements: Array<BaseMetaModelElement> = map.get(mapKey);
+            const modelElements: Array<BaseMetaModelElement> = map.get(mapKey)!;
             for (const element of modelElements) {
                 element.accept(this, map);
             }
         }
     }
 
-    visitAspect(aspect: Aspect, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitAspect(_aspect: Aspect, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitCharacteristic(characteristic: Characteristic, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitCharacteristic(_characteristic: Characteristic, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitConstraint(constraint: Constraint, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitConstraint(_constraint: Constraint, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitEntity(entity: Entity, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitEntity(_entity: Entity, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitOperation(operation: Operation, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitOperation(_operation: Operation, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitEvent(unit: Event, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitEvent(_unit: Event, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitProperty(property: Property, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitProperty(_property: Property, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitQuantityKind(quantityKind: QuantityKind, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitQuantityKind(_quantityKind: QuantityKind, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitUnit(unit: Unit, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitUnit(_unit: Unit, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 
-    visitValue(value: Value, context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
-        return undefined;
+    visitValue(_value: Value, _context: Map<string, Array<BaseMetaModelElement>>): BaseMetaModelElement {
+        return undefined!;
     }
 }

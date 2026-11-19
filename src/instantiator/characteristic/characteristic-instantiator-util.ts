@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Quad} from "n3";
+import {Literal, Quad} from 'n3';
 
 export interface MultiLanguageText {
     value: string;
@@ -19,44 +19,43 @@ export interface MultiLanguageText {
 }
 
 export class CharacteristicInstantiatorUtil {
-
-public static resolveValues(quad: Quad, dataType: string): string | number {
-    if (!dataType || !dataType.includes('#')) {
-        return `${quad.object.value}`;
-    }
-
-    switch (dataType.split('#')[1]) {
-        case 'decimal':
-        case 'integer':
-        case 'double':
-        case 'float':
-        case 'byte':
-        case 'short':
-        case 'int':
-        case 'long':
-        case 'unsignedByte':
-        case 'unsignedLong':
-        case 'unsignedInt':
-        case 'unsignedShort':
-        case 'positiveInteger':
-        case 'nonNegativeInteger':
-        case 'negativeInteger':
-        case 'nonPositiveInteger':
-            return Number(quad.object.value);
-        default:
+    public static resolveValues(quad: Quad, dataType: string): string | number {
+        if (!dataType || !dataType.includes('#')) {
             return `${quad.object.value}`;
+        }
+
+        switch (dataType.split('#')[1]) {
+            case 'decimal':
+            case 'integer':
+            case 'double':
+            case 'float':
+            case 'byte':
+            case 'short':
+            case 'int':
+            case 'long':
+            case 'unsignedByte':
+            case 'unsignedLong':
+            case 'unsignedInt':
+            case 'unsignedShort':
+            case 'positiveInteger':
+            case 'nonNegativeInteger':
+            case 'negativeInteger':
+            case 'nonPositiveInteger':
+                return Number(quad.object.value);
+            default:
+                return `${quad.object.value}`;
+        }
     }
-}
 
-public static solveBlankNodeValues(resolvedBlankNodes: Array<Quad>): Array<MultiLanguageText> {
-    return resolvedBlankNodes.length > 0 ? resolvedBlankNodes.map(item => this.createLanguageObject(item)) : [];
-}
+    public static solveBlankNodeValues(resolvedBlankNodes: Array<Quad>): Array<MultiLanguageText> {
+        return resolvedBlankNodes.length > 0 ? resolvedBlankNodes.map(item => this.createLanguageObject(item)) : [];
+    }
 
-public static getPredicateKey(quad: Quad): string {
-    return quad.predicate.value.split('#')[1];
-}
+    public static getPredicateKey(quad: Quad): string {
+        return quad.predicate.value.split('#')[1];
+    }
 
-public static createLanguageObject(quad: Quad): MultiLanguageText {
-    return {value: quad.object.value, language: (quad.object as any).language};
-}
+    public static createLanguageObject(quad: Quad): MultiLanguageText {
+        return {value: quad.object.value, language: (quad.object as Literal).language};
+    }
 }

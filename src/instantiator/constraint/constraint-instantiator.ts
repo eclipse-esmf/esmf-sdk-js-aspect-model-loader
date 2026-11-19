@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,15 +12,10 @@
  */
 
 import {Quad} from 'n3';
-import {Constraint, DefaultConstraint} from '../../aspect-meta-model';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {BaseConstraintCharacteristicInstantiator} from '../base-constraint-characteristic-instantiator';
+import {Constraint, DefaultConstraint} from '../../aspect-meta-model/index.js';
+import {BaseConstraintCharacteristicInstantiator} from '../base-constraint-characteristic-instantiator.js';
 
 export class ConstraintInstantiator extends BaseConstraintCharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     create(quad: Quad): Constraint {
         const constraint = super.create(quad);
 
@@ -30,7 +25,7 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
             const initialName: string = constraint.name;
 
             // assign a unique random name
-            constraint.name = constraint.name ? constraint.name : 'constraint_' + Math.random().toString(36).substr(2, 9);
+            constraint.name = constraint.name ? constraint.name : 'constraint_' + Math.random().toString(36).slice(2, 11);
             constraint.aspectModelUrn = `${this.metaModelElementInstantiator.rdfModel.getAspectModelUrn()}${constraint.name}`;
             this.metaModelElementInstantiator.cacheService.addElement(initialName, constraint);
         }
@@ -38,7 +33,7 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
         return <DefaultConstraint>this.metaModelElementInstantiator.cacheService.resolveInstance(constraint);
     }
 
-    protected processElement(quads: Array<Quad>): Constraint {
-        return new DefaultConstraint(null, null, 'Constraint');
+    protected processElement(_quads: Array<Quad>): Constraint {
+        return new DefaultConstraint(null!, null!, 'Constraint');
     }
 }

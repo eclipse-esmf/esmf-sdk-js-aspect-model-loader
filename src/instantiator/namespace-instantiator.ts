@@ -1,15 +1,31 @@
-import {RdfModel} from '../shared/rdf-model';
-import {CacheStrategy} from '../shared/model-element-cache.service';
-import {BaseMetaModelElement} from '../aspect-meta-model';
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {RdfModel} from '../shared/rdf-model.js';
+import {CacheStrategy} from '../shared/model-element-cache.service.js';
+import {BaseMetaModelElement} from '../aspect-meta-model/index.js';
 import {NamedNode, Quad} from 'n3';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
-import {EntityInstantiator} from './entity-instantiator';
-import {AspectInstantiator} from './aspect-instantiator';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
+import {EntityInstantiator} from './entity-instantiator.js';
+import {AspectInstantiator} from './aspect-instantiator.js';
 
 export class NamespaceInstantiator {
     private readonly recursiveModelElements: Map<string, Array<BaseMetaModelElement>>;
 
-    constructor(private rdfModel: RdfModel, private cacheService: CacheStrategy) {
+    constructor(
+        private rdfModel: RdfModel,
+        private cacheService: CacheStrategy
+    ) {
         this.recursiveModelElements = new Map<string, Array<BaseMetaModelElement>>();
     }
     /**
@@ -53,14 +69,14 @@ export class NamespaceInstantiator {
             if (!allElementsByNamespace.has(baseMetaModelElement.namespace)) {
                 allElementsByNamespace.set(baseMetaModelElement.namespace, []);
             }
-            allElementsByNamespace.get(baseMetaModelElement.namespace).push(baseMetaModelElement);
+            allElementsByNamespace.get(baseMetaModelElement.namespace)!.push(baseMetaModelElement);
             return false;
         });
 
         return allElementsByNamespace;
     }
 
-    private loadModelElements(type: NamedNode, instantiatorFunction) {
+    private loadModelElements(type: NamedNode, instantiatorFunction: (quad: Quad) => void) {
         this.rdfModel.store.getQuads(null, this.rdfModel.samm.RdfType(), type, null).forEach(instantiatorFunction);
     }
 }

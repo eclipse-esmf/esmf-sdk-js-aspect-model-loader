@@ -1,22 +1,21 @@
 {
-    "editor.codeActionsOnSave": {
-        "source.fixAll.tslint": true
-    },
     "compileOnSave": false,
     "compilerOptions": {
-        "types": ["node", "jest"],
+        "types": ["node"],
+        "rootDir": "./src",
         "outDir": "./dist",
+        "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo",
         "sourceMap": true,
         "declaration": true,
-        "module": "commonjs",
-        "allowJs": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
+        "declarationMap": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "ES2022",
+        "lib": ["ES2022", "DOM"],
+        "useDefineForClassFields": false,
+        "strict": true,
         "esModuleInterop": true,
-        "importHelpers": true,
-        "target": "es6",
-        "downlevelIteration": true,
+        "isolatedModules": true,
         "removeComments": true
     },
     "exclude": ["node_modules"],

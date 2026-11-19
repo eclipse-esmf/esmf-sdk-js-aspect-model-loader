@@ -1,0 +1,11 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": ["src/index.ts"],
+    "out": "docs/api",
+    "name": "ESMF JavaScript SDK (@esmf/sdk-js)",
+    "readme": "README.md",
+    "excludePrivate": true,
+    "excludeInternal": true,
+    "githubPages": true,
+    "treatWarningsAsErrors": false
+}

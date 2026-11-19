@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from './base';
-import {ModelVisitor} from '../visitor/model-visitor';
+import {Base, BaseMetaModelElement} from './base.js';
+import {ModelVisitor} from '../visitor/model-visitor.js';
 
 export type ValueType = string | number | boolean;
 
@@ -26,7 +26,13 @@ export interface Value extends BaseMetaModelElement {
 }
 
 export class DefaultValue extends Base implements Value {
-    constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _value: ValueType, isAnonymousNode = false) {
+    constructor(
+        metaModelVersion: string,
+        aspectModelUrn: string,
+        name: string,
+        private _value: ValueType,
+        isAnonymousNode = false
+    ) {
         super(metaModelVersion, aspectModelUrn, name, isAnonymousNode);
     }
 
@@ -43,6 +49,6 @@ export class DefaultValue extends Base implements Value {
     }
 
     public accept<T, U>(visitor: ModelVisitor<T, U>, context: U): T {
-        return visitor.visitValue ? visitor.visitValue(this, context) : undefined;
+        return visitor.visitValue ? visitor.visitValue(this, context) : undefined!;
     }
 }

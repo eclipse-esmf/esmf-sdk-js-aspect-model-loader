@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -255,7 +255,7 @@ export class Samm {
         return this.ValueProperty().value === value;
     }
 
-    getEncodingList(): Array<any> {
+    getEncodingList(): Array<{value: string; isDefinedBy: string}> {
         return [
             {value: 'US-ASCII', isDefinedBy: `${this.getNamespace()}US-ASCII`},
             {value: 'ISO-8859-1', isDefinedBy: `${this.getNamespace()}ISO-8859-1`},

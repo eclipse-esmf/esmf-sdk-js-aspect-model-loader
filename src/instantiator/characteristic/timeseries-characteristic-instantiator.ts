@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,19 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CharacteristicInstantiator} from './characteristic-instantiator';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode} from 'n3';
-import {Collection, DefaultTimeSeries} from '../../aspect-meta-model';
-import {SortedSetCharacteristicInstantiator} from './sorted-set-characteristic-instantiator';
+import {DefaultTimeSeries} from '../../aspect-meta-model/index.js';
+import {SortedSetCharacteristicInstantiator} from './sorted-set-characteristic-instantiator.js';
 
 export class TimeSeriesCharacteristicInstantiator extends SortedSetCharacteristicInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
-    protected creatCollectionObject(): Collection {
-        return new DefaultTimeSeries(null, null, null, null, null);
+    protected createCollectionObject(): DefaultTimeSeries {
+        return new DefaultTimeSeries(null!, null!, null!, null!, null!);
     }
 
     shouldProcess(nameNode: NamedNode): boolean {

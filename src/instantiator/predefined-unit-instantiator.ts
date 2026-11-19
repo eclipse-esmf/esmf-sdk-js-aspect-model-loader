@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultQuantityKind, QuantityKind} from '../aspect-meta-model/default-quantity-kind';
-import {DefaultUnit, Unit} from '../aspect-meta-model/default-unit';
-import {Samm, SammU} from '../vocabulary';
-import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
+import {DefaultQuantityKind, QuantityKind} from '../aspect-meta-model/default-quantity-kind.js';
+import {DefaultUnit, Unit} from '../aspect-meta-model/default-unit.js';
+import {Samm, SammU} from '../vocabulary/index.js';
+import {MetaModelElementInstantiator} from './meta-model-element-instantiator.js';
 import {DataFactory} from 'n3';
-import {Units} from '../shared/units';
+import {Units} from '../shared/units.js';
 
 export class PredefinedUnitInstantiator {
     private readonly sammU: SammU;
@@ -40,30 +40,30 @@ export class PredefinedUnitInstantiator {
             if (quantityKind) {
                 return new DefaultQuantityKind(
                     this.samm.version,
-                    `${this.metaModelElementInstantiator.sammU.getDefaultQuantityKindsUri()}${quantityKind.name}`,
+                    `${this.sammU.getNamespace()}${quantityKind.name}`,
                     quantityKind.name,
                     quantityKind.label
                 );
             }
         }
-        return null;
+        return null!;
     }
 
     createUnit(name: string): Unit {
         if (name) {
             const quantityKindNames = new Array<string>();
             const unit = this.units.getUnit(name.replace(this.sammU.getNamespace(), ''));
-            const defaultUnit = new DefaultUnit(this.samm.version, null, null, null, null, null);
+            const defaultUnit = new DefaultUnit(this.samm.version, null!, null!, null!, null!, null!);
 
             if (unit) {
                 defaultUnit.name = unit.name;
                 defaultUnit.addPreferredName('en', unit.label);
                 defaultUnit.aspectModelUrn = `${this.metaModelElementInstantiator.sammU.getDefaultUnitUri()}#${defaultUnit.name}`;
-                defaultUnit.symbol = unit.symbol;
-                defaultUnit.code = unit.code;
-                defaultUnit.referenceUnit = unit.referenceUnit ? unit.referenceUnit().name : null;
-                defaultUnit.conversionFactor = unit.conversionFactor;
-                defaultUnit.quantityKinds = unit.quantityKinds;
+                defaultUnit.symbol = unit.symbol!;
+                defaultUnit.code = unit.code!;
+                defaultUnit.referenceUnit = unit.referenceUnit ? unit.referenceUnit().name : null!;
+                defaultUnit.conversionFactor = unit.conversionFactor!;
+                quantityKindNames.push(...new Set(unit.quantityKinds));
             } else {
                 const unitPropertyQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(
                     DataFactory.namedNode(name),
@@ -102,14 +102,14 @@ export class PredefinedUnitInstantiator {
             return defaultUnit;
         }
 
-        return null;
+        return null!;
     }
 
     getSupportedQuantityKindsNames(): Array<string> {
-        return Object.keys(this.units.getSupportedQuantityKindsNames());
+        return this.units.getSupportedQuantityKindsNames();
     }
 
     getSupportedUnitNames(): Array<string> {
-        return Object.keys(this.units.getSupportedUnitNames());
+        return this.units.getSupportedUnitNames();
     }
 }

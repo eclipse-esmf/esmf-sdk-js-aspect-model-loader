@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Constraint, DefaultConstraint} from './default-constraint';
-import {BoundDefinition} from '../bound-definition';
+import {Constraint, DefaultConstraint} from './default-constraint.js';
+import {BoundDefinition} from '../bound-definition.js';
 
 export interface RangeConstraint extends Constraint {
-    minValue?: number;
-    maxValue?: number;
+    minValue?: number | string;
+    maxValue?: number | string;
     upperBoundDefinition?: BoundDefinition;
     lowerBoundDefinition?: BoundDefinition;
 }
@@ -28,8 +28,8 @@ export class DefaultRangeConstraint extends DefaultConstraint implements RangeCo
         name: string,
         private _upperBoundDefinition: BoundDefinition,
         private _lowerBoundDefinition: BoundDefinition,
-        private _minValue?: any,
-        private _maxValue?: any
+        private _minValue?: number | string,
+        private _maxValue?: number | string
     ) {
         super(metaModelVersion, aspectModelUrn, name);
     }
@@ -50,19 +50,19 @@ export class DefaultRangeConstraint extends DefaultConstraint implements RangeCo
         return this._lowerBoundDefinition;
     }
 
-    public set minValue(value: any) {
+    public set minValue(value: number | string | undefined) {
         this._minValue = value;
     }
 
-    public get minValue(): any {
+    public get minValue(): number | string | undefined {
         return this._minValue;
     }
 
-    public set maxValue(value: any) {
+    public set maxValue(value: number | string | undefined) {
         this._maxValue = value;
     }
 
-    public get maxValue(): any {
+    public get maxValue(): number | string | undefined {
         return this._maxValue;
     }
 }

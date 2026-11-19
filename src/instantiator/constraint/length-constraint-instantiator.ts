@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,18 +12,13 @@
  */
 
 import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultLengthConstraint} from '../../aspect-meta-model';
-import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {ConstraintInstantiator} from './constraint-instantiator';
+import {Characteristic, DefaultLengthConstraint} from '../../aspect-meta-model/index.js';
+import {ConstraintInstantiator} from './constraint-instantiator.js';
 
 export class LengthConstraintInstantiator extends ConstraintInstantiator {
-    constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: ConstraintInstantiator) {
-        super(metaModelElementInstantiator, nextProcessor);
-    }
-
     protected processElement(quads: Array<Quad>): Characteristic {
         const sammC = this.metaModelElementInstantiator.sammC;
-        const defaultLanguageConstraint = new DefaultLengthConstraint(null, null, null, null, null);
+        const defaultLanguageConstraint = new DefaultLengthConstraint(null!, null!, null!, null!, null!);
 
         quads.forEach(quad => {
             if (sammC.isMinValueProperty(quad.predicate.value)) {
