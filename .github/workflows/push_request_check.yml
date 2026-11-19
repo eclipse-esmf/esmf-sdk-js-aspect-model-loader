@@ -7,13 +7,19 @@ on:
     branches: [ '**' ]
     paths-ignore:
       - 'documentation/decisions/**'
-        
+
 permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: Check if passes all requirements (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # check out the repository
     strategy:
       fail-fast: false
       matrix:
@@ -21,13 +27,15 @@ jobs:
 
     steps:
       - name: Checkout project
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 #v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
       - name: Setup NodeJs
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # 6.1.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
